@@ -98,7 +98,7 @@ To contribute a new visualization or improve an existing one:
 1. **Fork** this repository
 2. **Create a feature branch** for your changes
 3. **Develop your visualization** in the appropriate `packages/[name]` directory
-4. **Test thoroughly** using `yarn test` and `yarn build`
+4. **Test thoroughly** using `pnpm test` and `pnpm build`
 5. **Update the package version** in `package.json` if publishing changes
 6. **Submit a pull request** with a clear description of your changes
 

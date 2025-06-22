@@ -35,11 +35,7 @@ async function create() {
     try {
         const dataset = await getData(metaUrl);
 
-        const supportedFormats = [
-            "pdb", "pqr", "cif", "bcif",
-            "mol", "mol2", "sdf", "xyz",
-            "gro", "top", "traj"
-        ];
+        const supportedFormats = ["pdb", "pqr", "cif", "bcif", "mol", "mol2", "sdf", "xyz", "gro", "top", "traj"];
 
         const extension = dataset.extension.toLowerCase();
         const loadFormat = extension === "pqr" ? "pdb" : extension;

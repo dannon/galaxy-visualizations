@@ -9,9 +9,13 @@
     "build:all": "pnpm -r run build",
     "test:all": "pnpm -r run test",
     "lint:all": "pnpm -r run prettier",
+    "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,vue,css,md}' --ignore-path .prettierignore",
     "dev": "echo 'Use: pnpm --filter @galaxyproject/[package-name] dev' && echo 'Available packages:' && ls packages/",
     "clean": "pnpm -r exec rm -rf node_modules dist static build .next",
     "install:all": "pnpm install"
   },
-  "packageManager": "pnpm@10.12.1"
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
 }
