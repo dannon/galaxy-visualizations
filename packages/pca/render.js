@@ -141,7 +141,7 @@ export async function render(container, url) {
                     header
                         .slice(0, dataStart)
                         .map((key, i) => `<b>${key}</b>: ${row[i]}`)
-                        .join("<br>"),
+                        .join("<br>")
                 );
                 filteredColors.push(row[colorColumn]);
             }

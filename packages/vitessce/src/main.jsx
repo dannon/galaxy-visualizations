@@ -125,7 +125,7 @@ async function render() {
     createRoot(appElement).render(
         <StrictMode>
             <App datasetContent={datasetContent} />
-        </StrictMode>,
+        </StrictMode>
     );
 }
 

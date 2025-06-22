@@ -119,7 +119,7 @@ const EXTENSION_ENTRY = {
 };
 const exists = federated.some(
     (e) =>
-        e.name === EXTENSION_ENTRY.name && e.load === EXTENSION_ENTRY.load && e.extension === EXTENSION_ENTRY.extension,
+        e.name === EXTENSION_ENTRY.name && e.load === EXTENSION_ENTRY.load && e.extension === EXTENSION_ENTRY.extension
 );
 if (!exists) {
     federated.push(EXTENSION_ENTRY);

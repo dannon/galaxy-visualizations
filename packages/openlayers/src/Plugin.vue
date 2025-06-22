@@ -23,7 +23,7 @@ function render() {
         "geojson", //dataset.extension,
         props.settings.geometry_color,
         props.settings.geometry_type,
-        viewport.value,
+        viewport.value
     );
 }
 
@@ -41,7 +41,7 @@ onMounted(() => {
 watch(
     () => props,
     () => render(),
-    { deep: true },
+    { deep: true }
 );
 </script>
 
@@ -49,8 +49,18 @@ watch(
     <div>
         <div ref="viewport" class="h-screen p-4"></div>
         <button
-            class="absolute bottom-2 right-2 p-2 bg-sky-100 text-black rounded-full hover:bg-sky-700 hover:bg-opacity-[0.1]"
-            @click="onExport">
+            class="
+                absolute
+                bottom-2
+                right-2
+                p-2
+                bg-sky-100
+                text-black
+                rounded-full
+                hover:bg-sky-700 hover:bg-opacity-[0.1]
+            "
+            @click="onExport"
+        >
             <ArrowDownTrayIcon class="w-5 h-5 text-skyblue-600" />
         </button>
     </div>

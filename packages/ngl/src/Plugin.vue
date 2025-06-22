@@ -56,7 +56,7 @@ watch(
     () => {
         render();
     },
-    { deep: true },
+    { deep: true }
 );
 </script>
 

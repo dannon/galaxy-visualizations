@@ -1,11 +1,12 @@
-
-html, body {
+html,
+body {
     height: 100%;
     width: 100%;
 }
 
 .body-rna-viz {
-    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif,
+        Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
     font-size: 9pt;
     background-color: #f8f8f8;
     overflow: hidden;
@@ -18,7 +19,7 @@ html, body {
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%; 
+    height: 100%;
     z-index: 1;
 }
 
@@ -35,9 +36,18 @@ html, body {
     margin: 0;
 }
 
-.col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4,
-.col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8,
-.col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+.col-sm-1,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-5,
+.col-sm-6,
+.col-sm-7,
+.col-sm-8,
+.col-sm-9,
+.col-sm-10,
+.col-sm-11,
+.col-sm-12 {
     padding-left: 0px;
 }
 
@@ -204,12 +214,14 @@ html, body {
     margin-left: 5%;
 }
 
-#rna-alignment-graphics1 p, #rna-alignment-graphics2 p {
+#rna-alignment-graphics1 p,
+#rna-alignment-graphics2 p {
     margin-left: 10%;
     font-size: 13pt;
 }
 
-#rna-alignment-graphics1 svg, #rna-alignment-graphics2 svg {
+#rna-alignment-graphics1 svg,
+#rna-alignment-graphics2 svg {
     margin-top: 3%;
 }
 
@@ -228,7 +240,7 @@ html, body {
 .search-input {
     position: relative;
 }
-.search-input input { 
+.search-input input {
     border: none;
     background: #fff;
     display: block;

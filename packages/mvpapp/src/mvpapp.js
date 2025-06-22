@@ -329,7 +329,7 @@ function AjaxDataProvider(confObj) {
                     var obj = {};
                     cv.forEach(function (d, idx) {
                         var escapedField = '"' + cNames[idx] + '"';
-                        if (isNumber(d) && cNames[idx] != 'PEPTIDE_ID') {
+                        if (isNumber(d) && cNames[idx] != "PEPTIDE_ID") {
                             obj[escapedField] = Number.parseFloat(d);
                         } else {
                             obj[escapedField] = d;
@@ -1746,8 +1746,7 @@ const PSMDetailHelp = {
  */
 var PeptideView = (function (pv) {
     pv.baseQuery = {
-        SELECT:
-            'spectrum_counts.ENCODED_SEQUENCE AS Sequence, spectrum_counts.SPECTRA_COUNT AS "Spectra Count", protein_counts.PROTEIN_COUNT AS "Protein Count", spectrum_counts.peptide_id',
+        SELECT: 'spectrum_counts.ENCODED_SEQUENCE AS Sequence, spectrum_counts.SPECTRA_COUNT AS "Spectra Count", protein_counts.PROTEIN_COUNT AS "Protein Count", spectrum_counts.peptide_id',
         FROM: "spectrum_counts, protein_counts",
         WHERE: "protein_counts.SII_ID = spectrum_counts.SII_ID",
     };
@@ -2121,8 +2120,7 @@ var PeptideView = (function (pv) {
     pv.reBuildTable = function (name, value) {
         let tbl = $("#data-table").DataTable();
         let q = {
-            SELECT:
-                'DISTINCT spectrum_counts.ENCODED_SEQUENCE AS Sequence, spectrum_counts.SPECTRA_COUNT AS "Spectra Count", protein_counts.PROTEIN_COUNT AS "Protein Count", spectrum_counts.peptide_id',
+            SELECT: 'DISTINCT spectrum_counts.ENCODED_SEQUENCE AS Sequence, spectrum_counts.SPECTRA_COUNT AS "Spectra Count", protein_counts.PROTEIN_COUNT AS "Protein Count", spectrum_counts.peptide_id',
             FROM: "spectrum_counts, protein_counts, psm_entries",
             WHERE:
                 'protein_counts.SII_ID = spectrum_counts.SII_ID AND  psm_entries.id = spectrum_counts.PEPTIDE_ID AND psm_entries."' +

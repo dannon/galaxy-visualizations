@@ -2,7 +2,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
-const dist = "static/dist/"
+const dist = "static/dist/";
 
 module.exports = {
     mode: "production",
@@ -18,8 +18,8 @@ module.exports = {
         new MiniCssExtractPlugin(),
         new CopyPlugin({
             patterns: [
-                { from: "nora.xml", to: "static/nora.xml" },                
-                { from: "nora.svg", to: "static/logo.svg" },                
+                { from: "nora.xml", to: "static/nora.xml" },
+                { from: "nora.svg", to: "static/logo.svg" },
                 { from: "htdocs/logo.svg", to: dist + "logo.svg" },
                 { from: "htdocs/babylon.js", to: dist + "babylon.js" },
                 { from: "htdocs/babylon.objFileLoader.js", to: dist + "babylon.objFileLoader.js" },

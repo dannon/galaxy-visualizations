@@ -1,12 +1,12 @@
 body {
-  padding-top: 70px;
+    padding-top: 70px;
 }
 .navbar-fixed-top {
-  background-color: #9e9f9f;
+    background-color: #9e9f9f;
 }
 
 .tip-help {
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .vertical-align {
@@ -14,9 +14,9 @@ body {
     align-items: center;
 }
 
-.row{
-  margin-top: 10px;
-  margin-bottom: 15px;
+.row {
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 .msi_button {
@@ -34,11 +34,11 @@ body {
 }
 
 .score-filter {
-    border: 1px solid #DDD;
+    border: 1px solid #ddd;
 }
 
 .brush .extent {
-    fill-opacity: .125;
+    fill-opacity: 0.125;
     shape-rendering: crispEdges;
 }
 
@@ -62,7 +62,7 @@ svg {
 
 .resize path {
     fill: #666;
-    fill-opacity: .8;
+    fill-opacity: 0.8;
     stroke: #000;
     stroke-width: 1.5px;
 }
@@ -109,12 +109,17 @@ path {
     background: rgba(70, 130, 180, 0.62);
 }
 
-#selectable .ui-selecting { background: rgba(70, 130, 180, 0.62); }
-#selectable .ui-selected { background: darkblue; color: white; }
+#selectable .ui-selecting {
+    background: rgba(70, 130, 180, 0.62);
+}
+#selectable .ui-selected {
+    background: darkblue;
+    color: white;
+}
 
 .well {
-    background-color: #DDDDDD;
-    border: 1px solid #DDDDDD;
+    background-color: #dddddd;
+    border: 1px solid #dddddd;
 }
 
 .btn-group {
@@ -147,29 +152,21 @@ path {
 #mod_banner {
     font-weight: 200;
     overflow-y: scroll;
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
 
 .baseMod {
     cursor: help;
     color: rgb(10, 173, 63);
     font-size: larger;
-    text-shadow: 0 1px 0 #ccc,
-    0 2px 0 #c9c9c9,
-    0 3px 0 #bbb,
-    0 4px 0 #b9b9b9,
-    0 5px 0 #aaa,
-    0 6px 1px rgba(0,0,0,.1),
-    0 0 5px rgba(0,0,0,.1),
-    0 1px 3px rgba(0,0,0,.3),
-    0 3px 5px rgba(0,0,0,.2),
-    0 5px 10px rgba(0,0,0,.25),
-    0 10px 10px rgba(0,0,0,.2),
-    0 20px 20px rgba(0,0,0,.15);
+    text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa,
+        0 6px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3),
+        0 3px 5px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2),
+        0 20px 20px rgba(0, 0, 0, 0.15);
 }
 
 .file_picker {
-    cursor: pointer;    
+    cursor: pointer;
     padding: 2em;
 }
 
@@ -234,7 +231,7 @@ td.details-control {
 }
 
 .fv-protein:hover {
-   color: #337ab7;
+    color: #337ab7;
 }
 
 .fv-seq {
@@ -288,15 +285,18 @@ HIS       pale blue  [130,130,210]   PRO         flesh  [220,150,130]
     stroke-width: 1px;
 }
 
-.asp, .glu {
+.asp,
+.glu {
     fill: rgb(230, 10, 10);
 }
 
-.lys, .arg {
+.lys,
+.arg {
     fill: rgb(20, 90, 255);
 }
 
-.phe, .tyr {
+.phe,
+.tyr {
     fill: rgb(50, 50, 170);
 }
 
@@ -312,19 +312,24 @@ HIS       pale blue  [130,130,210]   PRO         flesh  [220,150,130]
     fill: rgb(130, 130, 210);
 }
 
-.cys, .met {
+.cys,
+.met {
     fill: rgb(230, 230, 0);
 }
 
-.ser, .thr {
+.ser,
+.thr {
     fill: rgb(250, 150, 0);
 }
 
-.asn, .gln {
+.asn,
+.gln {
     fill: rgb(0, 220, 220);
 }
 
-.leu, .val, .ile {
+.leu,
+.val,
+.ile {
     fill: rgb(15, 130, 15);
 }
 
@@ -354,8 +359,6 @@ HIS       pale blue  [130,130,210]   PRO         flesh  [220,150,130]
     font-size: 10px;
     fill: black;
 }
-
-
 
 .psm {
     fill: #fd8d3c;
@@ -390,26 +393,26 @@ HIS       pale blue  [130,130,210]   PRO         flesh  [220,150,130]
 .genome_dummy {
     stroke-width: 40px;
     stroke: #a8a8a8;
-    stroke-dasharray: 1,1;
+    stroke-dasharray: 1, 1;
 }
 
 .ptm {
-    fill: #E5E7E9;
+    fill: #e5e7e9;
 }
 
 text.ptm {
-    fill: #6E2C00;
-    text-shadow: 2px 2px 3px #AEB6BF;
+    fill: #6e2c00;
+    text-shadow: 2px 2px 3px #aeb6bf;
 }
 
 text.itraq4plex {
-    fill: #884EA0;
-    text-shadow: 2px 2px 3px #AEB6BF;
+    fill: #884ea0;
+    text-shadow: 2px 2px 3px #aeb6bf;
 }
 
 text.oxidation {
-    fill: #2471A3;
-    text-shadow: 2px 2px 3px #AEB6BF;
+    fill: #2471a3;
+    text-shadow: 2px 2px 3px #aeb6bf;
 }
 
 .mismatch {
@@ -428,7 +431,7 @@ text.oxidation {
     fill: steelblue;
     opacity: 0.5;
     stroke: gray;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .tooltip {
@@ -438,5 +441,5 @@ text.oxidation {
 
 .tooltip-inner {
     background: steelblue;
-    color:white;
+    color: white;
 }

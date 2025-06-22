@@ -317,7 +317,7 @@ var RNAInteractionViewer = (function (riv) {
                 "Top 50 symbols based on expression",
                 "Symbols",
                 "Expression (TPM)",
-                symbolGeneExpTop["names"],
+                symbolGeneExpTop["names"]
             );
             riv.registerPlotClick("rna-expr-sym");
         }
@@ -648,7 +648,7 @@ var RNAInteractionViewer = (function (riv) {
             hybrid = "";
         riv.showRow();
         $elBothGenes.append(
-            "<div class='interaction-header'>Chimera</div><div><svg height='60' width='300' id='one-svg'></svg></div>",
+            "<div class='interaction-header'>Chimera</div><div><svg height='60' width='300' id='one-svg'></svg></div>"
         );
         $elBothGenes.find("#one-svg").html(riv.createSVG(item));
         $elBothGenes.append("<div class='interaction-header'> Interacting partners </div>");
@@ -1121,11 +1121,11 @@ var RNAInteractionViewer = (function (riv) {
         plottingData.region2 = riv.mergeFamiliesToOthers(plottingData.region2, summaryResultRegion2.length);
         plottingData.summaryResultSymbol1 = riv.mergeFamiliesToOthers(
             plottingData.summaryResultSymbol1,
-            summaryResultSymbol1.length,
+            summaryResultSymbol1.length
         );
         plottingData.summaryResultSymbol2 = riv.mergeFamiliesToOthers(
             plottingData.summaryResultSymbol2,
-            summaryResultSymbol2.length,
+            summaryResultSymbol2.length
         );
         // plot
         riv.plotInteractions(plottingData);
@@ -1153,7 +1153,7 @@ var RNAInteractionViewer = (function (riv) {
             "Top " + expr1Len + " symbols based on expression",
             "Symbols",
             "Expression (TPM)",
-            data.rnaexpr1.names,
+            data.rnaexpr1.names
         );
         riv.plotHistogram(
             data.rnaexpr2.values,
@@ -1161,7 +1161,7 @@ var RNAInteractionViewer = (function (riv) {
             "Top " + expr2Len + " symbols based on expression",
             "Symbols",
             "Expression (TPM)",
-            data.rnaexpr2.names,
+            data.rnaexpr2.names
         );
     };
 

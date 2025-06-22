@@ -123,11 +123,11 @@ export default class Heatmap {
 
         this.height = Math.min(
             Math.max(0, this.container.clientHeight - margin.top - margin.bottom),
-            this.container.clientHeight,
+            this.container.clientHeight
         );
         this.width = Math.min(
             Math.max(0, this.container.clientWidth - margin.left - margin.right),
-            this.container.clientWidth,
+            this.container.clientWidth
         );
 
         this.xScale.range([0, this.width]);

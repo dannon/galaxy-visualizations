@@ -34,11 +34,7 @@ const url = `${root}api/datasets/${datasetId}/content`;
 
 const rootElement = createRoot(appElement);
 rootElement.render(
-    <H5GroveProvider
-      url={url}
-      filepath={datasetName}
-      axiosConfig={{ params: { file: datasetName } }}
-    >
-      <App />
+    <H5GroveProvider url={url} filepath={datasetName} axiosConfig={{ params: { file: datasetName } }}>
+        <App />
     </H5GroveProvider>
 );

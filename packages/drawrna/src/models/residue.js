@@ -5,15 +5,15 @@ var Residue = Backbone.Model.extend({
         group: "nodes",
         selectable: true,
         locked: false,
-        grabbable: true
+        grabbable: true,
     },
-    initialize: function(data){
+    initialize: function (data) {
         this.set("name", data.name);
         this.set("color", data.color);
         this.set("x", data.x);
         this.set("y", data.y);
         this.set("id", data.id);
-    }
-})
+    },
+});
 
 module.exports = Residue;

@@ -17,7 +17,8 @@ defineProps<{
                 :root="root"
                 :settings="settings"
                 :specs="specs"
-                :tracks="tracks" />
+                :tracks="tracks"
+            />
         </template>
     </GalaxyCharts>
 </template>

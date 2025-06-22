@@ -101,13 +101,13 @@ onMounted(() => {
 watch(
     () => props,
     () => render(),
-    { deep: true },
+    { deep: true }
 );
 
 watch(
     () => props.tracks,
     () => emit("update", { job_dataset_id: null }),
-    { deep: true },
+    { deep: true }
 );
 </script>
 

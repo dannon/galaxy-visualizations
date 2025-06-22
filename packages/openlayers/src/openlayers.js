@@ -195,14 +195,14 @@ export function MapViewer(mv) {
                 shp(shpfile.data).then(
                     (geojson) => {
                         const url = window.URL.createObjectURL(
-                            new Blob([JSON.stringify(geojson)], { type: "application/json" }),
+                            new Blob([JSON.stringify(geojson)], { type: "application/json" })
                         );
                         const sourceVec = new Vector({ format: formatType, url: url, wrapX: false });
                         mv.createMap(sourceVec, geometryColor, geometryType, styleFunction, target);
                     },
                     (failure) => {
                         console.debug("FAILURE!", failure);
-                    },
+                    }
                 );
             });
         }

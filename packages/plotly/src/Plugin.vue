@@ -51,7 +51,7 @@ onMounted(() => {
 watch(
     () => props,
     () => render(),
-    { deep: true },
+    { deep: true }
 );
 </script>
 

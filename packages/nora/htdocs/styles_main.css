@@ -38,15 +38,14 @@
 
 
 **************************************************************/
-body.wait, body.wait * {
+body.wait,
+body.wait * {
     cursor: wait !important;
 }
-
 
 textarea {
     tab-size: 4;
 }
-
 
 .Kjobinfo {
     position: absolute;
@@ -64,8 +63,8 @@ textarea {
     left: 20%;
     top: 20%;
     border: 5px solid;
-    border-color: hsl(0,0%,50%);
-    box-shadow: 15px 15px 25px hsla(0, 0%, 10%, .7);    /*boxshadow*/
+    border-color: hsl(0, 0%, 50%);
+    box-shadow: 15px 15px 25px hsla(0, 0%, 10%, 0.7); /*boxshadow*/
     background: white;
     fdisplay: flex;
     fflex-direction: column;
@@ -82,9 +81,8 @@ textarea {
     user-select: text;
 }
 
-
 .Kjobinfo .Kjobinfo_othertitle {
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
     color: white;
     margin-left: 4px;
     padding-left: 5px;
@@ -92,13 +90,12 @@ textarea {
     width: calc(100% - 70px);
 }
 
-
 .Kjobinfo .Kjobinfo_title {
     display: inline-block;
     font-weight: bold;
     color: black;
     border: 1.5px solid #777;
-    background: hsl(0,0%,90%);
+    background: hsl(0, 0%, 90%);
     padding: 2px 2px 2px;
     margin: 3px;
     cursor: pointer;
@@ -107,22 +104,18 @@ textarea {
     min-width: 150px !important;
 }
 
-
 .Kjobinfo .Kjobinfo_title.selected {
     background-color: yellow;
     box-shadow: 0px 0px 0px;
 }
 
-
 .Kjobinfo .Kjobinfo_title:hover {
     background-color: yellow;
 }
 
-
 .Kjobinfo .fa:hover {
-    background-color: #113355;    /*highlight*/
+    background-color: #113355; /*highlight*/
 }
-
 
 .Kjobinfo .fa {
     position: absolute;
@@ -136,9 +129,8 @@ textarea {
     background: green;
     color: white;
     z-index: 9999999999;
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
 }
-
 
 .Kjobinfo .fa-spinner {
     background: red;
@@ -146,18 +138,16 @@ textarea {
     left: 50%;
     font-size: 50px;
     width: 50px;
-    ; height: 50px;
+    height: 50px;
     line-height: 50px;
     color: black;
     border-radius: 20px;
-    background: rgba(168,168,168,.3);
+    background: rgba(168, 168, 168, 0.3);
 }
-
 
 .Kjobinfo .fa-refresh {
     right: 30px;
 }
-
 
 .KjobinfoContent {
     _position: absolute;
@@ -166,7 +156,6 @@ textarea {
     height: calc(100% - 30px);
 }
 
-
 .KjobinfoContent > mark.alt1 {
     padding: 1px;
     margin: 10px 0px 1px;
@@ -174,7 +163,6 @@ textarea {
     background: lightblue !important;
     width: 100%;
 }
-
 
 .KjobinfoContent > mark.alt2 {
     padding: 5px;
@@ -186,7 +174,6 @@ textarea {
     width: 100%;
 }
 
-
 .Kjobinfo .Kjobinfo_error {
     background: red !important;
     color: white;
@@ -196,7 +183,6 @@ textarea {
     width: calc(100% - 70px);
 }
 
-
 .KjobinfoContent {
     _position: absolute;
     overflow: auto;
@@ -204,41 +190,33 @@ textarea {
     height: calc(100% - 60px);
 }
 
-
 body a {
     text-decoration: none;
     color: black;
 }
-
 
 body a:visited {
     text-decoration: none;
     color: black;
 }
 
-
 body a:hover {
     text-decoration: none;
 }
 
-
 .KTreeSymbol {
 }
-
 
 .KTreeExpander {
 }
 
-
 .KTreeExpander:hover {
 }
-
 
 .KCheckBox {
     dmargin-top: 5px;
     spadding: 2px 4px 2px 4px;
 }
-
 
 #frame {
     display: block;
@@ -248,13 +226,12 @@ body a:hover {
     color: none;
     width: 100%;
     height: 100%;
-    padding: 38px 0px 0px 0px ;
+    padding: 38px 0px 0px 0px;
     border: 0px solid green;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-
 
 #container {
     -webkit-box-sizing: border-box;
@@ -274,12 +251,10 @@ body a:hover {
     overflow: hidden;
 }
 
-
 #myKView {
     position: absolute;
     top: 0px;
 }
-
 
 .containerDIV {
     display: table-cell;
@@ -293,7 +268,6 @@ body a:hover {
     border-collapse: collapse;
 }
 
-
 .localfiletable {
     color: white;
     __overflow: scroll;
@@ -303,21 +277,18 @@ body a:hover {
     position: relative;
 }
 
-
 .localfiletable .dummymessage {
     margin: 15px;
     font-size: 16px;
     line-height: 19px;
 }
 
-
 .localfiletable.tablelayoutfixed {
     table-layout: fixed;
 }
 
-
 .localfiletable td {
-    border: 1px solid #BBB;
+    border: 1px solid #bbb;
     padding-left: 8px;
     padding-right: 1px;
     vertical-align: middle;
@@ -328,12 +299,10 @@ body a:hover {
     position: relative;
 }
 
-
 .localfiletable td > div {
     position: absolute;
     top: 1px;
 }
-
 
 .localfiletable i {
     margin-left: -5px !important;
@@ -345,13 +314,11 @@ body a:hover {
     text-align: left;
 }
 
-
 .localfiletable .tablebutton {
     border-radius: 4px;
-    background: linear-gradient(to top left, #113355, #4466AA);    /*toolbutton*/
-    color: #BBB;
+    background: linear-gradient(to top left, #113355, #4466aa); /*toolbutton*/
+    color: #bbb;
 }
-
 
 .localfiletable .tablebutton.selected {
     border-radius: 4px;
@@ -361,104 +328,87 @@ body a:hover {
     border-collapse: collapse;
 }
 
-
 .localfiletable .tablebutton:hover {
-    background: #AAAAAA;
+    background: #aaaaaa;
     color: black;
 }
 
-
 .localfiletable i:hover {
-    color: hsl(0,0%,40%);
+    color: hsl(0, 0%, 40%);
 }
-
 
 .localfiletable .fa-close {
     ccolor: black;
 }
 
-
 .localfiletable .fa-close:hover {
     color: red;
 }
 
-
 .localfiletable tr {
-    background: hsl(0,0%,95%);
+    background: hsl(0, 0%, 95%);
     color: black;
 }
 
-
 .localfiletable tr:hover {
-    background: hsl(0,0%,90%);
+    background: hsl(0, 0%, 90%);
 }
-
 
 .localfiletable tr.modified {
-    background: #B00;
+    background: #b00;
     color: white;
 }
-
 
 .localfiletable tr.selected {
     color: black;
     background: hsl(60, 100%, 90%);
 }
 
-
 .localfiletable tr.selected:hover {
     background: hsl(60, 50%, 88%);
 }
-
 
 .localfiletable tr.islandrow {
     font-style: italic;
     color: darkred;
 }
 
-
 .opthide {
     display: none;
 }
-
 
 .localfiletable tr.current {
     color: black;
     background: hsl(10, 100%, 90%) !important;
 }
 
-
 .localfiletable tr.selectedisland {
     color: green !important;
     background: white;
 }
 
-
 .localfiletable tr.selectedGray {
-    color: #113355;    /*highlight*/
+    color: #113355; /*highlight*/
     __font-weight: bold;
 }
-
 
 .localfiletable thead tr {
     dborder: 7px solid green;
     z-index: 1;
 }
 
-
 .localfiletable thead tr td {
-    background: #404055;    /*tablehead*/
+    background: #404055; /*tablehead*/
     color: white;
     cursor: inherit;
     position: relative;
     /* this does the trick with disapparing border in relative position */
-    border: 1px solid hsl(0,0%,0%);
+    border: 1px solid hsl(0, 0%, 0%);
     padding-left: 9px;
-    _-border-bottom: 1px solid hsl(0,0%,60%);
-    gbox-shadow: inset 1px 1px 0px 0px hsl(0,0%,60%);
+    _-border-bottom: 1px solid hsl(0, 0%, 60%);
+    gbox-shadow: inset 1px 1px 0px 0px hsl(0, 0%, 60%);
     z-index: 1;
 }
-
 
 .localfiletable tbody select {
     width: 100%;
@@ -466,11 +416,9 @@ body a:hover {
     background: none;
 }
 
-
-.localfiletable tbody input[type='checkbox'] {
+.localfiletable tbody input[type="checkbox"] {
     margin: 1px 1px 1px 4px;
 }
-
 
 .localfiletable td.fixedwidth {
     text-overflow: clip;
@@ -482,26 +430,20 @@ body a:hover {
   */
 }
 
-
-.sharedlinktable td
-{
-    text-align:left !important;
+.sharedlinktable td {
+    text-align: left !important;
 }
 
-.sharedlinktable td:nth-child(4) 
-{
+.sharedlinktable td:nth-child(4) {
     white-space: normal;
-    width:80%;
-    
+    width: 80%;
 }
-.sharedlinktable td:nth-child(5) 
-{
-    max-width:200px;
+.sharedlinktable td:nth-child(5) {
+    max-width: 200px;
 }
 
-.sharedlinktable .modernbutton
-{
-    margin:2px !important;
+.sharedlinktable .modernbutton {
+    margin: 2px !important;
 }
 
 #KJobinfoTooltip {
@@ -511,18 +453,16 @@ body a:hover {
     color: black;
 }
 
-
 #MetaKeySearch > .keydiv {
     position: relative;
     width: 100%;
     height: 150px !important;
     overflow: scroll;
-    background: hsl(0,0%,62%)!important;
+    background: hsl(0, 0%, 62%) !important;
     text-align: left;
     border: 1px solid black;
     margin-bottom: 10px;
 }
-
 
 #MetaKeySearch > .buttondiv {
     height: 40px;
@@ -531,27 +471,23 @@ body a:hover {
     text-align: left;
 }
 
-
 #MetaKeySearch > .buttondiv input {
     width: 50px;
 }
 
-
 #MetaKeySearch > .buttondiv span {
     padding-right: 30px;
 }
-
 
 #MetaKeySearch > .buttondiv .fa {
     background: gray;
     padding: 4px;
     margin-right: 5px;
     border-radius: 4px;
-    border: 1px solid hsl(0,0%,0%);
+    border: 1px solid hsl(0, 0%, 0%);
     color: white;
     box-shadow: 2px 1px 1px #888;
 }
-
 
 #MetaKeySearch > .buttondiv > span > .fa:hover {
     background: lightgray;
@@ -560,19 +496,16 @@ body a:hover {
     cursor: pointer;
 }
 
-
 #MetaKeySearch div.selected {
     background: lightblue;
 }
-
 
 /* the main (file) search bar */
 .KSearchFieldContainer {
     position: relative;
     display: flex;
-    background: hsl(0,0%,62%)!important;
+    background: hsl(0, 0%, 62%) !important;
 }
-
 
 .KSearchField_filterList {
     _width: 27px;
@@ -585,20 +518,18 @@ body a:hover {
     cursor: default;
 }
 
-
 .KSearchField_filterList > ul {
     visibility: hidden;
     opacity: 0;
-    transition: visibility ease-in 0.3s,opacity 0.3s ease-in;
+    transition: visibility ease-in 0.3s, opacity 0.3s ease-in;
 }
 
-
-.KSearchField_filterList:hover > ul {    /*display:block;*/
+.KSearchField_filterList:hover > ul {
+    /*display:block;*/
     visibility: visible;
     opacity: 1;
     transition-delay: 0.2s;
 }
-
 
 .KSearchField_filterList > ul > li > span {
     overflow: hidden;
@@ -606,17 +537,14 @@ body a:hover {
     max-width: 300px;
 }
 
-
 .KSearchField_filterList > ul > li > span > span:nth-child(2) {
     display: inline-block;
 }
-
 
 .KSearchField_filterList > i {
     font-size: 15px;
     __color: white;
 }
-
 
 #KSearchFieldGeneral {
     width: 100%;
@@ -626,28 +554,24 @@ body a:hover {
     position: relative;
 }
 
-
 .KSearchFieldGeneral_after {
     position: absolute;
     right: 0px;
-    width: 10px;    /*scrollbarwidth*/
+    width: 10px; /*scrollbarwidth*/
     height: 24px;
-    background: #226699;    /*menucolor*/
-    background: hsl(0,0%,30%);
+    background: #226699; /*menucolor*/
+    background: hsl(0, 0%, 30%);
 }
-
 
 .KSearchField_clear {
     color: black;
     background: white;
 }
 
-
 .KSearchField_clear:hover {
     background: darkred;
     color: white;
 }
-
 
 .KSearchField_clear {
     color: black;
@@ -659,16 +583,13 @@ body a:hover {
     top: 2px;
 }
 
-
 .hover_bg_gray {
-    background: hsl(0,0%,72%)!important;
+    background: hsl(0, 0%, 72%) !important;
 }
-
 
 .hover_bg_gray:hover {
-    background: hsl(0,0%,48%)!important;
+    background: hsl(0, 0%, 48%) !important;
 }
-
 
 .fa_container {
     display: inline-flex;
@@ -676,18 +597,15 @@ body a:hover {
     justify-content: center;
 }
 
-
 .fa_container > i {
     _background: red;
     padding: 0px 4px;
 }
 
-
 /* ================================ patient table =============================*/
 .patientTableTopTools {
     overflow: hidden;
 }
-
 
 .patientTableTopTools .menu_generic li {
     padding-left: 4px;
@@ -695,16 +613,13 @@ body a:hover {
     border: 0px solid green;
 }
 
-
 .patientTableTopTools .menu_generic li.active {
     background: darkred;
 }
 
-
 .patientTableTopTools .menu_generic li.active2 {
     background: red;
 }
-
 
 #patientTableInnerContainer {
     background: hsl(0, 0%, 35%);
@@ -717,7 +632,6 @@ body a:hover {
     display: inline-table;
 }
 
-
 #patientTableInnerContainer > div {
     sssbackground-color: hsl(0, 0%, 35%);
     width: 100%;
@@ -725,7 +639,6 @@ body a:hover {
     border: 0px solid gray;
     /* top tool row*/
 }
-
 
 #patientTableLowerContainer {
     width: 400px;
@@ -735,14 +648,12 @@ body a:hover {
     position: relative;
 }
 
-
 #patientThumbContainer {
     overflow-y: scroll;
     overflow-x: hidden;
     height: auto;
     %background: linear-gradient(to top left, #999, #777);
 }
-
 
 #patientThumbBackButton {
     display: none;
@@ -758,29 +669,25 @@ body a:hover {
     box-shadow: 4px 3px 1px #000;
 }
 
-
 #patientThumbBackButton:hover {
     background: black;
     color: white;
     cursor: pointer;
 }
 
-
 .patientTable_timeMarker {
-    background: #007A29;
+    background: #007a29;
     background: darkcyan;
-    _color: white!important;
+    _color: white !important;
     _font-weight: bold;
 }
 
-
 .patientTable_timeMarker span {
-    color: hsl(0,0%,90%);
+    color: hsl(0, 0%, 90%);
     font-style: italic;
     padding-left: 5px;
     font-weight: normal;
 }
-
 
 #patientTableWrap {
     overflow: auto;
@@ -788,11 +695,9 @@ body a:hover {
     cursor: default;
 }
 
-
 .ANULL {
     opacity: 0.1;
 }
-
 
 .stickytable {
     white-space: nowrap;
@@ -806,19 +711,16 @@ body a:hover {
     cursor: inherit;
 }
 
-
 .stickytable.tablelayoutfixed {
     table-layout: fixed;
 }
-
 
 .cellEditable > span {
     display: block;
 }
 
-
 .stickytable td {
-    position: relative;    /*why does this have to turned off to make job tooltip working?*/
+    position: relative; /*why does this have to turned off to make job tooltip working?*/
     border-left: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
     box-sizing: border-box;
@@ -828,7 +730,6 @@ body a:hover {
     text-overflow: ellipsis;
 }
 
-
 .stickytable tbody td {
     padding-left: 8px;
     padding-right: 0px;
@@ -836,13 +737,11 @@ body a:hover {
     padding-bottom: 2px;
 }
 
-
 .stickytable tbody td:first-child i {
     color: gray;
     margin: 2px;
     margin-top: 4px;
 }
-
 
 .stickytable tbody:not(.nohover) td:hover {
     overflow: visible;
@@ -850,18 +749,15 @@ body a:hover {
     background: inherit;
 }
 
-
 .stickytable tbody:not(.nohover) td:hover > span {
     position: relative;
     overflow: visible;
     background: inherit;
 }
 
-
 .stickytable tbody:not(.nohover) td:hover > span.large {
     white-space: normal;
 }
-
 
 /*
 td.fileCell
@@ -894,7 +790,6 @@ td.fileCell  > span
     ddbackground: white;
 }
 
-
 /*
 .td_Filename span
 {
@@ -916,45 +811,37 @@ td.fileCell  > span
     user-select: text;
 }
 
-
 .td_PIZ span {
     user-select: text;
 }
 
-
 pp.stickytable .row_selected td:hover > span {
-    background: #F0F0FF;    /*tableentry*/
+    background: #f0f0ff; /*tableentry*/
     color: black;
 }
-
 
 pp.stickytable .row_selected td:hover {
-    background: #F0F0FF;    /*tableentry*/
+    background: #f0f0ff; /*tableentry*/
     color: black;
 }
-
 
 .stickytable tbody:not(.nohover) tr:hover {
     opacity: 0.9;
 }
 
-
 .stickytable tr {
     color: black;
 }
 
-
 .patienttable_button {
-    background-color: #FCFCFC;
+    background-color: #fcfcfc;
 }
-
 
 .patienttable_button td {
     font-size: 8px;
     overflow: visible;
     color: #444;
 }
-
 
 .patienttable_button span {
     background: #eee;
@@ -966,17 +853,14 @@ pp.stickytable .row_selected td:hover {
     border: 1px solid #666;
 }
 
-
 .patienttable_button:hover span {
     background: yellowgreen !important;
     color: black;
 }
 
-
 .patienttable_button {
     overflow: visible;
 }
-
 
 .patientTableHeaderCell:first-child i {
     vertical-align: middle;
@@ -984,11 +868,9 @@ pp.stickytable .row_selected td:hover {
     padding: 0px !important;
 }
 
-
 .patientTableHeaderCell:first-child span {
     padding: 0px !important;
 }
-
 
 .patientTableHeaderCell > span > span {
     cursor: pointer;
@@ -996,7 +878,6 @@ pp.stickytable .row_selected td:hover {
     display: inline-block;
     text-align: left;
 }
-
 
 .patientTableHeaderCell > span {
     display: block;
@@ -1014,16 +895,13 @@ pp.stickytable .row_selected td:hover {
     line-height: 24px;
 }
 
-
 .ptable_col_dragover {
-    background: #880
+    background: #880;
 }
-
 
 .ptable_col_dragover > span {
     background: #880;
 }
-
 
 .patientTableHeaderCell {
     z-index: 2;
@@ -1034,9 +912,8 @@ pp.stickytable .row_selected td:hover {
     border: 0px solid !important;
 }
 
-
 .patientTableHeaderSearchCell {
-    background: #AAA;
+    background: #aaa;
     color: black;
     padding-left: 1px !important;
     padding-right: 0px !important;
@@ -1044,27 +921,22 @@ pp.stickytable .row_selected td:hover {
     text-align: center;
 }
 
-
 .stickytable .row_selected {
-    background-color: #113355 !important;    /*highlight*/
+    background-color: #113355 !important; /*highlight*/
     color: white;
 }
 
-
 .stickytable td i:nth-child(2) {
-    margin-left: 7px
+    margin-left: 7px;
 }
-
 
 .stickytable td a {
     color: inherit;
 }
 
-
 .stickytable thead td {
     z-index: 11;
 }
-
 
 .stickytable {
     position: relative;
@@ -1078,24 +950,20 @@ pp.stickytable .row_selected td:hover {
     cursor: inherit;
 }
 
-
 .stickytable thead {
     position: sticky;
     top: 0;
     z-index: 12;
 }
 
-
 .patientTableHeaderSearch > td > span > i {
     margin-left: -2px;
 }
-
 
 .patientTableHeaderSearch > td {
     line-height: 24px;
     z-index: 1;
 }
-
 
 .patientTableHeaderSearch input {
     width: 100%;
@@ -1109,11 +977,10 @@ pp.stickytable .row_selected td:hover {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     font-size: 15px;
-    background: linear-gradient(to top left, #FFFFFF, #CFCFCF);
+    background: linear-gradient(to top left, #ffffff, #cfcfcf);
     cursor: inherit;
     height: 22px !important;
 }
-
 
 .patientTableHeaderCell {
     line-height: 24px;
@@ -1121,11 +988,9 @@ pp.stickytable .row_selected td:hover {
     text-align: center;
 }
 
-
 .patientRow {
     background-color: #999;
 }
-
 
 .patientTableHeaderRow {
     color: white;
@@ -1134,63 +999,53 @@ pp.stickytable .row_selected td:hover {
     cursor: inherit;
 }
 
-
 .studyRow {
-    background-color: #D0D0D0 ;
+    background-color: #d0d0d0;
 }
-
 
 .fileRow {
-    background-color: #FCFCFC;
+    background-color: #fcfcfc;
 }
-
 
 .aggregateRow {
     color: #555555 !important;
 }
 
-
 .rowSelected {
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
     color: white !important;
 }
 
-
 .subfolderRow {
-    background-color: #E8E8E8 ;
+    background-color: #e8e8e8;
 }
-
 
 .fileRow a:hover {
-    color: black!important;
+    color: black !important;
     cursor: pointer;
 }
-
 
 .studyCell .fa-circle:hover {
-    color: hsl(0,0%,30%);
+    color: hsl(0, 0%, 30%);
     cursor: pointer;
 }
-
 
 .studyCell .fa-circle-o:hover {
-    color: hsl(0,0%,50%);
+    color: hsl(0, 0%, 50%);
     cursor: pointer;
 }
-
 
 #project_indicator {
     padding-left: 10px;
     padding-right: 10px;
 }
 
-
 .leveltab {
     font-size: 14px;
     border-top: 1px solid lightgray !important;
     border-left: 1px solid lightgray !important;
     border-right: 1px solid lightgray !important;
-    background: linear-gradient(to top left, #113355, #4466AA);    /*toolbutton*/
+    background: linear-gradient(to top left, #113355, #4466aa); /*toolbutton*/
     border-top-left-radius: 10px !important;
     border-top-right-radius: 10px !important;
     border-bottom-left-radius: 0px !important;
@@ -1203,17 +1058,14 @@ pp.stickytable .row_selected td:hover {
     opacity: 0.6;
 }
 
-
 .leveltab.current {
     color: white !important;
     opacity: 1;
 }
 
-
 .leveltab:hover {
     color: black !important;
 }
-
 
 select {
     border-radius: 0px;
@@ -1226,7 +1078,6 @@ select {
     -ms-user-select: none;
     user-select: none;
 }
-
 
 /*.menu_context li:after { clear: both; }
 */
@@ -1286,14 +1137,12 @@ select {
     height: 100%;
 }
 
- 
 #gridjobtable {
     overflow: scroll;
     width: 100%;
     position: relative;
     height: 100%;
 }
-
 
 .jobTable {
     border: 0px solid green;
@@ -1310,32 +1159,26 @@ select {
     overflow: scroll;
 }
 
-
 .jobTable.tablelayoutfixed {
     table-layout: fixed;
 }
-
 
 tr.TEST {
     background: magenta !important;
 }
 
-
 tr.DONE {
     background: #333 !important;
-    color: #7AA !important;
+    color: #7aa !important;
 }
-
 
 tr.TEST .gridactionbutton .fa-refresh {
     display: none;
 }
 
-
 tr:not(.TEST) .gridactionbutton .fa-times {
     display: none;
 }
-
 
 .gridactionbutton i {
     background: lightgray;
@@ -1344,19 +1187,16 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     cursor: pointer;
 }
 
-
 .gridactionbutton i:hover {
     background: darkgray;
     color: white;
     cursor: pointer;
 }
 
-
 .gridactionbutton {
     white-space: nowrap;
     overflow: hidden;
 }
-
 
 .jobTable td {
     border-left: 1px solid #aaa;
@@ -1370,7 +1210,6 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     user-select: text;
 }
 
-
 .jobTable td > span {
     overflow: hidden;
     display: block;
@@ -1380,7 +1219,6 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     margin: -1px;
 }
 
-
 .jobTable tbody td:hover > span {
     width: initial;
     position: relative;
@@ -1389,34 +1227,29 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     display: inline-block;
     border: 1px dotted;
     margin: -2px;
-    background: #F0F0FF;
+    background: #f0f0ff;
 }
-
 
 .jobTable tbody td:hover > span.link {
     cursor: pointer;
     color: blue;
 }
 
-
 .jobTable tr {
-    background: #F0F0FF;
+    background: #f0f0ff;
     color: black;
     cursor: inherit;
 }
-
 
 .jobTable tr.selected {
     color: black;
     background: lightblue;
 }
 
-
 .jobTable tr {
     overflow: auto;
     text-overflow: ellipsis;
 }
-
 
 .jobTable thead td {
     z-index: 2;
@@ -1426,21 +1259,18 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     cursor: inherit;
 }
 
-
 .jobTableSearchCell input {
     width: 100%;
 }
 
-
 .jobTableSearchCell {
-    background: #AAA;
+    background: #aaa;
     color: black;
     padding-left: 1px !important;
     padding-right: 0px !important;
     border: 0px solid !important;
     text-align: center;
 }
-
 
 .jobTable td > span {
     position: relative;
@@ -1454,7 +1284,6 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     z-index: 20;
 }
 
-
 .jobTable tbody td:hover > span {
     width: initial;
     position: relative;
@@ -1463,9 +1292,8 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     display: inline-block;
     border: 1px dotted;
     margin: -2px;
-    background: #F0F0FF;
+    background: #f0f0ff;
 }
-
 
 .jobTable td > p {
     position: absolute;
@@ -1473,7 +1301,6 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     margin: -1px;
     z-index: 20;
 }
-
 
 .jobTable tbody td:hover > p {
     z-index: 24;
@@ -1484,7 +1311,6 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     width: 180px;
 }
 
-
 .jobprogress {
     background: yellow;
     position: absolute;
@@ -1493,19 +1319,17 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     z-index: 0;
     opacity: 0.4;
     border: 1px solid black;
-    border-right: 2px solid #AAA;
+    border-right: 2px solid #aaa;
     box-sizing: border-box;
     width: 0%;
 }
-
 
 /* KCommandDialog  */
 .KCommandDialogListDIV {
     background: gray;
     overflow-y: auto !important;
-    height:calc(100% - 36px);
-    z-index:90;
-
+    height: calc(100% - 36px);
+    z-index: 90;
 }
 
 .KCommandDialogGridContainer {
@@ -1513,10 +1337,9 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     display: flex;
     flex-direction: row;
     box-sizing: border-box;
-    overflow: visible!important;
+    overflow: visible !important;
     max-height: 300px;
 }
-
 
 /* tool bar left */
 .KCommandDialogGridContainer > div:first-child {
@@ -1524,22 +1347,19 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     width: 40px;
     display: flex;
     flex-direction: column;
-    background: hsl(0,0%,30%);
+    background: hsl(0, 0%, 30%);
 }
-
 
 .KCommandDialogGridContainer > div:nth-child(2) {
-    position:relative;
-    width:100%;
-    height:calc(100% - 5px);
+    position: relative;
+    width: 100%;
+    height: calc(100% - 5px);
 }
-
 
 .KCommandDialogGridContainer > div:last-child table {
-    width: 100%!important;
-    __height: 100%!important;
+    width: 100% !important;
+    __height: 100% !important;
 }
-
 
 /* to be deleted
 .KCommandDialogGridDIV_inner
@@ -1574,9 +1394,9 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     position: absolute;
     top: -30px;
     right: -95%;
-    transform: translate(-100%,0%);
-    margin-left: 10px ;
-    margin-right: 10px ;
+    transform: translate(-100%, 0%);
+    margin-left: 10px;
+    margin-right: 10px;
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 1px !important;
@@ -1584,7 +1404,7 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     margin-top: 2px;
     margin-bottom: 5px;
     font-size: 14px;
-    border: 1px dashed #0F0 ;
+    border: 1px dashed #0f0;
     box-sizing: border-box;
     pointer-events: none;
     border-radius: 6px !important;
@@ -1600,12 +1420,10 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     /* Chrome */
 }
 
-
 .KCommandPatientSelection.missing {
     background: red;
-    border: 0px ;
+    border: 0px;
 }
-
 
 .batchbutton {
     padding: 6px 10px 6px 10px;
@@ -1615,26 +1433,22 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     display: inline-block;
 }
 
-
 .batchbutton:hover {
     background: yellowgreen;
     color: black;
     cursor: pointer;
 }
 
-
 .textarea_foldbutton:hover {
     color: white;
     opacity: 1;
-    background: rgba(0.1,0.1,0.6,0.2);
+    background: rgba(0.1, 0.1, 0.6, 0.2);
 }
-
 
 .textarea_foldbutton.open {
     top: initial;
     bottom: 3px !important;
 }
-
 
 .textarea_foldbutton {
     position: absolute;
@@ -1644,37 +1458,33 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     left: 50%;
     top: 1px;
     padding-top: 4px;
-    border: 1px solid rgba(0.1,0.6,0.6,0.1);
+    border: 1px solid rgba(0.1, 0.6, 0.6, 0.1);
     width: 150px;
     height: 18px;
     border-radius: 5px;
     cursor: pointer !important;
     z-index: 100;
-    background: rgba(0.1,0.1,0.6,0.1);
+    background: rgba(0.1, 0.1, 0.6, 0.1);
     transform: translate(-50%, 0%);
     z-index: 2;
 }
 
-
 .isDragged {
     opacity: 1;
-    border: 2px dashed #0FF !important;
+    border: 2px dashed #0ff !important;
 }
-
 
 .isDraggedOver {
-    yborder-top: 2px dashed #0F0 !important;
+    yborder-top: 2px dashed #0f0 !important;
 }
-
 
 .KMenuSeparator {
     opacity: 1s;
     margin-right: 5px;
     margin-left: 5px;
     _background: black;
-    border-right: 1px solid hsl(0,0%,80%)!important;
+    border-right: 1px solid hsl(0, 0%, 80%) !important;
 }
-
 
 .KCmdGridinfo {
     position: absolute;
@@ -1688,17 +1498,15 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     z-index: 100;
 }
 
-
-.KCmdGridButton >div {
+.KCmdGridButton > div {
     display: inline;
     background: gray;
     padding: 3px;
     border-radius: 3px;
 }
 
-
 .KCmdGridButton {
-    background: #AAA;
+    background: #aaa;
     width: 24px;
     height: 24px;
     border-radius: 4px;
@@ -1707,12 +1515,10 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     white-space: nowrap;
 }
 
-
 .KCmdGridButton i {
-    padding: 4px 5px ;
+    padding: 4px 5px;
     font-size: 18px;
 }
-
 
 .KCmdGridButton:hover {
     background: #777;
@@ -1720,11 +1526,9 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     cursor: pointer;
 }
 
-
 .KCommandDialogwithGrid {
     height: calc(80% - 30px) !important;
 }
-
 
 .KCommandDialogListDIV li {
     font-size: 13px !important;
@@ -1733,12 +1537,10 @@ tr:not(.TEST) .gridactionbutton .fa-times {
 
 .KCommandDialogListDIV .found {
     animation: blinker 1s linear infinite;
- 
 }
 
-
 .KCommandDialog {
-    overflow-y: scroll!important;
+    overflow-y: scroll !important;
     margin-top: 30px;
     /*
   overflow-x:hidden !important;
@@ -1747,47 +1549,39 @@ tr:not(.TEST) .gridactionbutton .fa-times {
   */
 }
 
-
-.KBatchsearch
-{
-    border-radius:4px;    
-    margin-left:10px;
-    z-index:100;
-    
+.KBatchsearch {
+    border-radius: 4px;
+    margin-left: 10px;
+    z-index: 100;
 }
 
-.Kcmd_project_search_result > span
-{
-    background:lightyellow;
+.Kcmd_project_search_result > span {
+    background: lightyellow;
     border: 1px solid black;
-    border-radius :4px;
-    margin:2px;
-    padding:1px;
-    font-size:12px;
-    line-height:20px;
-    
-    
+    border-radius: 4px;
+    margin: 2px;
+    padding: 1px;
+    font-size: 12px;
+    line-height: 20px;
 }
-.Kcmd_project_search_result
-{
-    position:absolute;
-    top:25px;
-    left:30px;
-    width:300px;
-    max-height:300px; 
-    z-index:20 !important;
-    background:white;
+.Kcmd_project_search_result {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    width: 300px;
+    max-height: 300px;
+    z-index: 20 !important;
+    background: white;
     white-space: normal;
-    color:black;
-    overflow-y:scroll;
-    border-radius:4px;
-    padding:2px;
+    color: black;
+    overflow-y: scroll;
+    border-radius: 4px;
+    padding: 2px;
 }
 
 .Kcollapse {
     position: absolute;
 }
-
 
 .Kzoomedbatch {
     background: gray;
@@ -1796,26 +1590,22 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     width: 100%;
     padding-bottom: 150px;
     height: calc(100% - 150px);
-    overflow-y: scroll ;
+    overflow-y: scroll;
 }
-
 
 .KCommandDetails {
     font-weight: normal;
     color: white;
 }
 
-
 .KCommandDetails li {
     list-style: none;
     padding-left: 5px;
 }
 
-
 .KCommandDetails ol {
     padding-left: 15px;
 }
-
 
 .KCommandList {
     display: table-cell;
@@ -1823,27 +1613,23 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     color: black;
 }
 
-
 .KCommandList ol {
     padding-left: 15px;
     border: 0px solid white;
 }
-
 
 .KCommandList > ol {
     padding-left: 0px;
     border: 0px solid white;
 }
 
-
 .KCommandList li {
     cursor: pointer;
     list-style: none;
     padding: 5px 5px 5px 5px;
-    background: -moz-linear-gradient(top, #229966, #5C85AD);
+    background: -moz-linear-gradient(top, #229966, #5c85ad);
     /* for firefox 3.6+ */
 }
-
 
 .KCommandList li:hover {
     background: -moz-linear-gradient(top, #669acc, #669acc);
@@ -1851,58 +1637,55 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     background: #669acc;
 }
 
-
 .KNodeRow {
-    background: hsl(0,0%,35%)!important;
+    background: hsl(0, 0%, 35%) !important;
 }
-
 
 .KNodeRow > .td {
-    dpadding-left: 20px!important;
+    dpadding-left: 20px !important;
     sborder-top: 1px solid gray;
 }
-
 
 .banned {
     ffopacity: 0.5;
 }
 
-
-.banned input,.banned span,.banned select,.banned table,.banned .fa,.banned div,.banned textarea {
-    background-color: rgb(100,100,100,0.1) !important;
-    color: rgb(200,200,200,0.5) !important;
+.banned input,
+.banned span,
+.banned select,
+.banned table,
+.banned .fa,
+.banned div,
+.banned textarea {
+    background-color: rgb(100, 100, 100, 0.1) !important;
+    color: rgb(200, 200, 200, 0.5) !important;
     pointer-events: none;
 }
 
-
 .banned .fa-ban {
-    color: rgb(255,0,0,1.0) !important;
+    color: rgb(255, 0, 0, 1) !important;
     background-color: white !important;
     pointer-events: all !important;
 }
-
 
 .KCmdvalidate_top {
     right: 100px !important;
     top: 3px;
 }
 
-
 .KCmdvalidatefull {
     top: 4px;
     margin-right: 5px;
 }
 
-
 .KCmdvalidate {
     position: absolute;
     right: 80px;
     text-shadow: 1px 1px 1px black;
-    color: #F22;
+    color: #f22;
     padding: 1px;
     cursor: pointer;
 }
-
 
 .KCmdvalidate:not(.KCmdok):hover {
     background: lightgray;
@@ -1910,33 +1693,27 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     border-radius: 3px;
 }
 
-
 .KCmdok {
-    color: #AFA;
+    color: #afa;
     cursor: default;
 }
-
 
 .KChildRow0.hidden {
     display: none !important;
 }
 
-
 .KChildRow1 > .td:first-child {
-    padding-left: 90px!important;
-    background: hsl(0,0%,35%)!important;
+    padding-left: 90px !important;
+    background: hsl(0, 0%, 35%) !important;
 }
-
 
 .KChildRow1 > .td {
-    _background: hsl(0,0%,39%)!important;
+    _background: hsl(0, 0%, 39%) !important;
 }
-
 
 .KChildRow1 > .td:last-child {
-    dpadding-bottom: 20px!important;
+    dpadding-bottom: 20px !important;
 }
-
 
 /* this was a try to have additinal container. Must rebuild whole commanddialog for this
 .KCmdArgListContainer
@@ -1961,26 +1738,22 @@ tr:not(.TEST) .gridactionbutton .fa-times {
     width: 98% !important;
 }
 
-
 div.KCmdBatchgroup {
-    border: 2px solid #EEE;
+    border: 2px solid #eee;
     margin-top: 30px !important;
 }
-
 
 .KCmdBatchgroup div .td {
     background: #000 !important;
 }
 
-
 .KCmdLoopgroup div .td {
-    background: #AAA !important;
+    background: #aaa !important;
 }
 
-.KCmdArgListTable /*single list item */
-{
+.KCmdArgListTable /*single list item */ {
     border: #000 4px solid;
-    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, .9);
+    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.9);
     display: table;
     table-layout: fixed;
     border-collapse: collapse;
@@ -1992,10 +1765,9 @@ div.KCmdBatchgroup {
     color: white;
     white-space: nowrap;
     box-sizing: border-box;
-    sborder-top: 1px solid hsl(0,0%,39%);
-    background-color: linear-gradient( to bottom right , hsl(0, 0%,22%), hsl(0, 0%,45%));    /*blockbackground*/
+    sborder-top: 1px solid hsl(0, 0%, 39%);
+    background-color: linear-gradient(to bottom right, hsl(0, 0%, 22%), hsl(0, 0%, 45%)); /*blockbackground*/
 }
-
 
 .KCmd_successfully_created {
     -webkit-animation-name: blinker;
@@ -2003,123 +1775,107 @@ div.KCmdBatchgroup {
     -webkit-animation-duration: 3s;
 }
 
-
 .KCmdwrap div {
     background: #555 !important;
     color: white;
 }
 
-
 /* SID and PIZ and VAR selectors are special */
-.KCmdvariableSID, .KCmdvariablePID {
+.KCmdvariableSID,
+.KCmdvariablePID {
     border: none;
     background: none;
 }
 
-
-.KCmdvariableSID.inactive, .KCmdvariablePID.inactive {
+.KCmdvariableSID.inactive,
+.KCmdvariablePID.inactive {
     opacity: 0.3;
     pointer-events: none;
 }
-
 
 select option.optionerror {
     color: red !important;
 }
 
-
 select option.noerror {
     color: black;
 }
-
 
 select.optionerror {
     color: red !important;
 }
 
-
 .error_blinker {
     animation: blinker 1s linear infinite;
 }
 
-
 @keyframes blinker {
     50% {
         opacity: 1;
-        background: #EE1;
-        color:
+        background: #ee1;
+        color: ;
     }
-
 }
 
-.KCmdvariablePID .tr .td, .KCmdvariablePID .tr .td {
+.KCmdvariablePID .tr .td,
+.KCmdvariablePID .tr .td {
     padding: 0px 0px 0px 10px;
 }
-
 
 .KCmdArgListTable:first-of-type:visible {
     dmargin-top: 20px;
 }
 
-
 .KCmdArgListTable .tr {
     display: table-row;
     font-size: 12px !important;
     cursor: default;
-    border-top: 1px solid hsl(0, 0%,30%);
+    border-top: 1px solid hsl(0, 0%, 30%);
 }
-
 
 .KCmdArgListTable .tr:first-child {
 }
 
-
 /* title row first cell */
 .KCmdArgListTable_titleRow .td {
-    padding-left: 0px!important;
+    padding-left: 0px !important;
     font-style: normal;
     font-weight: bold;
     position: relative;
     font-size: 14px;
     background: #111 !important;
-    color: #EEE
+    color: #eee;
 }
-
 
 /* add a small fading border at bottom */
 ._noneed_KCmdArgListTable_titleRow .td:first-child:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 500px;
-    ; height: 0px;
-    background: linear-gradient(to right, hsl(0,0%,39%), hsl(0,0%,22%));
+    height: 0px;
+    background: linear-gradient(to right, hsl(0, 0%, 39%), hsl(0, 0%, 22%));
     bottom: 0px;
     left: 0;
 }
-
 
 /* second row margin top */
 .KCmdArgListTable .tr:nth-child(2) .td {
     padding-top: 3px;
 }
 
-
 /* last row with margin */
 .KCmdArgListTable .tr:last-child .td {
     padding-bottom: 3px;
 }
-
 
 .KCmdArgListTable .td:first-child {
     width: 36%;
     padding-left: 22px;
 }
 
-
 .KCmdToolSaveButton.modified {
-    background: rgb(200,50,50) !important;
+    background: rgb(200, 50, 50) !important;
 }
-
 
 .KCustomName {
     display: inline-block;
@@ -2136,19 +1892,16 @@ select.optionerror {
     white-space: normal;
 }
 
-
 .td:first-child .KCustomName {
     float: none;
     color: yellow;
 }
 
-
 li.KStudyTagOnSuccess {
     width: auto;
 }
 
-
-li.KStudyTagOnSuccess >input {
+li.KStudyTagOnSuccess > input {
     width: 100px;
     background: lightgray;
     position: absolute;
@@ -2156,8 +1909,7 @@ li.KStudyTagOnSuccess >input {
     top: 2px;
 }
 
-
-li.niceinput >input {
+li.niceinput > input {
     width: 100px;
     background: lightgray;
     position: absolute;
@@ -2165,8 +1917,7 @@ li.niceinput >input {
     top: 2px;
 }
 
-
-li.KStudyTagOnSuccess >textarea {
+li.KStudyTagOnSuccess > textarea {
     width: 100px;
     background: lightgray;
     position: absolute;
@@ -2177,14 +1928,12 @@ li.KStudyTagOnSuccess >textarea {
     overflow: hidden;
 }
 
-
-li.KStudyTagOnSuccess >textarea:hover {
+li.KStudyTagOnSuccess > textarea:hover {
     position: absolute;
     width: 300px;
     height: 100px;
     transition-delay: 0.5s;
 }
-
 
 .KCmdArgListTable .fullspan {
     display: cell;
@@ -2195,11 +1944,9 @@ li.KStudyTagOnSuccess >textarea:hover {
     margin-bottom: 10px;
 }
 
-
 .KCmdFileref {
-    float: right
+    float: right;
 }
-
 
 .KCmdargdetail {
     left: -10px;
@@ -2210,13 +1957,11 @@ li.KStudyTagOnSuccess >textarea:hover {
     background: #334;
 }
 
-
 .KCmdargdetail:hover {
-    background-color: #113355;    /*highlight*/
+    background-color: #113355; /*highlight*/
     border: 1px solid #666;
     color: yellow;
 }
-
 
 .KCmdargdetail textarea {
     position: absolute;
@@ -2226,16 +1971,13 @@ li.KStudyTagOnSuccess >textarea:hover {
     z-index: 10;
 }
 
-
 .KCmdToolBar > .KCmdargdetail textarea {
     width: 700px !important;
 }
 
-
 .Kargtype {
     width: 100%;
 }
-
 
 .KCmdArgListTable .td {
     position: relative;
@@ -2243,58 +1985,49 @@ li.KStudyTagOnSuccess >textarea:hover {
     padding: 1px;
     padding-left: 10px;
     text-align: left;
-    border-radius: 0px;    /*borderradius*/
+    border-radius: 0px; /*borderradius*/
     white-space: nowrap;
     vertical-align: middle;
     background: none;
 }
 
-
 .KCmdArgListTable .CodeMirror {
     dwidth: calc(100% - 55px);
 }
 
-
 .CodeMirror {
 }
 
-
 .CodeMirror-scroll {
 }
-
 
 .KCmdHeadSeparatorStyle > ul > li > ul {
     font-size: 12px;
 }
 
-
 .KCmdHeadSeparatorStyle > ul > li > ul li {
     height: 22px;
 }
 
-
-.KCmdHeadSeparatorStyle > ul > li > a >.fa {
-    background-color: #113355;    /*highlight*/
+.KCmdHeadSeparatorStyle > ul > li > a > .fa {
+    background-color: #113355; /*highlight*/
     border: 1px solid gray;
     padding-top: 3px;
     padding-bottom: 3px;
     border-radius: 5px;
 }
 
-
-.dialog_generic_menu > ul > li > a >.fa {
-    sbackground-color: #113355;    /*highlight*/
+.dialog_generic_menu > ul > li > a > .fa {
+    sbackground-color: #113355; /*highlight*/
     border: 1px solid gray;
     padding-top: 3px;
     padding-bottom: 4px;
     border-radius: 5px;
 }
 
-
 .KCmdHeadSeparatorStyle > ul > li:hover > a > .fa {
     color: yellow !important;
 }
-
 
 .KCmdArgListTable .flexlr {
     border: 0px solid red;
@@ -2303,13 +2036,11 @@ li.KStudyTagOnSuccess >textarea:hover {
     width: 100%;
 }
 
-
 .__KCmdArgListTable .flexlr div:last-child {
     aflex-grow: 1;
     atext-align: center;
     afont-size: 9px;
 }
-
 
 .__KCmdArgListTable .flexlr div:first-child {
     flex-grow: 1;
@@ -2317,27 +2048,22 @@ li.KStudyTagOnSuccess >textarea:hover {
     padding-right: 20px;
 }
 
-
 .KCmdToDrop {
-    background: #FFA !important;
+    background: #ffa !important;
 }
 
-
-.KCmdArgListTable input[type=number] {
+.KCmdArgListTable input[type="number"] {
     width: 100px !important;
 }
-
 
 .KCmdArgListTable textarea {
     resize: vertical;
     height: 20px;
 }
 
-
 .KCmdArgListTable input:hover {
-    box-shadow: 0 0 2px 2px rgba(82,168,236,.9);
+    box-shadow: 0 0 2px 2px rgba(82, 168, 236, 0.9);
 }
-
 
 .KCmdArgListTable select {
     width: fit-content;
@@ -2345,18 +2071,16 @@ li.KStudyTagOnSuccess >textarea:hover {
     __height: 20px;
     padding: 1px 0px;
     font-size: 12px;
-    background: hsl(0,0%,93%);
+    background: hsl(0, 0%, 93%);
     margin-left: 2px;
     margin-top: 0px;
-    max-width:140px;
+    max-width: 140px;
 }
-
 
 .KCmdArgListTable_fixedWidth {
     display: inline-block;
     min-width: 50px;
 }
-
 
 #KCmdHeadSeparator {
     position: absolute;
@@ -2365,16 +2089,13 @@ li.KStudyTagOnSuccess >textarea:hover {
     top: 4px;
 }
 
-
 #KCmdHeadSeparator.inactive {
     pointer-events: none;
 }
 
-
 #KCmdHeadSeparator.inactive li {
     color: #999 !important;
 }
-
 
 .KCmdHeadSeparatorStyle {
     height: 30px;
@@ -2383,11 +2104,9 @@ li.KStudyTagOnSuccess >textarea:hover {
     margin-left: 0px;
 }
 
-
 #KCmdHeadFinalSpacer {
-    height: 200px
+    height: 200px;
 }
-
 
 #KCmdHeadSeparatorAggregate {
     position: relative;
@@ -2400,17 +2119,14 @@ li.KStudyTagOnSuccess >textarea:hover {
     sbackground: red;
 }
 
-
 .KCmdmarked {
     background: #771 !important;
     border: dotted 2px yellow;
 }
 
-
 .KCmdmarkedPlay {
-    background: #BB1 !important;
+    background: #bb1 !important;
 }
-
 
 .KCmdBatch {
     height: 520px;
@@ -2419,20 +2135,17 @@ li.KStudyTagOnSuccess >textarea:hover {
     padding-left: 5px;
 }
 
-
 .KCmdToolBar {
     border: 0px solid red;
     justify-content: right;
-    text-align: right!important;
-    padding: 0px!important;
+    text-align: right !important;
+    padding: 0px !important;
     width: 100px;
 }
-
 
 .KCmdTool.fa-ban {
     opacity: 1 !important;
 }
-
 
 .KCmdTool.fa {
     background: #334;
@@ -2444,7 +2157,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     margin-bottom: 4px;
 }
 
-
 .KCmdTool {
     border: 1px solid #000;
     cursor: pointer;
@@ -2454,12 +2166,10 @@ li.KStudyTagOnSuccess >textarea:hover {
     border-radius: 20%;
 }
 
-
 .KCmdTool.inactive {
     opacity: 0.4;
     pointer-events: none;
 }
-
 
 .KCmdTool.inprogress {
     -webkit-animation: blink 1s linear infinite;
@@ -2467,34 +2177,29 @@ li.KStudyTagOnSuccess >textarea:hover {
     animation: blink 1s linear infinite;
 }
 
-
 .KCmdTool.enabled {
     background: yellow !important;
     color: black !important;
 }
 
-
 .KCmdTool:hover {
-    background-color: #113355;    /*highlight*/
+    background-color: #113355; /*highlight*/
     border: 1px solid #666;
     color: yellow;
 }
-
 
 .KValidate {
     padding: 2px;
     margin-right: 10px;
     margin-top: 3px;
-    background-color: #113355;    /*highlight*/
+    background-color: #113355; /*highlight*/
     float: right;
 }
-
 
 /* smaller buttons in file rows */
 .KChildRow0 .KCmdTool {
     padding: 2px 2px;
 }
-
 
 .KCmdArgListTable .flexlr div:last-child {
     aflex-grow: 1;
@@ -2502,19 +2207,18 @@ li.KStudyTagOnSuccess >textarea:hover {
     afont-size: 9px;
 }
 
- 
-.KCmdArgListTable input, .KCmdArgListTable textarea {
+.KCmdArgListTable input,
+.KCmdArgListTable textarea {
     font-size: 14px;
-    border: 1px solid hsl(0, 0%,22%);
+    border: 1px solid hsl(0, 0%, 22%);
     border-radius: 2px;
     padding: 1px 1px;
-    background: hsl(0,0%,93%);
+    background: hsl(0, 0%, 93%);
     efont-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
     color: black;
     width: calc(99% - 60px);
     box-sizing: border-box;
 }
-
 
 .KCmdArgListTable input.customeditoption {
     background: lightgray;
@@ -2524,21 +2228,18 @@ li.KStudyTagOnSuccess >textarea:hover {
     float: right;
     position: absolute;
     border: white;
-    max-width:120px;
+    max-width: 120px;
 }
-
 
 .KCmdFilerefDiv {
     display: inline;
     float: right;
 }
 
-
 #KCmdHeadFinalSpacer {
     height: 200px;
     pointer-events: none;
 }
-
 
 #KCmdHeadSeparatorAggregate {
     position: relative;
@@ -2552,14 +2253,12 @@ li.KStudyTagOnSuccess >textarea:hover {
     _background: red;
 }
 
-
 #KCmdHeadDummySpacer {
     position: relative;
     _background: red;
     display: none;
     height: 60px;
 }
-
 
 .dialog_generic_frame {
     position: absolute;
@@ -2569,14 +2268,13 @@ li.KStudyTagOnSuccess >textarea:hover {
     top: 80px;
     display: none;
     border: 1px solid;
-    border-color: #666666;    /*bordercolor*/
-    background: hsl(0, 0%, 22%);    /*windowbackground*/
-    box-shadow: 15px 15px 25px hsla(0, 0%, 10%, .7);    /*boxshadow*/
+    border-color: #666666; /*bordercolor*/
+    background: hsl(0, 0%, 22%); /*windowbackground*/
+    box-shadow: 15px 15px 25px hsla(0, 0%, 10%, 0.7); /*boxshadow*/
     z-index: 900;
-    border-radius: 0px;    /*borderradius*/
+    border-radius: 0px; /*borderradius*/
     overflow: hidden;
 }
-
 
 .dialog_generic_menu {
     position: absolute;
@@ -2585,7 +2283,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     width: 100%;
 }
 
-
 .dialog_generic_resizeTriangle {
     position: absolute;
     background-color: none;
@@ -2593,7 +2290,7 @@ li.KStudyTagOnSuccess >textarea:hover {
     width: 0px;
     bottom: 0px;
     border-bottom: 30px solid;
-    border-color: #666666;    /*bordercolor*/
+    border-color: #666666; /*bordercolor*/
     border-left: 30px solid transparent;
     right: 0px;
     display: block;
@@ -2602,40 +2299,36 @@ li.KStudyTagOnSuccess >textarea:hover {
     cursor: se-resize;
 }
 
-
 .dialog_generic_resizeTriangle:hover {
-    border-color: #113355;    /*highlight*/
+    border-color: #113355; /*highlight*/
     border-bottom: 30px solid;
     border-left: 30px solid transparent;
 }
-
 
 .dialog_generic_resizeTriangle_hovered {
-    border-color: #113355;    /*highlight*/
+    border-color: #113355; /*highlight*/
     border-bottom: 30px solid;
     border-left: 30px solid transparent;
 }
-
 
 .dialog_generic_container {
     position: relative;
     display: block;
     overflow: auto;
     resize: none;
-    background-color: none;    /*height:100%;*/
+    background-color: none; /*height:100%;*/
     top: 30px;
     height: -moz-calc(100% - 31px);
     height: -webkit-calc(100% - 31px);
     height: calc(100% - 31px);
     font-size: 11pt;
-    color: hsl(0,0%,90%);
+    color: hsl(0, 0%, 90%);
     /*
   display:flex;
   flex-direction:column;
   background:green;
 */
 }
-
 
 /*
 .dialog_generic_container > div
@@ -2651,16 +2344,13 @@ li.KStudyTagOnSuccess >textarea:hover {
     color: hsl(5, 100%, 25%);
 }
 
-
 .dialog_generic_container a.link:visited {
     color: hsl(5, 100%, 25%);
 }
 
-
 .dialog_generic_container a.link:hover {
     color: hsl(5, 100%, 15%);
 }
-
 
 .popupDIV {
     background-color: #1a334c;
@@ -2682,21 +2372,17 @@ li.KStudyTagOnSuccess >textarea:hover {
     resize: both;
 }
 
-
 .popupDIV header {
     color: white;
 }
-
 
 .popupDIV table {
     white-space: nowrap;
 }
 
-
 .popupDIV table td:last-child {
     text-align: left;
 }
-
 
 .innerScrollContainerDIV {
     height: -moz-calc(100% - 30px);
@@ -2705,7 +2391,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     overflow-x: scroll;
     overflow-y: scroll;
 }
-
 
 .menuDIV {
     background: #229966;
@@ -2716,12 +2401,11 @@ li.KStudyTagOnSuccess >textarea:hover {
     color: white;
     text-shadow: 1px 1px 1px black;
     font-size: 15pt;
-    border-bottom: 0px solid ;
+    border-bottom: 0px solid;
     text-align: left;
     text-indent: 0px;
     z-index: 99;
 }
-
 
 /* this is already the ul */
 .menu_generic {
@@ -2729,16 +2413,15 @@ li.KStudyTagOnSuccess >textarea:hover {
     font-size: 17px;
     display: block;
     dsheight: 5px;
-    ; width: 100%;
+    width: 100%;
     margin: 0px;
     padding: 0px;
     border: 0px solid green;
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
     dtext-shadow: 1px 1px 1px #333333;
     white-space: nowrap;
-    border-radius: 0px;    /*borderradius*/
+    border-radius: 0px; /*borderradius*/
 }
-
 
 .menu_generic .descrip {
     visibility: hidden;
@@ -2752,7 +2435,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     background: lightgray !important;
 }
 
-
 .menu_generic li:hover > .descrip {
     visibility: visible;
     left: 80%;
@@ -2762,7 +2444,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     transition-delay: 0.6s;
     z-index: 10000;
 }
-
 
 .menu_generic li {
     padding-left: 5px;
@@ -2775,7 +2456,7 @@ li.KStudyTagOnSuccess >textarea:hover {
     /* this is important !!!! since the main frame is filling whole window */
     cursor: pointer;
     color: white;
-    border-radius: 0px;    /*borderradius*/
+    border-radius: 0px; /*borderradius*/
     color: whitesmoke;
     height: 100%;
     /* needed if i's are contained*/
@@ -2788,14 +2469,12 @@ li.KStudyTagOnSuccess >textarea:hover {
     line-height: 30px;
 }
 
-
 .menu_generic li.logo {
     padding: 0px 0px;
     fwidth: 100px;
     display: flex;
     align-items: center;
 }
-
 
 .menu_generic li.logo > div {
     box-sizing: border-box;
@@ -2808,20 +2487,17 @@ li.KStudyTagOnSuccess >textarea:hover {
     justify-content: center;
 }
 
-
 .menu_generic li.logo > div > img {
     box-sizing: border-box;
     height: 100%;
-    border: 0px solid white;    /*position:relative;
+    border: 0px solid white; /*position:relative;
   top:50%;
   left:50%;*/
 }
 
-
 .menu_generic li.icon_only {
     padding: 6px 12px;
 }
-
 
 .menu_generic li.menu_generic_disabled {
     color: grey;
@@ -2831,7 +2507,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     __line-height: 30px;
 }
 
-
 .menu_generic li.menu_generic_labelname {
     color: whitesmoke;
     text-shadow: none;
@@ -2839,7 +2514,6 @@ li.KStudyTagOnSuccess >textarea:hover {
     doverflow: hidden;
     z-index: 0;
 }
-
 
 .menu_generic li.batchicon {
     color: #999;
@@ -2849,12 +2523,10 @@ li.KStudyTagOnSuccess >textarea:hover {
     z-index: 0;
 }
 
-
 .menu_generic li.menu_generic_devtool {
     color: orange;
     font-size: 13px;
 }
-
 
 .menu_generic li.inactive {
     __color: whitesmoke;
@@ -2862,23 +2534,20 @@ li.KStudyTagOnSuccess >textarea:hover {
     pointer-events: none;
 }
 
-
 .menu_generic li.archive {
     opacity: 0.5;
     pointer-events: none;
 }
 
-
 .menu_generic li.menu_generic_tabbed {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    color: hsl(0,0%,20%);
+    color: hsl(0, 0%, 20%);
     text-shadow: none;
     pointer-events: none;
     cursor: default;
-    background: hsl(0, 0%,80%);
+    background: hsl(0, 0%, 80%);
 }
-
 
 /* main level link */
 .menu_generic li a {
@@ -2887,65 +2556,55 @@ li.KStudyTagOnSuccess >textarea:hover {
     background: none;
 }
 
-
 .menu_generic ul {
     left: 0;
 }
-
 
 .menu_generic ul.rightmenu {
     left: initial;
     right: 0;
 }
 
-
 /* level 2 list */
 .menu_generic ul {
-    background: #F0F0FF;    /*submenucolor*/
+    background: #f0f0ff; /*submenucolor*/
     margin: 0;
     padding: 0;
     min-width: 180px;
     position: absolute;
     border: solid 0px #b4b4b4;
-    border-radius: 0px;    /*borderradius*/
-    box-shadow: 15px 15px 25px hsla(0, 0%, 10%, .7);    /*boxshadow*/
-    transition: visibility ease-out 210ms, opacity 210ms ease-out ;
+    border-radius: 0px; /*borderradius*/
+    box-shadow: 15px 15px 25px hsla(0, 0%, 10%, 0.7); /*boxshadow*/
+    transition: visibility ease-out 210ms, opacity 210ms ease-out;
     top: 100%;
     /* this is really important for other menu sizes. Otherwise, it will be fixed */
     visibility: hidden;
     opacity: 0;
 }
 
-
 .menu_generic ul.small {
     font-size: 14px;
 }
-
 
 .menu_generic ul {
     font-size: 14px;
 }
 
-
 .menu_generic ul.small > li {
     height: 23px;
 }
-
 
 .menu_generic ul > li {
     height: 23px;
 }
 
-
 .menu_generic .hidden {
     display: none;
 }
 
-
 .menu_generic .more {
     color: gray;
 }
-
 
 shit.menu_generic.menu_scrollable > li > ul {
     max-height: 600px;
@@ -2953,13 +2612,11 @@ shit.menu_generic.menu_scrollable > li > ul {
     overflow-x: hidden;
 }
 
-
 .projectsearch input {
     color: gray;
     margin-top: 6px;
     margin-bottom: 3px;
 }
-
 
 .projectsearch .fa-search {
     color: gray;
@@ -2967,22 +2624,20 @@ shit.menu_generic.menu_scrollable > li > ul {
     padding-right: 2px;
 }
 
-
 .submenu_scrollable {
     max-height: 600px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-
 /* dropdown */
-.menu_generic li:hover > ul , .menu_generic li.jsHover > ul {
+.menu_generic li:hover > ul,
+.menu_generic li.jsHover > ul {
     visibility: visible;
     opacity: 1;
-    __transition: visibility ease-out 0s,opacity 0.5s ease-out;
+    __transition: visibility ease-out 0s, opacity 0.5s ease-out;
     transition-delay: 0.2s;
 }
-
 
 .menu_generic a {
     width: 100%;
@@ -2997,18 +2652,17 @@ shit.menu_generic.menu_scrollable > li > ul {
   */
 }
 
-
 /* main level li hover */
-.menu_generic > li:not(.nohover):hover , li.jsHover {
-    background: #F0F0FF;    /*submenucolor*/
-    _text-shadow: 1px 1px 1px rgba(255, 255, 255, .8);
-    color: hsl(0,0%,20%);
+.menu_generic > li:not(.nohover):hover,
+li.jsHover {
+    background: #f0f0ff; /*submenucolor*/
+    _text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    color: hsl(0, 0%, 20%);
     text-decoration: none;
     z-index: 100;
     /* this is important !!!! since the main frame is filling whole window */
     transition: background 0s linear;
 }
-
 
 /*
    -webkit-transition: .5s all;   
@@ -3023,19 +2677,17 @@ shit.menu_generic.menu_scrollable > li > ul {
     transition-delay: 5s; 
 */
 /* sublevel li hover*/
-.menu_generic li > ul:hover >li:not(.nohover):hover {
-    background: hsl(0,0%,70%);    /*submenucolor_hover*/
-    color: #FFF !important;
+.menu_generic li > ul:hover > li:not(.nohover):hover {
+    background: hsl(0, 0%, 70%); /*submenucolor_hover*/
+    color: #fff !important;
     text-shadow: none;
 }
 
-
-.menu_generic > li > ul >li {
-    ___background-color: #F0F0FF;    /*submenucolor*/
+.menu_generic > li > ul > li {
+    ___background-color: #f0f0ff; /*submenucolor*/
     margin: 0px;
     margin-right: 0px;
 }
-
 
 .menu_generic > li > a > i {
     _line-height: 30px;
@@ -3044,49 +2696,41 @@ shit.menu_generic.menu_scrollable > li > ul {
     width: 30px;
 }
 
-
-.menu_generic > li > ul >li > i {
+.menu_generic > li > ul > li > i {
     line-height: 30px;
     text-align: center;
 }
 
-
 .menu_generic ul li {
     float: none;
     width: auto;
-    text-shadow: 0 1px 0px rgba(255,255,255, .1);
+    text-shadow: 0 1px 0px rgba(255, 255, 255, 0.1);
     apadding: 10px 10px 10px 10px;
     display: flex;
     color: #444;
 }
 
-
 .menu_generic.small ul {
     font-size: 13px;
 }
-
 
 .menu_generic.small ul li {
     apadding: 4px 0px 4px 10px;
 }
 
-
 /* second menu expand to right horizontal */
-.menu_generic > li > ul > li >ul {
-    left: 100% ;
+.menu_generic > li > ul > li > ul {
+    left: 100%;
     top: 0;
     width: auto;
 }
 
-
 .menu_generic > li > ul > li > a > i {
 }
-
 
 .menu_generic > li > ul > li > a > span {
     float: left;
 }
-
 
 .menu_generic > li > ul > li > a > i:nth-child(2) {
     position: relative;
@@ -3095,12 +2739,10 @@ shit.menu_generic.menu_scrollable > li > ul {
     text-align: center;
 }
 
-
 .menu_generic > li > ul > li > ul > li > i {
     line-height: 30px;
     text-align: center;
 }
-
 
 .menu_generic > li > ul i:first-child {
     dmargin-left: 20px;
@@ -3108,7 +2750,6 @@ shit.menu_generic.menu_scrollable > li > ul {
     bborder: 1px solid green;
     text-align: right;
 }
-
 
 /* clearfix: insert somethig after the content of each elemnt */
 .menu_generic:after {
@@ -3120,34 +2761,28 @@ shit.menu_generic.menu_scrollable > li > ul {
     height: 0;
 }
 
-
 .menu_generic .inverted_white {
     color: white;
 }
-
 
 .menu_generic .inverted_red {
     aabackground: #aaaaaa;
     color: white;
 }
 
-
 .menu_generic .inverted_green {
     background: green;
     color: white;
 }
-
 
 .menu_generic ul li .usercmdshortcut {
     padding: 0px 3px;
     float: right;
 }
 
-
 .menu_generic ul li .usercmdshortcut:hover {
     color: black;
 }
-
 
 .menu_generic .roitoolbutton {
     float: right;
@@ -3156,56 +2791,46 @@ shit.menu_generic.menu_scrollable > li > ul {
     margin: 0px;
 }
 
-
 .menu_generic .roitoolbutton.selected {
     color: white;
     text-shadow: 3px 3px 3px black;
 }
-
 
 .menu_generic .roitoolbutton input {
     width: 40px;
     margin-top: -1px;
 }
 
-
 .RoiTool_topmenu {
-    background: linear-gradient(to top left, #44A, #66B) !important;
+    background: linear-gradient(to top left, #44a, #66b) !important;
 }
-
 
 .FormTool_topmenu {
-    background: linear-gradient(to top left, #F55, #A55) !important;
+    background: linear-gradient(to top left, #f55, #a55) !important;
 }
-
 
 .Obj3DTool_topmenu {
-    background: #E98 !important;
+    background: #e98 !important;
     color: black !important;
 }
-
 
 .Obj3DTool_topmenu li {
     color: black !important;
 }
 
-
 .AtlasTool_topmenu {
-    background: linear-gradient(to top left, #FF7, #FFF) !important;
+    background: linear-gradient(to top left, #ff7, #fff) !important;
 }
-
 
 .AtlasTool_topmenu li {
     color: black !important;
 }
-
 
 .KToolsTopMenu li {
     padding: 0px 3px;
     height: 25px;
     line-height: 25px;
 }
-
 
 .KToolsTopMenu .draganddrop {
     display: flex;
@@ -3214,15 +2839,13 @@ shit.menu_generic.menu_scrollable > li > ul {
     flex-direction: vertical;
 }
 
-
 .KToolsTopMenu .draganddrop i {
-    background: linear-gradient(to top left, #998D7A, #AAAAAA);
+    background: linear-gradient(to top left, #998d7a, #aaaaaa);
     border-radius: 2px;
     border: solid 1px white;
     color: yellow !important;
     padding: 2px 3px;
 }
-
 
 .tool_menu_generic {
     display: flex;
@@ -3232,18 +2855,15 @@ shit.menu_generic.menu_scrollable > li > ul {
     overflow: hidden;
 }
 
-
 .tool_menu_generic li {
     border: 0px solid red;
 }
-
 
 .patientTableNavigator {
     margin: 0px;
     height: 5px;
     display: flex;
 }
-
 
 .__patientTableNavigator li {
     display: block;
@@ -3252,13 +2872,11 @@ shit.menu_generic.menu_scrollable > li > ul {
     border-collapse: collapse;
 }
 
-
 /*  create some rudimentary styling for our tooltip class */
 .tooltip {
     display: inline;
     position: relative;
 }
-
 
 /*
 .tooltip:hover:after{
@@ -3281,9 +2899,8 @@ shit.menu_generic.menu_scrollable > li > ul {
     font-size: 13px !important;
     background: black;
     border-radius: 4px;
-    padding: 3px
+    padding: 3px;
 }
-
 
 .KSortDir {
     background: whitesmoke;
@@ -3300,12 +2917,10 @@ shit.menu_generic.menu_scrollable > li > ul {
     ddisplay: inline-block;
 }
 
-
 .KSortDir:hover {
     background: gray;
     color: black;
 }
-
 
 .KJobAction {
     background: whitesmoke;
@@ -3320,12 +2935,10 @@ shit.menu_generic.menu_scrollable > li > ul {
     height: auto;
 }
 
-
 .KJobAction:hover {
     background: gray;
     color: black;
 }
-
 
 .KTextButton {
     background: whitesmoke;
@@ -3340,7 +2953,6 @@ shit.menu_generic.menu_scrollable > li > ul {
     height: auto;
 }
 
-
 .KTextButton.selected {
     background: red;
     margin: 0px;
@@ -3354,9 +2966,8 @@ shit.menu_generic.menu_scrollable > li > ul {
     height: auto;
 }
 
-
 .aggregateTag {
-    background: #FFF !important;
+    background: #fff !important;
     color: red !important;
     padding-left: 0px !important;
     font-size: 10px !important;
@@ -3364,17 +2975,14 @@ shit.menu_generic.menu_scrollable > li > ul {
     border: 0px !important;
 }
 
-
 .cellEditable {
     color: black;
-    background: #EED;
+    background: #eed;
 }
-
 
 .row_selected .cellEditable:hover {
     color: white;
 }
-
 
 .patienttable_subfoldercount {
     float: right;
@@ -3383,55 +2991,46 @@ shit.menu_generic.menu_scrollable > li > ul {
     color: #888 !important;
 }
 
-
 td .aggregateTag {
     float: right;
     padding-right: 5px;
     padding-left: 5px !important;
 }
 
-
 .fiberTag {
-    background: linear-gradient(to top left, #FEA, #FAA) !important;
+    background: linear-gradient(to top left, #fea, #faa) !important;
     color: black !important;
 }
-
 
 .workstateTag {
-    background: linear-gradient(to top left, #AEF, #AAF) !important;
+    background: linear-gradient(to top left, #aef, #aaf) !important;
     color: black !important;
 }
-
 
 .imgTag {
-    background: linear-gradient(to top left, #AAF, #AFF) !important;
+    background: linear-gradient(to top left, #aaf, #aff) !important;
     color: black !important;
 }
-
 
 .AtlasTag {
-    background: linear-gradient(to top left, #FF7, #FFF) !important;
+    background: linear-gradient(to top left, #ff7, #fff) !important;
     color: black !important;
 }
-
 
 .MaskTag {
-    background: linear-gradient(to top left, #AAF, #99F) !important;
+    background: linear-gradient(to top left, #aaf, #99f) !important;
     color: black !important;
 }
-
 
 .AnoTag {
-    background: linear-gradient(to top left, #8A8, #8C8) !important;
+    background: linear-gradient(to top left, #8a8, #8c8) !important;
     color: black !important;
 }
-
 
 .FormTag {
-    background: linear-gradient(to top left, #D99, #F55) !important;
+    background: linear-gradient(to top left, #d99, #f55) !important;
     color: black !important;
 }
-
 
 .JupyterTag {
     background: yellow !important;
@@ -3449,7 +3048,6 @@ td .aggregateTag {
     color: grey;
 }
 
-
 .KTagFile {
     background: whitesmoke;
     margin: 1px;
@@ -3461,7 +3059,6 @@ td .aggregateTag {
     color: gray;
     height: auto;
 }
-
 
 .KTagPatient {
     background: white;
@@ -3477,14 +3074,11 @@ td .aggregateTag {
     height: auto;
 }
 
-
 .KTag {
     line-height: 10px;
 }
 
-
-#KJobinfoTooltip > ul /* this is for the tooltip on the running jobs*/
-{
+#KJobinfoTooltip > ul /* this is for the tooltip on the running jobs*/ {
     position: absolute;
     font-size: 15px;
     list-style: none;
@@ -3494,9 +3088,7 @@ td .aggregateTag {
     z-index: 9999;
 }
 
-
-#KJobinfoTooltip > ul >li /* this is for the tooltip on the running jobs*/
-{
+#KJobinfoTooltip > ul >li /* this is for the tooltip on the running jobs*/ {
     background: lightyellow;
     padding: 5px;
     z-index: 99999;
@@ -3504,22 +3096,19 @@ td .aggregateTag {
     cursor: pointer;
 }
 
-
-#KJobinfoTooltip > ul >li > span {
+#KJobinfoTooltip > ul > li > span {
     background: gray;
     border: 2px solid darkgray;
     margin-left: 10px;
-    color : white;
+    color: white;
     border-radius: 4px;
     padding-left: 2px;
     padding-right: 2px;
 }
 
-
-#KJobinfoTooltip > ul >li > span:hover {
+#KJobinfoTooltip > ul > li > span:hover {
     background: lightgray;
 }
-
 
 #standardTooltip {
     position: absolute;
@@ -3538,7 +3127,6 @@ td .aggregateTag {
     pointer-events: none;
 }
 
-
 .KTagWaiting {
     background: yellow;
     margin: 1px;
@@ -3550,25 +3138,21 @@ td .aggregateTag {
     display: none;
 }
 
-
 @keyframes blink {
     0% {
-        background: #0F0;
+        background: #0f0;
         color: black;
     }
-
 
     50% {
         background: #050;
         color: black;
     }
 
-
     100% {
-        background: #0F0;
+        background: #0f0;
         color: black;
     }
-
 }
 
 .KTagRunning {
@@ -3588,7 +3172,6 @@ td .aggregateTag {
     animation: blink 1s linear infinite;
 }
 
-
 .KTagError {
     background: red;
     margin: 1px;
@@ -3601,7 +3184,6 @@ td .aggregateTag {
     color: black;
     display: none;
 }
-
 
 .KTagSuspended {
     background: orange;
@@ -3616,7 +3198,6 @@ td .aggregateTag {
     display: none;
 }
 
-
 .KTagRegistered {
     background: white;
     margin: 1px;
@@ -3630,59 +3211,49 @@ td .aggregateTag {
     display: none;
 }
 
-
 #KStatusBar {
     overflow: hidden;
 }
-
 
 #KStatusBar:hover {
     cursor: default;
 }
 
-
 .patientTableEditMode {
-    background: hsl(0, 0%, 22%);    /*windowbackground*/
+    background: hsl(0, 0%, 22%); /*windowbackground*/
     overflow: hidden;
     font-size: 15px;
 }
 
-
 .patientTableEditMode li:hover i {
-    color: hsl(0,0%,50%);
+    color: hsl(0, 0%, 50%);
 }
-
 
 #patientTableEditModeTextFirst {
-    margin : 1px;
+    margin: 1px;
     margin-left: 4px;
 }
-
 
 #patientTableEditModeTextSecond {
-    margin : 1px;
+    margin: 1px;
     margin-left: 4px;
 }
 
-
 .testag {
-    color : red;
+    color: red;
     background: green;
 }
 
-
 .listFrame {
     display: flex;
-    border-top: 1px solid hsl(0, 0%,70%);
+    border-top: 1px solid hsl(0, 0%, 70%);
 }
-
 
 .listFrame > div {
     height: 100%;
-    align-self: flex-start ;
+    align-self: flex-start;
     overflow-y: auto;
 }
-
 
 .listFrame > div:nth-child(2) {
     margin-top: -0px;
@@ -3691,12 +3262,10 @@ td .aggregateTag {
     border: 0px solid red;
 }
 
-
 .listFrame > div:last-child {
     flex-grow: 1;
     border-left: 1px solid gray;
 }
-
 
 .listFrame_left {
     border: 0px solid green;
@@ -3704,7 +3273,6 @@ td .aggregateTag {
     margin: 0px;
     min-width: 190px;
 }
-
 
 .listFrame_left li {
     position: relative;
@@ -3714,10 +3282,9 @@ td .aggregateTag {
     color: #444;
     display: flex;
     flex-wrap: nowrap;
-    border-radius: 0px;    /*borderradius*/
-    background: #F0F0FF;    /*menucolor_context*/
+    border-radius: 0px; /*borderradius*/
+    background: #f0f0ff; /*menucolor_context*/
 }
-
 
 .listFrame_left li:hover {
     background: #a1a1a1;
@@ -3725,13 +3292,11 @@ td .aggregateTag {
     color: #444;
 }
 
-
 .listFrame_left li.active {
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
     color: white;
     border-top: 0px solid gray;
 }
-
 
 .listFrame_left li > div {
     display: flex;
@@ -3743,21 +3308,17 @@ td .aggregateTag {
     align-items: center;
 }
 
-
 .listFrame_left li > div:first-child {
     flex-grow: 1;
 }
-
 
 .listFrame_left li > div:last-child {
     align-self: flex-end;
 }
 
-
 .autoloadersnapshot {
     position: absolute;
 }
-
 
 .listFrame_left.apply li {
     background: hsl(120, 100%, 25%);
@@ -3768,13 +3329,11 @@ td .aggregateTag {
     border-radius: 15px;
 }
 
-
 .listFrame_left.apply li:hover {
     dbackground: hsl(120, 100%, 30%);
-    opacity: .87;
+    opacity: 0.87;
     ddcolor: black;
 }
-
 
 .listFrame_left.apply li div {
     text-align: center;
@@ -3783,22 +3342,18 @@ td .aggregateTag {
     display: inline;
 }
 
-
 .listFrame_left i {
     padding: 8px;
     font-size: 16px;
 }
 
-
 .listFrame_left i:hover {
     color: white;
 }
 
-
 .listFrame_left li.active i:hover {
     color: black;
 }
-
 
 .listFrame_left i.activecheck {
     __border-radius: 50%;
@@ -3806,11 +3361,9 @@ td .aggregateTag {
     visibility: visible;
 }
 
-
 .KFormItemSettings .KFormItem_label {
     width: 40%;
 }
-
 
 .KFormItem {
     padding: 5px 5px;
@@ -3818,11 +3371,9 @@ td .aggregateTag {
     font-size: 15px;
 }
 
-
 .KFormTitle {
     margin-left: 10px;
 }
-
 
 .KFormItem_rating {
     border: px solid white;
@@ -3830,15 +3381,12 @@ td .aggregateTag {
     display: inline-block;
 }
 
-
 .KFormItem label {
     min-width: 150px;
     position: relative;
 }
 
-
-.KFormItem_label /* this extra class is necessary for vertical layouts, see below*/
-{
+.KFormItem_label /* this extra class is necessary for vertical layouts, see below*/ {
     display: inline-block;
     text-align: left;
     margin-right: 10px;
@@ -3848,7 +3396,6 @@ td .aggregateTag {
     font-weight: bold;
 }
 
-
 .KFormItem table {
     border: 1px solid gray;
     padding: 0px 5px 5px 5px;
@@ -3856,18 +3403,15 @@ td .aggregateTag {
     table-layout: fixed;
 }
 
-
 .KFormItem table td {
     padding: px;
     width: 37px;
     text-align: center;
 }
 
-
 .KFormItem table tr:first-child td {
     border-bottom: 1px solid gray;
 }
-
 
 .KFormItem .small {
     font-weight: normal;
@@ -3876,34 +3420,31 @@ td .aggregateTag {
     margin: -2px 3px -5px 2px;
 }
 
-
 .KFormItem input:hover {
-    -webkit-box-shadow: 0 0 2px 2px rgba(82,168,236,.9);
+    -webkit-box-shadow: 0 0 2px 2px rgba(82, 168, 236, 0.9);
 }
 
-
-.KFormItem input[type=range]:hover {
+.KFormItem input[type="range"]:hover {
     -webkit-box-shadow: none;
 }
 
-
-.KFormItem input[type=radio],input[type=checkbox] {
+.KFormItem input[type="radio"],
+input[type="checkbox"] {
     transform: scale(1.5);
     -webkit-transform: scale(1.5);
     margin: 5px 8px;
 }
 
-
-.KFormItem input[type=text], .KFormItem input[type=number], .KFormItem input[type=password] {
+.KFormItem input[type="text"],
+.KFormItem input[type="number"],
+.KFormItem input[type="password"] {
     width: 200px;
-    border-radius: 4px;    /*borderradius_tool*/
+    border-radius: 4px; /*borderradius_tool*/
 }
-
 
 .KFormItem {
     __white-space: nowrap;
 }
-
 
 .KFormItem textarea.intentfield {
     position: absolute;
@@ -3914,7 +3455,6 @@ td .aggregateTag {
     background: lightyellow;
 }
 
-
 .KFormItem textarea.intentfield:hover {
     height: 200px !important;
     width: 66% !important;
@@ -3923,52 +3463,50 @@ td .aggregateTag {
     overflow: scroll;
 }
 
-
 .KFormItem textarea {
     font-family: Courier New;
     font-weight: bold;
     height: auto;
     width: 70%;
-    border-radius: 4px;    /*borderradius_tool*/
+    border-radius: 4px; /*borderradius_tool*/
 }
-
 
 /* give this class to a parent of form to have labels vertical above elements */
 .KFormVertical .KFormItem_label {
     _display: block;
     _text-align: left;
     _font-weight: bold;
-    ___border-top: 1px solid hsl(0,0%,33%);
+    ___border-top: 1px solid hsl(0, 0%, 33%);
 }
 
-
-.KFormVertical select, .KFormVertical input, .KFormVertical input[type=radio], .KFormVertical input[type=checkbox], .KFormVertical .KFormItem_rating, .KForm_markerpointrow {
+.KFormVertical select,
+.KFormVertical input,
+.KFormVertical input[type="radio"],
+.KFormVertical input[type="checkbox"],
+.KFormVertical .KFormItem_rating,
+.KForm_markerpointrow {
     margin-left: 20px;
 }
-
 
 .KFormVertical .KFormItem_textdiv {
     display: block;
 }
-
 
 .KFormVertical .markerpointrowd {
     width: auto;
     display: inline-block;
 }
 
-
 .KFormSeparator {
     height: 2px;
     display: block;
     background: gray;
-    opacity: .5;
-    dborder-radius: 4px;    /*borderradius_tool*/
+    opacity: 0.5;
+    dborder-radius: 4px; /*borderradius_tool*/
     margin-top: 10px;
     margin-bottom: 10px;
     box-sizing: border-box;
 }
-
 
 .KFormInfo {
     float: left;
@@ -3978,9 +3516,7 @@ td .aggregateTag {
     padding: 3px;
 }
 
-
-.KFormItem_formarray /* box for subform with dynamic number of fields */
-{
+.KFormItem_formarray /* box for subform with dynamic number of fields */ {
     border: 0px solid red;
     font-size: 14px;
     font-weight: bold;
@@ -3990,24 +3526,20 @@ td .aggregateTag {
     min-width: 200px;
 }
 
-
 .KFormItem_formarray_menu {
     min-height: 20px;
 }
-
 
 .KFormItem_formarray_subform {
     border: 0px solid orange;
     position: relative;
     padding-left: 30px;
     _border-top: 1px solid gray;
-    background: linear-gradient( to bottom right , hsl(0, 0%,22%), hsl(0, 0%,35%));    /*blockbackground*/
+    background: linear-gradient(to bottom right, hsl(0, 0%, 22%), hsl(0, 0%, 35%)); /*blockbackground*/
     box-sizing: border-box;
 }
 
-
-.KFormItem_formarray_tool /* create / delete new element */
-{
+.KFormItem_formarray_tool /* create / delete new element */ {
     border: 0px solid green;
     display: inline-block;
     font-size: 14px;
@@ -4024,47 +3556,40 @@ td .aggregateTag {
     ddfont-style: italic;
 }
 
-
 .KFormItem_formarray_autoid {
     color: orange;
     right: 30px;
     top: 5px;
 }
 
-
 .KFormItem_formarray_tool i {
     margin-left: 0px;
     padding: 6px 8px;
 }
 
-
 .KFormItem_formarray_tool i:hover {
     background: #113355;
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
 }
-
 
 .KFormItem_formarray_selectormenu {
     position: absolute;
     top: 10px;
     z-index: 50;
-    _background: hsl(0,0%,50%);
+    _background: hsl(0, 0%, 50%);
 }
-
 
 .KFormItem_formarray_highligterline {
     height: 6px;
     width: 100%;
 }
 
-
 .KFormItem_formarray_selectormenu > div {
     width: 15px;
     height: 15px;
     padding: 4px;
-    border-right: 1px solid hsl(0,0%,90%);
+    border-right: 1px solid hsl(0, 0%, 90%);
 }
-
 
 .KFormItem_formarray_selectormenu > div > div {
     margin: 0px;
@@ -4072,69 +3597,57 @@ td .aggregateTag {
     height: 15px;
 }
 
-
 .KFormItem_formarray_selectormenu > div:hover {
-    background: hsl(0,0%,40%);
+    background: hsl(0, 0%, 40%);
 }
-
 
 .KFormItem_formarray_selectormenu > div.active {
-    border: 1px solid hsl(0,0%,90%);
+    border: 1px solid hsl(0, 0%, 90%);
     border-right: none;
 }
-
 
 .KFormItem_formarray_selectormenu > div.active > div {
     width: 20px;
 }
 
-
 .autoloaderitem {
     __display: inline-block;
 }
-
 
 .autoloaderitem.KFormItem {
     align-items: center;
     vertical-align: top;
 }
 
-
 .autoloaderitem label {
     __min-width: 0px !important;
 }
 
-
 .autoloaderitem input {
     width: 60px !important;
 }
-
 
 .autoloadvaroption {
     width: 95%;
     height: 25px;
 }
 
-
 .autoloadvaroption > span {
     margin-left: 20px;
 }
-
 
 .optioncolsel > div {
     top: 6px;
 }
 
-
 .autoloaderDIV {
     position: relative;
     margin: 0px;
-    background: #113355;    /*highlight*/
-    background: linear-gradient( to bottom right , hsl(0, 0%,22%), hsl(0, 0%,35%));    /*blockbackground*/
+    background: #113355; /*highlight*/
+    background: linear-gradient(to bottom right, hsl(0, 0%, 22%), hsl(0, 0%, 35%)); /*blockbackground*/
     border-radius: 0px;
     align-items: center;
 }
-
 
 .autoloaderToolbar {
     position: absolute;
@@ -4143,27 +3656,23 @@ td .aggregateTag {
     border: 0px solid green;
 }
 
-
 .autoloaderToolbar i {
     padding: 10px 12px;
-    ; font-size: 20px;
+    font-size: 20px;
 }
-
 
 .autoloaderToolbar i:hover {
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
 }
 
-
-.NiceButton > div /* this is a button*/
-{
+.NiceButton > div /* this is a button*/ {
     display: block;
     margin: 8px 10px 8px 0px;
     width: 100%;
     color: white;
     font-size: 25px;
     text-align: center;
-    border : 0px solid white;
+    border: 0px solid white;
     padding: 20px 0px;
     cursor: pointer;
     font-weight: normal;
@@ -4171,24 +3680,21 @@ td .aggregateTag {
     vertical-align: middle;
     text-shadow: 0px 2px 26px gray;
     border-radius: 3px;
-    box-shadow: 2px 2px 5px 1px ;
-    background: #226699;    /*menucolor*/
+    box-shadow: 2px 2px 5px 1px;
+    background: #226699; /*menucolor*/
 }
-
 
 .NiceButton > div.green {
     background: #008000;
     /* Old browsers */
-    background: linear-gradient(to bottom, #009900 50%,#008000 50%);
+    background: linear-gradient(to bottom, #009900 50%, #008000 50%);
     /* W3C, IE10+*/
 }
-
 
 .NiceButton > div.green:hover {
     background: #008000;
     /* Old browsers */
 }
-
 
 [draggable] {
     -moz-user-select: none;
@@ -4200,7 +3706,6 @@ td .aggregateTag {
     -webkit-user-drag: element;
 }
 
-
 #dragimg {
     position: absolute;
     top: -1000;
@@ -4208,10 +3713,9 @@ td .aggregateTag {
     z-index: -99;
     padding: 4px;
     color: yellow;
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
     border: 1px solid gray;
 }
-
 
 .dragbox {
     position: absolute;
@@ -4222,7 +3726,6 @@ td .aggregateTag {
     pointer-events: none;
 }
 
-
 .modernbuttongroup {
     display: flex;
     flex-wrap: wrap;
@@ -4230,15 +3733,13 @@ td .aggregateTag {
     padding: 10px 20px;
 }
 
-
 .modernbutton.large {
     padding: 10px;
 }
 
-
 .modernbutton {
     cursor: pointer;
-    background: hsl(206, 64%, 37%);    /*modernbutton*/
+    background: hsl(206, 64%, 37%); /*modernbutton*/
     opacity: 0.8;
     margin: 8px;
     min-width: 200px;
@@ -4253,7 +3754,6 @@ td .aggregateTag {
     white-space: nowrap;
 }
 
-
 .modernbutton.small {
     min-width: 50px;
     padding: 0px 10px;
@@ -4263,7 +3763,6 @@ td .aggregateTag {
     position: relative;
     font-size: 14px;
 }
-
 
 .modernbutton.tiny {
     min-width: 20px;
@@ -4276,27 +3775,22 @@ td .aggregateTag {
     margin: 0px;
 }
 
-
 .modernbutton.auth {
     left: 20%;
 }
-
 
 .modernbutton.inactive {
     opacity: 0.2;
     pointer-events: none;
 }
 
-
 .modernbutton i {
     padding-right: 10px;
 }
 
-
 .modernbutton:hover {
     opacity: 1;
 }
-
 
 .authDialog {
     position: absolute;
@@ -4305,86 +3799,69 @@ td .aggregateTag {
     top: 40%;
 }
 
-
 .green {
     background: hsl(120, 100%, 25%);
 }
-
 
 .green:hover {
     background: hsl(120, 100%, 27%);
 }
 
-
 .yellow {
     background: hsl(50, 100%, 40%);
 }
-
 
 .yellow:hover {
     background: hsl(50, 100%, 48%);
 }
 
-
 .red {
     background: hsl(5, 100%, 25%);
 }
-
 
 .red:hover {
     background: hsl(5, 100%, 30%);
 }
 
-
 .orange {
-    background: hsl(36, 100%, 50%)
+    background: hsl(36, 100%, 50%);
 }
-
 
 .orange:hover {
-    background: hsl(36, 100%, 55%)
+    background: hsl(36, 100%, 55%);
 }
-
 
 .pink {
     background: hsl(322, 81%, 43%);
 }
 
-
 .pink:hover {
-    background: hsl(322, 81%, 53%)
+    background: hsl(322, 81%, 53%);
 }
-
 
 .gray {
     background: hsl(0, 0%, 50%);
 }
 
-
 .gray:hover {
     background: hsl(0, 0%, 60%);
 }
-
 
 .darkgray {
     background: hsl(0, 0%, 30%);
 }
 
-
 .darkgray:hover {
     background: hsl(0, 0%, 35%);
 }
-
 
 .nocolor {
     background: none;
 }
 
-
 .nocolor:hover {
     background: none;
 }
-
 
 .loginContainer {
     padding: 35px 15px;
@@ -4405,16 +3882,14 @@ td .aggregateTag {
     text-align: center;
     vertical-align: middle;
     border: 2px solid;
-    border-color: #666666;    /*bordercolor*/
-    border-radius: 20px ;
-    background: hsl(0, 0%, 22%);    /*windowbackground*/
+    border-color: #666666; /*bordercolor*/
+    border-radius: 20px;
+    background: hsl(0, 0%, 22%); /*windowbackground*/
 }
-
 
 .loginContainer a {
-    color: white!important;
+    color: white !important;
 }
-
 
 .loginContainerFlex {
     border: px solid red;
@@ -4430,13 +3905,12 @@ td .aggregateTag {
     text-align: center;
     vertical-align: middle;
     font-weight: normal;
-    border-radius: 5px ;
+    border-radius: 5px;
     padding: 10px;
     color: white;
     position: relative;
     line-height: 20px;
 }
-
 
 input.loginContainerFlex {
     border-radius: 0px;
@@ -4452,22 +3926,18 @@ input.loginContainerFlex {
     width: 95%;
 }
 
-
 input:required {
 }
 
-
 input.loginContainerFlex:focus {
-    box-shadow: 0 0 0px 1000px hsl(0,0%,90%) inset;
+    box-shadow: 0 0 0px 1000px hsl(0, 0%, 90%) inset;
 }
-
 
 input.readonly {
-    -webkit-box-shadow: 0 0 0px 1000px hsl(0,0%,70%) inset;
-    box-shadow: 0 0 0px 1000px hsl(0,0%,70%) inset!important;
+    -webkit-box-shadow: 0 0 0px 1000px hsl(0, 0%, 70%) inset;
+    box-shadow: 0 0 0px 1000px hsl(0, 0%, 70%) inset !important;
     box-sizing: border-box;
 }
-
 
 .loginContainer .switcher {
     width: 320px;
@@ -4480,14 +3950,12 @@ input.readonly {
     justify-content: center;
 }
 
-
 .loginContainer .switcher:nth-of-type(2) {
-    border-bottom: 1px solid hsl(0,0%,52%);
+    border-bottom: 1px solid hsl(0, 0%, 52%);
 }
 
-
 .loginContainer .switcher > div {
-    background: hsl(0,0%,32%);
+    background: hsl(0, 0%, 32%);
     border-radius: 8px 8px 0px 0px;
     flex-grow: 1;
     margin: 0px 20px;
@@ -4498,74 +3966,64 @@ input.readonly {
     cursor: pointer;
 }
 
-
 .loginContainer .switcher div:hover {
-    background: hsl(0,0%,39%);
+    background: hsl(0, 0%, 39%);
 }
-
 
 .loginContainer .switcher .active {
     background: hsl(120, 100%, 25%);
-    background: hsl(0,0%,52%);
+    background: hsl(0, 0%, 52%);
     font-weight: bold;
 }
-
 
 .loginContainer .switcher .active:hover {
     background: hsl(120, 100%, 27%);
-    background: hsl(0,0%,62%);
+    background: hsl(0, 0%, 62%);
     font-weight: bold;
 }
-
 
 /* Let's get this party started */
 ::-webkit-scrollbar {
     width: 10px;
 }
 
-
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
-    -webkit-border-radius: 0px;    /*borderradius*/
-    border-radius: 0px;    /*borderradius*/
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 0px; /*borderradius*/
+    border-radius: 0px; /*borderradius*/
     background-clip: padding-box;
 }
 
-
 ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 0px;    /*borderradius*/
-    border-radius: 0px;    /*borderradius*/
-    background: rgb(34 102 153);    /*menucolor*/
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    -webkit-border-radius: 0px; /*borderradius*/
+    border-radius: 0px; /*borderradius*/
+    background: rgb(34 102 153); /*menucolor*/
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
-
 
 ::-webkit-scrollbar-thumb:window-inactive {
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
 }
-
 
 ::-webkit-scrollbar-corner {
-    background: transparent
+    background: transparent;
 }
 
-
-#KProgressFrame,#KLoadingFrame {
+#KProgressFrame,
+#KLoadingFrame {
     position: absolute;
-    color: #F0F0FF;    /*menucolor_context*/
-    background: #113355;    /*highlight*/
+    color: #f0f0ff; /*menucolor_context*/
+    background: #113355; /*highlight*/
     width: 100%;
     height: 100%;
     opacity: 1;
     z-index: 500;
 }
 
-
 #KLoadingFrame {
     display: none;
     z-index: 501;
 }
-
 
 #KLoadingFrameText {
     position: absolute;
@@ -4577,14 +4035,12 @@ input.readonly {
     z-index: 9999999999;
 }
 
-
 #KLoadingFrameText.CVR {
     max-width: 70%;
     overflow: scroll;
     max-height: 30%;
-    white-space: pre ;
+    white-space: pre;
 }
-
 
 #KLoadingFrameTypeString {
     position: absolute;
@@ -4597,14 +4053,13 @@ input.readonly {
     font-size: 20px;
 }
 
-
-#KLoadingFrame,#KProcFrame .thespinner {
+#KLoadingFrame,
+#KProcFrame .thespinner {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
 }
-
 
 #KLoadingFrame .thespinner {
     position: absolute;
@@ -4612,7 +4067,6 @@ input.readonly {
     left: 50%;
     top: 50%;
 }
-
 
 #KProgressFrame .fa-spinner {
     position: absolute;
@@ -4622,7 +4076,6 @@ input.readonly {
     z-index: 99999999999999;
 }
 
-
 #KProgressFrame .fa-close {
     position: absolute;
     left: 85%;
@@ -4630,7 +4083,6 @@ input.readonly {
     opacity: 0.1;
     z-index: 99999999999999;
 }
-
 
 #KProgressFrame .fa-close:hover {
     position: absolute;
@@ -4641,7 +4093,6 @@ input.readonly {
     z-index: 99999999999999;
 }
 
-
 #KLoadingFrame .fa-close {
     position: absolute;
     right: 2%;
@@ -4650,11 +4101,9 @@ input.readonly {
     z-index: 99999999999999;
 }
 
-
 #KLoadingFrame .fa-close:hover {
     opacity: 0.6;
 }
-
 
 .fileupload_tool {
     height: 17px;
@@ -4663,22 +4112,20 @@ input.readonly {
     padding-right: 2px;
     padding-left: 2px;
     margin-left: 5px;
-    background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
     float: right;
 }
 
-
 .fileupload_tool:hover {
-    background: #113355;    /*highlight*/
+    background: #113355; /*highlight*/
 }
-
 
 .modalWindow {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0px;
-    background: rgba(100,100,100,0.95);
+    background: rgba(100, 100, 100, 0.95);
     z-index: 999999;
     margin: 0px;
     text-align: center;
@@ -4688,9 +4135,7 @@ input.readonly {
     justify-content: center;
 }
 
-
-.modalWindow > div /* this is the container*/
-{
+.modalWindow > div /* this is the container*/ {
     background: gray;
     __width: 600px;
     max-width: 80%;
@@ -4705,7 +4150,6 @@ input.readonly {
     flex-direction: column;
 }
 
-
 .modalWindow_controls {
     display: flex;
     flex-direction: row;
@@ -4715,20 +4159,17 @@ input.readonly {
     /* align vertical */
 }
 
-
 .modalWindow_controls > div {
     flex-grow: 1;
     max-width: 500px;
 }
 
-
 .modalWindow_message {
     height: 20px;
     padding: 20px 10px 20px 10px;
     font-size: 18px;
-    color: rgba(200,0,0,1);
-    ; }
-
+    color: rgba(200, 0, 0, 1);
+}
 
 .modalWindow_title {
     line-height: 35px;
@@ -4736,7 +4177,6 @@ input.readonly {
     margin-bottom: 10px;
     border-bottom: 1px solid;
 }
-
 
 /* this is a standard notification with chapters and so on in modal window */
 .modalWindow_notificationText {
@@ -4747,21 +4187,17 @@ input.readonly {
     line-height: 22px;
 }
 
-
 .modalWindow_notificationText p {
     margin-left: 30px;
     margin-bottom: 10px;
 }
-
 
 .fileDropper {
     padding: 10px 10px;
     margin: 0px 0px;
 }
 
-
-.fileDropper > div:first-child /* drop area */
-{
+.fileDropper > div:first-child /* drop area */ {
     position: relative;
     height: 230px;
     font-size: 22px;
@@ -4782,13 +4218,11 @@ input.readonly {
     margin: 20px 0px;
 }
 
-
-.fileDropper > div:first-child .progressSpinner /* drop area */
-{
+.fileDropper > div:first-child .progressSpinner /* drop area */ {
     top: 0px;
     position: absolute;
     background: gray;
-    opacity: .9;
+    opacity: 0.9;
     display: flex;
     justify-content: center;
     /* align horizontal */
@@ -4799,22 +4233,18 @@ input.readonly {
     color: green;
 }
 
-
 .fileDropper table td {
     font-size: 16px;
     padding: 5px 10px 0px 0px;
     width: 100%;
 }
 
-
 .fileDropper table td i {
 }
-
 
 .fileDropper table td i:hover {
     color: darkred;
 }
-
 
 .fileDropper table thead td {
     font-weight: bold;
@@ -4823,7 +4253,6 @@ input.readonly {
     min-width: 15px;
 }
 
-
 #powerdbydpx {
     font-size: 10px;
     align-self: flex-start;
@@ -4831,12 +4260,10 @@ input.readonly {
     bottom: -60px;
 }
 
-
 #powerdbydpx a {
     color: gray;
     cursor: pointer;
 }
-
 
 .instanceselector {
     padding: 65px 15px;
@@ -4857,14 +4284,12 @@ input.readonly {
     text-align: center;
     vertical-align: middle;
     border: 8px solid;
-    border-color: #666666;    /*bordercolor*/
-    border-radius: 20px ;
-    background: hsl(0, 0%, 22%);    ; /*windowbackground*/
+    border-color: #666666; /*bordercolor*/
+    border-radius: 20px;
+    background: hsl(0, 0%, 22%); /*windowbackground*/
 }
 
-
-.instanceselector .instancebox /* one selection */
-{
+.instanceselector .instancebox /* one selection */ {
     display: flex;
     vertical-align: middle;
     flex-direction: column;
@@ -4878,9 +4303,7 @@ input.readonly {
     height: 100%;
 }
 
-
-.instanceselector .instancebox .instanceelement /* one selection */
-{
+.instanceselector .instancebox .instanceelement /* one selection */ {
     position: relative;
     height: auto;
     text-align: center;
@@ -4899,27 +4322,20 @@ input.readonly {
     padding: 10px 10px;
 }
 
-
-.instanceselector .instancebox .instanceelement:hover /* one selection */
-{
+.instanceselector .instancebox .instanceelement:hover /* one selection */ {
     background: #1c537d;
 }
 
-
-.instanceselector .instancebox .instanceelement > div:nth-child(1) /* one selection */
-{
+.instanceselector .instancebox .instanceelement > div:nth-child(1) /* one selection */ {
     font-size: 25px;
     font-weight: bold;
     padding: 10px 10px;
 }
 
-
-.instanceselector .instancebox .instanceelement > div:nth-child(2) /* one selection */
-{
+.instanceselector .instancebox .instanceelement > div:nth-child(2) /* one selection */ {
     font-size: 15px;
     color: #b3b3b3;
 }
-
 
 .centerdummy {
     position: absolute;
@@ -4927,7 +4343,6 @@ input.readonly {
     left: 70%;
     top: 40%;
 }
-
 
 #KStartTour {
     position: absolute;
@@ -4945,14 +4360,12 @@ input.readonly {
     line-height: 1.3;
 }
 
-
 #KStartTour .modernbutton {
     width: 100px;
     transform: translate(-50%, 0);
     left: 50%;
     margin-top: 30px;
 }
-
 
 .cancelTour {
     position: absolute;
@@ -4970,12 +4383,10 @@ input.readonly {
     color: black;
 }
 
-
 .cancelTour:hover {
     color: white !important;
     background: red !important;
 }
-
 
 #KHighlighter {
     position: absolute;
@@ -4991,16 +4402,13 @@ input.readonly {
     border-radius: 4px;
 }
 
-
 .KRoistat {
     padding-left: 20px;
 }
 
-
 .KRoistat_sub {
     padding-left: 20px;
 }
-
 
 .mirror_roi_dimspan > span {
     display: inline-block;
@@ -5008,18 +4416,16 @@ input.readonly {
     min-width: 25px;
     height: 19px;
     padding: 0px 5px;
-    ; box-sizing: border-box;
+    box-sizing: border-box;
     border-radius: 5px;
-    border: 1px solid hsl(0,0%,0%);
-    background: hsl(0,0%,90%)!important;
+    border: 1px solid hsl(0, 0%, 0%);
+    background: hsl(0, 0%, 90%) !important;
     text-align: center;
 }
 
-
 .mirror_roi_dimspan > span:hover {
-    background: hsl(0,0%,60%)!important;
+    background: hsl(0, 0%, 60%) !important;
 }
-
 
 .KJSONEditor {
     box-sizing: border-box;
@@ -5030,7 +4436,6 @@ input.readonly {
     border: 0px solid green;
 }
 
-
 .KJSONEditor textarea {
     box-sizing: border-box;
     width: 100%;
@@ -5039,13 +4444,12 @@ input.readonly {
     font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
     font-size: 13px;
     padding: 10px;
-    background: hsl(0,0%,26%);
-    color: hsl(0,0%,80%);
+    background: hsl(0, 0%, 26%);
+    color: hsl(0, 0%, 80%);
     resize: none;
     border: none;
-    ___box-shadow: inset 0 1px 19px 7px hsla(0,0%,23%,1);
+    ___box-shadow: inset 0 1px 19px 7px hsla(0, 0%, 23%, 1);
 }
-
 
 .KJSONEditor_log {
     width: 100%;
@@ -5053,11 +4457,10 @@ input.readonly {
     padding: 3px;
     box-sizing: border-box;
     __font-weight: bold;
-    background: hsl(0,0%,22%);
+    background: hsl(0, 0%, 22%);
     color: white;
     font-weight: bold;
 }
-
 
 /* this is the ul */
 .KList {
@@ -5070,14 +4473,12 @@ input.readonly {
     white-space: nowrap;
 }
 
-
 .KList a {
     color: inherit;
 }
 
-
 .KList li {
-    padding: 0px 9px ;
+    padding: 0px 9px;
     position: relative;
     list-style: none;
     display: inline-flex;
@@ -5093,47 +4494,40 @@ input.readonly {
     cursor: pointer;
     color: whitesmoke;
     font-size: 17px;
-    background: #226699;    /*menucolor*/
-    __background: #226699;    /*menucolor*/
+    background: #226699; /*menucolor*/
+    __background: #226699; /*menucolor*/
 }
-
 
 .KList.KList_noflex li {
     overflow: hidden;
     width: 100%;
 }
 
-
 .KList li:hover {
-    __background: #F0F0FF;    /*submenucolor*/
-    background: #226699;    /*menucolor*/
+    __background: #f0f0ff; /*submenucolor*/
+    background: #226699; /*menucolor*/
 }
 
-
 .KList li.active {
-    background: hsl(0,0%,23%);
+    background: hsl(0, 0%, 23%);
     font-weight: bold;
 }
 
-
 .KList li.active:hover {
-    background: hsl(0,0%,60%);
-    background: #226699;    /*menucolor*/
+    background: hsl(0, 0%, 60%);
+    background: #226699; /*menucolor*/
     color: hsl(0, 0%, 90%);
-    ; }
-
+}
 
 .KList li a {
     flex-grow: 1;
     text-align: left;
 }
 
-
 .KList li i.fa-bars {
     position: absolute;
     right: 2px;
 }
-
 
 .KList li i {
     flex-grow: 0;
@@ -5141,69 +4535,59 @@ input.readonly {
     display: block;
     _right: 5px;
     _top: 4px;
-    background: #DDD;
+    background: #ddd;
     padding: 3px;
     margin-right: 1px;
     border-radius: 4px;
     color: black !important;
 }
 
-
 .KList li i:hover {
-    color: red!important;
+    color: red !important;
 }
-
 
 .flexright {
     flex-grow: 1;
     text-align: right;
 }
 
-
 /* inverted color scale */
 .KList_inverted li {
-    background: #F0F0FF;    /*submenucolor*/
-    color: hsl(0,0%,0%);
+    background: #f0f0ff; /*submenucolor*/
+    color: hsl(0, 0%, 0%);
 }
-
 
 .KList_inverted li:hover {
-    background: #F0F0FF;    /*submenucolor*/
+    background: #f0f0ff; /*submenucolor*/
 }
 
-
 .KList_inverted li.active {
-    background: hsl(206, 64%, 37%);    /*modernbutton*/
+    background: hsl(206, 64%, 37%); /*modernbutton*/
     color: white;
 }
 
-
 .KList_inverted li.active:hover {
-    background: hsl(206, 64%, 42%);    /*modernbutton*/
+    background: hsl(206, 64%, 42%); /*modernbutton*/
 }
-
 
 .KList_vertical li {
     display: flex;
-    border-bottom: 1px solid hsl(0, 0%,70%);
+    border-bottom: 1px solid hsl(0, 0%, 70%);
     border-right: none;
     height: 33px;
 }
 
-
 .KList_vertical li > div {
     height: 100%;
-    align-self: flex-start ;
+    align-self: flex-start;
     overflow-y: auto;
 }
 
-
 .KList_roundish {
     background: none;
-    border-bottom: 0px solid hsl(0, 0%,0%);
+    border-bottom: 0px solid hsl(0, 0%, 0%);
     border-collapse: collapse;
 }
-
 
 .KList_roundish li {
     padding: 5px 15px;
@@ -5212,32 +4596,28 @@ input.readonly {
     _border-radius: 10px;
     _border-top-left-radius: 4px;
     _border-top-right-radius: 4px;
-    border-top: 1px solid hsl(0,0%,40%);
-    border-left: 1px solid hsl(0,0%,50%);
-    border-right: 1px solid hsl(0,0%,50%);
+    border-top: 1px solid hsl(0, 0%, 40%);
+    border-left: 1px solid hsl(0, 0%, 50%);
+    border-right: 1px solid hsl(0, 0%, 50%);
     box-sizing: border-box;
     border-collapse: collapse;
-    box-shadow: inset 0 -9px 12px -9px hsla(0,0%,3%, 0.7);
+    box-shadow: inset 0 -9px 12px -9px hsla(0, 0%, 3%, 0.7);
     height: 30px;
     background: hsl(0, 0%, 12%);
 }
-
 
 .KList_roundish li.active {
     border-bottom: none;
     box-shadow: none;
 }
 
-
 .KList_static li {
     cursor: default;
 }
 
-
 .KList_static li.active {
     background: initial;
 }
-
 
 li.KListSpacer {
     background: none;
@@ -5249,27 +4629,22 @@ li.KListSpacer {
     font-weight: bold;
 }
 
-
 li.KListSpacer a {
     color: white;
 }
-
 
 li.KListSpacer:hover {
     background: none;
     cursor: default;
 }
 
-
 .KListItem.unsaved {
-    background: rgb(200,50,50);
+    background: rgb(200, 50, 50);
 }
-
 
 .KListItem.unsaved i.fa-save {
-    background: rgb(200,50,50)!important;
+    background: rgb(200, 50, 50) !important;
 }
-
 
 .KListItem .cmdsavebut.fa-save {
     margin-right: 16px;
@@ -5277,100 +4652,84 @@ li.KListSpacer:hover {
     right: 6px;
 }
 
-
 .KListItem .cmdsavebut.fa-reply {
     margin-right: 16px;
     position: absolute;
     right: 25px;
 }
 
-
 .KListItem .cmdsavebut {
     display: none;
 }
-
 
 .KListItem.unsaved .cmdsavebut {
     display: inline-block;
 }
 
-
 .KListItem_subgroup {
     padding-left: 0px;
 }
 
-
 .KListItem_subgroup i {
-    background: none!important;
+    background: none !important;
 }
-
 
 .KListItem_subgroup > li:first-child {
-    background: hsl(0,0%,80%);
+    background: hsl(0, 0%, 80%);
 }
-
 
 .KListItem_subitem {
-    padding-left: 20px!important;
+    padding-left: 20px !important;
 }
-
 
 .KListItem.unsaved:hover {
-    background: rgb(200,50,50);
+    background: rgb(200, 50, 50);
 }
-
 
 /* horizontal layout with left menu */
 .KListView {
     display: flex;
     background: none;
     height: 100%;
-    border-top: 1px solid hsl(0, 0%,70%);
+    border-top: 1px solid hsl(0, 0%, 70%);
     box-sizing: border-box;
 }
-
 
 .KListView > div {
     height: 100%;
-    align-self: flex-start ;
+    align-self: flex-start;
     box-sizing: border-box;
     overflow-y: auto;
 }
-
 
 .KListView > div:nth-child(1) {
     margin-top: -0px;
     min-width: 200px;
 }
 
-
 .KListView > div:nth-child(2) {
     flex-grow: 1;
-    border-left: 1px solid hsl(0, 0%,70%);
+    border-left: 1px solid hsl(0, 0%, 70%);
 }
-
 
 /* vertical layout with last child 100% and scroll */
 .KFlexVertical {
     display: flex;
     flex-direction: column;
-    overflow: hidden!important;
+    overflow: hidden !important;
     height: 100%;
 }
-
 
 .KFlexVertical > div {
     display: block;
     box-sizing: border-box;
 }
 
-
 .KFlexVertical > div:last-child {
     flex-grow: 1;
     height: 100%;
-    overflow: scroll!important;
+    overflow: scroll !important;
 }
-
 
 .spinnerbar {
     display: inline-block;
@@ -5382,7 +4741,6 @@ li.KListSpacer:hover {
     height: 10px;
 }
 
-
 .innerbar {
     jdisplay: inline-block;
     background: yellow;
@@ -5390,7 +4748,6 @@ li.KListSpacer:hover {
     height: 100%;
     width: 10%;
 }
-
 
 .KSyncBar {
     border: solid 1px;
@@ -5408,11 +4765,9 @@ li.KListSpacer:hover {
     max-width: 500px;
 }
 
-
 .KSyncBar.upload {
     background: darkblue;
 }
-
 
 .KSyncBar .fa {
     position: relative;
@@ -5420,13 +4775,11 @@ li.KListSpacer:hover {
     top: 4px;
 }
 
-
 .KSyncBar .spinnerbar {
     position: relative;
     left: 10px;
     top: 5px;
 }
-
 
 .KSyncBar .uploadtext {
     white-space: nowrap;
@@ -5440,7 +4793,6 @@ li.KListSpacer:hover {
     display: inline-block;
 }
 
-
 .KSyncBar .fa-close {
     position: absolute;
     left: 95%;
@@ -5453,19 +4805,16 @@ li.KListSpacer:hover {
     cursor: pointer;
 }
 
-
 .KSyncBar .fa-close:hover {
     background: red;
     color: white;
 }
-
 
 .KSyncBar .abortTitle {
     position: absolute;
     right: 40px;
     top: 7px;
 }
-
 
 .terms_of_usage {
     max-width: 600px;
@@ -5474,12 +4823,10 @@ li.KListSpacer:hover {
     text-align: justify;
 }
 
-
 /* notify changes */
 .notifyjs-corner {
-    margin-top: 35px!important;
+    margin-top: 35px !important;
 }
-
 
 .notifyjs-DPX-base {
     white-space: nowrap;
@@ -5489,12 +4836,10 @@ li.KListSpacer:hover {
     border-radius: 5px;
 }
 
-
 .notifyjs-DPX-error {
     color: white;
     background-color: darkred;
 }
-
 
 .notifyjs-DPXMORE-error {
     color: white;
@@ -5502,24 +4847,21 @@ li.KListSpacer:hover {
     opacity: 0.5;
 }
 
-
 .inactive_menu_point {
     opacity: 1;
     pointer-events: none;
 }
-
 
 .emptylist {
     font-family: cursive;
     font-size: 10px;
 }
 
-
 .KMouseSliderBtn {
     position: relative;
     width: 15px;
     text-align: center;
-    background: hsl(0,0%,50%);
+    background: hsl(0, 0%, 50%);
     __z-index: 1;
     right: -1px;
     _height: 9%;
@@ -5527,18 +4869,15 @@ li.KListSpacer:hover {
     touch-action: none;
 }
 
-
 .KMouseSliderBtn:hover {
-    background: hsl(0,0%,60%);
+    background: hsl(0, 0%, 60%);
 }
-
 
 .KMouseSliderBtn i {
     padding: 3px;
     font-size: 14px;
-    dcolor: hsl(0,0%,0%);
+    dcolor: hsl(0, 0%, 0%);
 }
-
 
 .KMouseSliderIndicator {
     z-index: 40;
@@ -5549,55 +4888,50 @@ li.KListSpacer:hover {
     pointer-events: none;
 }
 
-
 .KMouseSliderIndicator_bg {
     position: absolute;
     height: 100px;
     width: 12px;
     border: 0px solid red;
-    background: hsla(70,80%,80%, 1);
+    background: hsla(70, 80%, 80%, 1);
     border-radius: 6px;
     bottom: 0;
     pointer-events: none;
-    transform: translate(-50%,0);
+    transform: translate(-50%, 0);
     box-sizing: border-box;
     __background: hsl(206, 64%, 32%);
 }
-
 
 .KMouseSliderIndicator_ball {
     width: 14px;
     height: 14px;
     position: absolute;
     border-radius: 20px;
-    transform: translate(-50%,-25%);
+    transform: translate(-50%, -25%);
     box-sizing: border-box;
-    background: hsla(206, 64%, 37%,1);
-    -webkit-box-shadow: 0 0 5px 2px rgba(82,168,236,.9);
-    box-shadow: 0 0 5px 2px rgba(82,168,236,.9);
+    background: hsla(206, 64%, 37%, 1);
+    -webkit-box-shadow: 0 0 5px 2px rgba(82, 168, 236, 0.9);
+    box-shadow: 0 0 5px 2px rgba(82, 168, 236, 0.9);
 }
-
 
 .KMouseSliderIndicator_currentval {
     position: relative;
     font-size: 14px;
     font-weight: bold;
     z-index: 5;
-    background: hsla(0,0%,20%,.8);
-    dtransform: translate(-50%,0);
+    background: hsla(0, 0%, 20%, 0.8);
+    dtransform: translate(-50%, 0);
     width: 30px;
 }
-
 
 .KMouseSliderIndicator_center {
     width: 6px;
     height: 4px;
     position: absolute;
-    background: hsla(0, 0%, 27%,.5);
+    background: hsla(0, 0%, 27%, 0.5);
     border-radius: 0px;
-    transform: translate(-50%,0);
+    transform: translate(-50%, 0);
 }
-
 
 .KMouseSliderIndicator i {
     position: absolute;
@@ -5607,7 +4941,6 @@ li.KListSpacer:hover {
     font-size: 9px;
 }
 
-
 .alphaSlider {
     width: 45px;
     float: right;
@@ -5615,7 +4948,6 @@ li.KListSpacer:hover {
     opacity: 0.4;
     margin-top: -3px;
 }
-
 
 /*************  SBOX ***************   */
 .sbox {
@@ -5630,7 +4962,6 @@ li.KListSpacer:hover {
     border: 1px solid white;
 }
 
-
 .sbox_horz {
     position: relative;
     overflow: hidden;
@@ -5641,7 +4972,6 @@ li.KListSpacer:hover {
     _border: 1px solid green;
 }
 
-
 .sbox_fixed {
     height: 100px;
     flex-grow: 0;
@@ -5650,20 +4980,17 @@ li.KListSpacer:hover {
     _border: 1px solid white;
 }
 
-
 .sbox_resizable {
     flex-grow: 1;
     overflow: hidden;
     _width: 100%;
 }
 
-
 .resizer_horz_placeholder {
     width: 0px;
     position: relative;
     flex-grow: 0;
 }
-
 
 .resizer_horz {
     width: 10px;
@@ -5676,14 +5003,12 @@ li.KListSpacer:hover {
     _background: magenta;
 }
 
-
 .resizer_vert_placeholder {
     width: 100%;
     height: 0px;
     position: relative;
     flex-grow: 0;
 }
-
 
 .resizer_vert {
     width: 100%;
@@ -5695,27 +5020,23 @@ li.KListSpacer:hover {
     _background: magenta;
 }
 
-
 .resizer_horz:hover {
-    background: rgba(82,168,236,1);
-    -webkit-box-shadow: 0 0 10px 2px rgba(82,168,236,1);
-    -box-shadow: 0 0 10px 2px rgba(82,168,236,1);
+    background: rgba(82, 168, 236, 1);
+    -webkit-box-shadow: 0 0 10px 2px rgba(82, 168, 236, 1);
+    -box-shadow: 0 0 10px 2px rgba(82, 168, 236, 1);
 }
-
 
 .resizer_vert:hover {
-    background: rgba(82,168,236,1);
-    -webkit-box-shadow: 0 0 10px 2px rgba(82,168,236,1);
-    -box-shadow: 0 0 2px 3px rgba(82,168,236,1);
+    background: rgba(82, 168, 236, 1);
+    -webkit-box-shadow: 0 0 10px 2px rgba(82, 168, 236, 1);
+    -box-shadow: 0 0 2px 3px rgba(82, 168, 236, 1);
 }
-
 
 .resizer_hovered {
-    background: rgba(82,168,236,1);
-    -webkit-box-shadow: 0 0 10px 2px rgba(82,168,236,1);
-    -box-shadow: 0 0 10px 2px rgba(82,168,236,1);
+    background: rgba(82, 168, 236, 1);
+    -webkit-box-shadow: 0 0 10px 2px rgba(82, 168, 236, 1);
+    -box-shadow: 0 0 10px 2px rgba(82, 168, 236, 1);
 }
-
 
 /*************  end of sbox ***************   */
 .KSwitch {
@@ -5723,20 +5044,18 @@ li.KListSpacer:hover {
     height: 15px;
     position: relative;
     box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(100, 100, 100, 0.6);
-    background: hsl(0,0%,50%);
+    background: hsl(0, 0%, 50%);
     _border: 1px solid;
     border-radius: 20px;
 }
 
-
 .KSwitch:hover {
-    background: hsl(0,0%,58%);
+    background: hsl(0, 0%, 58%);
 }
-
 
 .KSwitch_button {
     _position: absolute;
-    background: linear-gradient(to top left, #555555, #FFFFFF);    /*toolbutton*/
+    background: linear-gradient(to top left, #555555, #ffffff); /*toolbutton*/
     width: 16px;
     height: 16px;
     border-radius: 10px;
@@ -5745,16 +5064,13 @@ li.KListSpacer:hover {
     margin-left: 2px;
 }
 
-
 .KSwitch_disabled {
 }
 
-
 .KSwitch_enabled {
-    background: linear-gradient(to top left, #113355, #4488FF);    /*toolbutton*/
+    background: linear-gradient(to top left, #113355, #4488ff); /*toolbutton*/
     margin-left: calc(100% - 18px);
 }
-
 
 .admin_dialog_logfilecontent {
     overflow: auto;
@@ -5776,12 +5092,10 @@ li.KListSpacer:hover {
     user-select: text;
 }
 
-
 .admin_dialog_logfilecontent a {
     color: green;
     cursor: pointer;
 }
-
 
 .admin_dialog_logfile_tools {
     position: absolute;
@@ -5790,11 +5104,9 @@ li.KListSpacer:hover {
     opacity: 1;
 }
 
-
 .Kpatientbarbutton {
     background: transparent !important;
 }
-
 
 .Kpatientbarbutton .fa {
     box-sizing: border-box;
@@ -5806,17 +5118,14 @@ li.KListSpacer:hover {
     box-shadow: 2px 2px 2px hsla(0, 0%, 0%, 1);
 }
 
-
 .Kpatientbarbutton .fa-plus {
     width: 50px;
 }
-
 
 .Kpatientbarbutton:hover .fa {
     background: white !important;
     box-shadow: 2px 2px 2px hsla(0, 0%, 0%, 0);
 }
-
 
 /* ///// IHE */
 .KViewPort_formViewer header.level1 {
@@ -5824,9 +5133,8 @@ li.KListSpacer:hover {
     font-size: medium;
     font-weight: bold;
     margin-top: 0.3cm;
-    margin-bottom: 0.0cm;
+    margin-bottom: 0cm;
 }
-
 
 .KViewPort_formViewer header.level2 {
     text-align: left;
@@ -5834,44 +5142,71 @@ li.KListSpacer:hover {
     font-size: small;
     font-weight: bold;
     margin-top: 0.3cm;
-    margin-bottom: 0.0cm;
+    margin-bottom: 0cm;
 }
-
 
 .KViewPort_formViewer section.level1 {
 }
-
 
 .KViewPort_formViewer section.level2 {
     padding-left: 0.8cm;
 }
 
-
 .KViewPort_formViewer p {
     padding-left: 0.8cm;
-    margin-top: 0.0cm;
-    margin-bottom: 0.0cm;
+    margin-top: 0cm;
+    margin-bottom: 0cm;
 }
 
-
-.KViewPort_formViewer table, .KViewPort_formViewer tr, .KViewPort_formViewer td, .KViewPort_formViewer th {
-    background-color: #E6E6E6;
+.KViewPort_formViewer table,
+.KViewPort_formViewer tr,
+.KViewPort_formViewer td,
+.KViewPort_formViewer th {
+    background-color: #e6e6e6;
     border: 1px solid black;
     border-collapse: collapse;
     padding: 0.1cm;
     margin-left: 0.8cm;
 }
 
-
-template-head, template_data, template_UI, template_name, exam_characteristics, exam_code, term, code_meaning, code_value, coding_scheme_designator, exam_code, modality, body_site, subspecialty, contrast, gender, indication, patient_life_stage, provider_group, owner, contributors, parent_template, sanctioning_body, language, top_level_flag, creation_date, revision_number, retired_flag {
+template-head,
+template_data,
+template_UI,
+template_name,
+exam_characteristics,
+exam_code,
+term,
+code_meaning,
+code_value,
+coding_scheme_designator,
+exam_code,
+modality,
+body_site,
+subspecialty,
+contrast,
+gender,
+indication,
+patient_life_stage,
+provider_group,
+owner,
+contributors,
+parent_template,
+sanctioning_body,
+language,
+top_level_flag,
+creation_date,
+revision_number,
+retired_flag {
     display: none;
 }
 
-
-.KViewPort_formViewer section_data, template_section_name, template_section_required, template_section_interleaved, template_section_level {
+.KViewPort_formViewer section_data,
+template_section_name,
+template_section_required,
+template_section_interleaved,
+template_section_level {
     display: none;
 }
-
 
 .KViewPort_formViewer textarea {
     width: 90%;
@@ -5879,26 +5214,21 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     display: block;
 }
 
-
 .KViewPort_formViewer input[type="text"] {
     width: 50em;
 }
-
 
 .KViewPort_formViewer input[type="number"] {
     width: 6em;
 }
 
-
 .KViewPort_formViewer select {
     max-width: 55em;
 }
 
-
 .KViewPort_formViewer td {
     color: black;
 }
-
 
 .pacsquery_tools_container {
     _background: red;
@@ -5907,28 +5237,23 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     height: 99%;
 }
 
-
 .pacsquery_rightcontainer {
     flex-grow: 1;
     height: 100%;
 }
-
 
 .pacsquery_rightcontainer > div:first-child {
     min-height: 90px;
     flex-grow: 0;
 }
 
-
 .pacsquery_resultscontainer table {
     width: 100%;
 }
 
-
 .pacsquery_resultscontainer .sbox_resizable {
     width: 100%;
 }
-
 
 .fpacsquery_resultscontainer table td:first-child {
     width: 10px;
@@ -5936,36 +5261,31 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     min-width: 10px;
 }
 
-
 .pacsquery_tools {
-    background: hsla(0, 0%, 22%, .5);
+    background: hsla(0, 0%, 22%, 0.5);
     padding: 0px;
     width: 150px;
     display: flex;
     padding: 2px 10px;
     flex-direction: column;
     height: 100%;
-    border-right: 1px solid hsl(0,0%,50%);
+    border-right: 1px solid hsl(0, 0%, 50%);
 }
-
 
 .pacsquery_tools select {
     height: 22px;
 }
-
 
 .pacsquery_tools select.inactive {
     pointer-events: none;
     opacity: 0.4;
 }
 
-
 .pacsquery_tools_caption {
     margin-top: 5px;
-    border-top: 1px solid hsl(0,0%,50%);
+    border-top: 1px solid hsl(0, 0%, 50%);
     padding: 4px;
 }
-
 
 .pacsquery_dropindicator {
     position: absolute;
@@ -5978,11 +5298,10 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     padding-top: 20%;
     font-size: 30px;
     z-index: 2;
-    background: hsla(0,0%,50%,.8);
+    background: hsla(0, 0%, 50%, 0.8);
     display: none;
     line-height: 40px;
 }
-
 
 .pacsquery_progressbox {
     position: absolute;
@@ -6001,17 +5320,14 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     max-width: 500px;
 }
 
-
 .pacsquery_progressbox table {
     width: 100%;
 }
-
 
 .pacsquery_progressbox td:nth-child(2) {
     text-align: right;
     font-weight: bold;
 }
-
 
 .pacsquery_title {
     font-weight: bold;
@@ -6019,7 +5335,6 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     margin-bottom: 5px;
     padding: 2px;
 }
-
 
 .pacsquery_dumplist {
     display: flex;
@@ -6030,11 +5345,9 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     margin: 10px;
 }
 
-
 .pacsquery_dumplist > div:first-child {
     background: gray;
 }
-
 
 .pacsquery_dumplist table {
     border: 1px solid gray;
@@ -6042,12 +5355,10 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     width: 100%;
 }
 
-
 .pacsquery_dumplist table td {
     border: 1px solid gray;
     border-collapse: collapse;
 }
-
 
 .pacsquery_studiestable {
     white-space: nowrap;
@@ -6057,12 +5368,10 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     width: 20px;
 }
 
-
 .pacsquery_studiestable td {
-    text-overflow: clip!important;
+    text-overflow: clip !important;
     _padding: 1px 5px;
 }
-
 
 .pacsquery_graydiv_search {
     position: absolute;
@@ -6071,24 +5380,22 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     align-items: center;
     width: 100%;
     height: 100%;
-    background: hsla(0,0%,0%,.8);
+    background: hsla(0, 0%, 0%, 0.8);
     top: 0px;
     text-align: center;
 }
-
 
 .pacsquery_graydiv_search > div {
     _margin: auto;
     _width: 100%;
 }
 
-
 #KProcFrame {
     top: 0;
     left: 0;
     position: absolute;
-    color: #F0F0FF;
-    background: linear-gradient(to top left, #113355, #4466AA);
+    color: #f0f0ff;
+    background: linear-gradient(to top left, #113355, #4466aa);
     width: 100%;
     height: 100%;
     opacity: 1;
@@ -6096,13 +5403,11 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     border: 1px solid green;
 }
 
-
 .Kautoexecform .KFormItem {
     posiction: relative;
     bsackground: red;
     display: inline-block;
 }
-
 
 .KFormItem {
     padding: 5px 5px;
@@ -6110,9 +5415,8 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     font-size: 15px;
     lborder: #333 1px solid;
     border-radius: 5px;
-    background: #AAA2
+    background: #aaa2;
 }
-
 
 .KFormItem label {
     min-width: 150px;
@@ -6120,27 +5424,22 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     text-align: left;
 }
 
-
 .Kautoexecform .selectuserbatch {
     font-size: 18px !important;
 }
 
-
 .Kautoexecform input {
     width: 20px !important;
 }
-
 
 .Kautoexecform textarea {
     height: 30px !important;
     width: 350px !important;
 }
 
-
 .Kautoexecform label {
     width: 40px;
 }
-
 
 /********************************
    KTagPanel    
@@ -6148,40 +5447,35 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
 .KTagPanel_tagcontainer {
     display: flex;
     flex-direction: row;
-    min-width: 220px!important;
+    min-width: 220px !important;
 }
 
-
 .KTagPanel_taglistdiv {
-    border-right: 1px solid hsl(0,0%,70%);
+    border-right: 1px solid hsl(0, 0%, 70%);
     flex-grow: 1;
 }
 
-
 .KTagPanel_taglisttitle {
     font-weight: bold;
-    border-bottom: 1px solid hsl(0,0%,70%);
+    border-bottom: 1px solid hsl(0, 0%, 70%);
     white-space: nowrap;
     padding: 1px 3px;
 }
-
 
 .KTagPanel_taglisttitle i {
     padding: 2px 7px;
     border-radius: 6px;
 }
 
-
 .KTagPanel_taglisttitle i:hover {
-    _background: hsl(0,0%,20%);
-    color: hsl(0,0%,60%);
+    _background: hsl(0, 0%, 20%);
+    color: hsl(0, 0%, 60%);
     cursor: pointer;
 }
 
-
 .KTagPanel_editbox {
     position: absolute;
-    background: hsl(0,0%,50%);
+    background: hsl(0, 0%, 50%);
     width: 100%;
     min-height: 300px;
     display: flex;
@@ -6190,13 +5484,11 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     top: 25px;
 }
 
-
 .KTagPanel_editbox > div:first-child {
     display: flex;
     flex-direction: row;
     height: 100%;
 }
-
 
 .KTagPanel_editbox textarea {
     flex-grow: 1;
@@ -6205,12 +5497,10 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     min-height: 200px;
 }
 
-
 .KTagPanel_taglist {
     display: flex;
     flex-direction: column;
 }
-
 
 .KTagPanel_tagitem {
     display: flex;
@@ -6218,29 +5508,24 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     cursor: pointer;
 }
 
-
 .KTagPanel_tagitem .KTagPatient:hover {
-    box-shadow: 0 0 5px 3px rgba(82,168,236,.9);
+    box-shadow: 0 0 5px 3px rgba(82, 168, 236, 0.9);
 }
-
 
 .KTagPanel_tagitem i {
     color: lightgreen;
 }
 
-
 .KTagPanel_tagitem_disabled .KTagPatient {
-    background: hsl(0,0%,30%);
-    color: hsl(0,10%,80%);
-    border-color: hsl(0,0%,50%);
+    background: hsl(0, 0%, 30%);
+    color: hsl(0, 10%, 80%);
+    border-color: hsl(0, 0%, 50%);
 }
-
 
 .KTagPanel_tagitem_shortcut {
     padding: 0px 5px;
     font-size: 12px;
 }
-
 
 /********************************
    KExcelList    
@@ -6250,14 +5535,12 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     height: 100%;
 }
 
-
 .KExcelList_icontainer {
     margin-right: 5px;
-    _border-right: 1px solid hsl(0,0%,40%);
+    _border-right: 1px solid hsl(0, 0%, 40%);
     height: 100%;
     min-width: 170px;
 }
-
 
 .KExcelList_icontainer_toolbar {
     height: 100px;
@@ -6267,7 +5550,6 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     justify-content: center;
 }
 
-
 .KExcelList_icontainer_toolbar .modernbutton {
     border-radius: 4px;
     margin: 4px;
@@ -6275,17 +5557,15 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     height: 15px;
     cursor: pointer;
     padding: 3px 8px;
-    ; }
-
+}
 
 .KExcelList_summary {
-    background: hsl(0,5%,60%);
+    background: hsl(0, 5%, 60%);
     color: black;
     padding: 0px 4px;
     height: 32px;
     font-size: 12px;
 }
-
 
 .KExcelList_tcontainer textarea {
     resize: none;
@@ -6298,7 +5578,6 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     _margin: auto;
 }
 
-
 .KExcelList_ititle {
     font-size: 20px;
     text-align: center;
@@ -6306,17 +5585,15 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     padding: 4px;
 }
 
-
 .KExcelList_tcontainer table {
     border-collapse: collapse;
-    background: hsl(0,0%,80%);
-    color: hsl(0,0%,10%);
+    background: hsl(0, 0%, 80%);
+    color: hsl(0, 0%, 10%);
     width: 100%;
 }
 
-
 .KExcelList_tcontainer table td {
-    border: 1px solid hsl(0,0%,50%);
+    border: 1px solid hsl(0, 0%, 50%);
     border-collapse: collapse;
     margin: 0px;
     padding: 2px 3px;
@@ -6324,16 +5601,13 @@ template-head, template_data, template_UI, template_name, exam_characteristics, 
     text-overflow: hidden;
 }
 
-
 .patientTableContextmenu hr {
     margin: 1px;
 }
 
-
 .usertable_userrow:hover td {
-    background: hsl(0,0%,80%);
+    background: hsl(0, 0%, 80%);
 }
-
 
 mark.link {
     color: blue;
@@ -6343,16 +5617,14 @@ mark.link {
     text-decoration: underline;
 }
 
-
 .sharedLinkLeave {
     background: beige;
     color: black !important;
 }
 
-
 #MetaKeySeqs {
     position: relative;
-    background: #CCCCCC;
+    background: #cccccc;
     height: 100px;
     padding: 6px;
     border: 1px solid black;
@@ -6362,7 +5634,6 @@ mark.link {
     text-align: left;
 }
 
-
 #MetaKeySeqs > span {
     display: inline-block;
     background: white;
@@ -6371,15 +5642,12 @@ mark.link {
     border-radius: 5px;
 }
 
-
 .sharedAccessRemove {
 }
-
 
 .sharedAccessRemove > .resource {
     background: aliceblue;
 }
-
 
 .sharedAccessRemove > div {
     display: inline-block;
@@ -6390,7 +5658,6 @@ mark.link {
     border-radius: 5px;
     color: black;
 }
-
 
 /************* some important colors: ********************
 
@@ -6433,11 +5700,9 @@ mark.link {
 
 **************************************************************/
 
-
 .fa_container.active {
     background: orange;
 }
-
 
 .submenu_scrollable {
     max-height: 400px;
@@ -6445,22 +5710,19 @@ mark.link {
     overflow-x: hidden;
 }
 
-
 .modalWindow_message {
     height: 20px;
     padding: 20px 10px 20px 10px;
     font-size: 18px;
-    color: #D44;
+    color: #d44;
     text-shadow: 1px 1px 1px black;
 }
-
 
 .KListItem > p.username {
     color: #222 !important;
     background: none;
     margin-right: 15px;
 }
-
 
 .terms_of_usage {
     white-space: pre-line;
@@ -6470,7 +5732,6 @@ mark.link {
     text-align: justify;
 }
 
-
 .sbox_vert {
     position: relative;
     overflow: hidden;
@@ -6479,16 +5740,14 @@ mark.link {
     resize: both;
     height: 100%;
     box-sizing: border-box;
-    _background: red!important;
+    _background: red !important;
     _border: 2px solid yellow;
 }
-
 
 .upload_droparea > span {
     align-self: center;
     color: white;
 }
-
 
 /****************** upload drop ************/
 
@@ -6505,7 +5764,6 @@ mark.link {
     overflow: auto;
 }
 
-
 .upload_droparea > div {
     color: black;
     position: relative;
@@ -6518,7 +5776,6 @@ mark.link {
     border-radius: 4px !important;
 }
 
-
 .upload_droparea > div > div {
     min-width: 100px;
     max-width: 350px;
@@ -6529,33 +5786,27 @@ mark.link {
     cursor: pointer;
 }
 
-
 .upload_droparea > div > i {
     position: absolute;
     top: 2px;
     right: 0px;
 }
 
-
 .thehover {
     background: green !important;
 }
-
 
 .contextm_ptable {
     color: lightgray;
 }
 
-
 .contextm_ptable_s {
     color: gray;
 }
 
-#KimportCSV
-{
-    width:100%;
-    height:200px;
-    overflow-y:scroll;    
-    margin-bottom:20px;
-    
+#KimportCSV {
+    width: 100%;
+    height: 200px;
+    overflow-y: scroll;
+    margin-bottom: 20px;
 }

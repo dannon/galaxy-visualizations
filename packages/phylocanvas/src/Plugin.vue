@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 watch(
     () => props.settings,
     () => render(treeindex.value),
-    { deep: true },
+    { deep: true }
 );
 
 watch(treeindex, (newVal) => {
@@ -134,7 +134,8 @@ watch(treeindex, (newVal) => {
         <div ref="container" class="h-screen"></div>
         <div
             v-if="treelist.length > 1"
-            class="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-white opacity-[0.9] rounded px-3 py-2">
+            class="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-white opacity-[0.9] rounded px-3 py-2"
+        >
             <div class="flex items-center space-x-2">
                 <n-tooltip trigger="hover" :to="false">
                     <template #trigger>
@@ -154,14 +155,16 @@ watch(treeindex, (newVal) => {
                     placeholder="?"
                     size="small"
                     style="width: 4rem"
-                    @update:value="onInputIndex" />
+                    @update:value="onInputIndex"
+                />
                 <span class="text-sm">of {{ treelist.length }}</span>
                 <n-tooltip trigger="hover" :to="false">
                     <template #trigger>
                         <n-button
                             size="small"
                             :disabled="treeindex === treelist.length - 1"
-                            @click="render(treeindex + 1)">
+                            @click="render(treeindex + 1)"
+                        >
                             <template #icon>
                                 <n-icon><ArrowRightIcon /></n-icon>
                             </template>

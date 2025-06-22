@@ -35,7 +35,7 @@ import "script-loader!./htdocs/KTools/KAnnotationTool.js";
 import "script-loader!./htdocs/KTools/KNavigationTool.js";
 import "script-loader!./htdocs/KTools/KRoiTool.js";
 import "script-loader!./htdocs/KTools/KObject3DTool.js";
-import "script-loader!./htdocs/KTools/KCacheManager.js"
+import "script-loader!./htdocs/KTools/KCacheManager.js";
 import "script-loader!./htdocs/KTools/KAtlasTool.js";
 import "script-loader!./htdocs/KTableOperator.js";
 import "script-loader!./htdocs/KView/KView.js";
@@ -67,7 +67,7 @@ import "script-loader!./htdocs/KTools/KAnnotationTool.js";
 import "script-loader!./htdocs/KTools/KNavigationTool.js";
 import "script-loader!./htdocs/KTools/KRoiTool.js";
 import "script-loader!./htdocs/KTools/KObject3DTool.js";
-import "script-loader!./htdocs/KTools/KCacheManager.js"
+import "script-loader!./htdocs/KTools/KCacheManager.js";
 import "script-loader!./htdocs/KTools/KAtlasTool.js";
 import "script-loader!./htdocs/KTableOperator.js";
 import "script-loader!./htdocs/KView/KView.js";
@@ -92,7 +92,7 @@ async function getData(url) {
 }
 
 function getUrl(datasetId) {
-    const rootWithoutProtocol = root.replace(/^[a-z]+:\/\//i, '');
+    const rootWithoutProtocol = root.replace(/^[a-z]+:\/\//i, "");
     return `${rootWithoutProtocol}api/datasets/${datasetId}/display`;
 }
 
@@ -100,8 +100,8 @@ async function render() {
     const metaData = await getData(metaUrl);
 
     setNORAenv({
-        url_pref: root + "static/plugins/visualizations/nora/static/dist/"
-    })
+        url_pref: root + "static/plugins/visualizations/nora/static/dist/",
+    });
 
     console.debug("[NORA] Initialization...");
 
@@ -114,20 +114,20 @@ async function render() {
     KViewer.globalCoordinates = true;
     KViewer.startImageLoader = startImageLoader;
 
-    addKeyboardShortcuts()
+    addKeyboardShortcuts();
 
-    ViewerSettings.nVisibleCols = 2
-    ViewerSettings.nVisibleRows = 2
+    ViewerSettings.nVisibleCols = 2;
+    ViewerSettings.nVisibleRows = 2;
     ViewerSettings.nVisibleBarports = 0;
 
     KViewer.ViewerSettings = ViewerSettings;
     KViewer.defaultFOV_mm = 220;
-    KViewer.$screenShot.hide()
-    KViewer.$iron.hide()
-    KViewer.applyState()
+    KViewer.$screenShot.hide();
+    KViewer.$iron.hide();
+    KViewer.applyState();
 
-    var loader = [{url: getUrl(datasetId), intendedName: metaData.name, filetype: metaData.extension, intent: {}}];
-    KViewer.startImageLoader(loader,function() {});
+    var loader = [{ url: getUrl(datasetId), intendedName: metaData.name, filetype: metaData.extension, intent: {} }];
+    KViewer.startImageLoader(loader, function () {});
 }
 
 render();

@@ -1,948 +1,832 @@
-
 // ======================================================================================
 // ======================================================================================
 // ============= KCacheManager
 // ======================================================================================
 // ======================================================================================
 
+function KCacheManager(master) {
+    /** the tool to manage local files/uploads/downloads etc
+     * @class
+     * @alias KCacheManager
+     * @augments KToolWindow
+     */
+    var that = new KToolWindow(
+        master,
+        $("<div class='KView_tool '><i class='fa fa-institution fa-1x'></i></div>").append(
+            $("<ul class='KView_tool_menu'></ul>").append($("<li>Workspace</li>"))
+        )
+    );
 
-function KCacheManager(master)
-{
-   /** the tool to manage local files/uploads/downloads etc
-   * @class 
-   * @alias KCacheManager
-   * @augments KToolWindow
-   */
-  var that = new KToolWindow(master,
-  $("<div class='KView_tool '><i class='fa fa-institution fa-1x'></i></div>")
-  .append( $("<ul class='KView_tool_menu'></ul>").append($("<li>Workspace</li>")) ) );
+    var dataman = master.dataManager;
 
-  var dataman = master.dataManager;
+    that.name = "Workspace";
 
+    var $menu = $("<ul ></ul>");
 
-  that.name = 'Workspace';
+    if (electron) {
+        var filters = [
+            {
+                name: "All Supported Formats",
+                extensions: ["nii", "mgh", "mgz", "nrrd", "tck", "trk", "gii", "gz", "jpg", "png", "json", "txt"],
+            },
+            { name: "NIFTI/MGH", extensions: ["nii", "nii.gz", "mgh", "mgz", "nrrd"] },
+            { name: "Streamline Formats", extensions: ["tck", "trk"] },
+            { name: "Json", extensions: ["json"] },
+            { name: "Dicoms/Bruker", extensions: ["*"] },
+            { name: "All Files", extensions: ["*"] },
+        ];
 
+        function loadit(f) {
+            if (f.filePaths) f = f.filePaths;
 
-  var $menu = $("<ul ></ul>");
+            f = f.map(function (s) {
+                return s.replace(/\\/g, "/");
+            }); // for windows
+            fileLoad(f);
+            updateRecent(f);
+        }
 
-  if (electron)
-  {
+        function loadfiles() {
+            var res = dialog.showOpenDialog(null, {
+                title: "open files",
+                properties: ["openFile", "multiSelections"],
+                filters: filters,
+                defaultPath: defaultOpenPath,
+            });
+            if (res) {
+                if (res.then) res.then(loadit);
+                else loadit(res);
+            }
+        }
 
+        function loaddirs() {
+            var res = dialog.showOpenDialog({
+                title: "open directories",
+                properties: ["openDirectory", "multiSelections"],
+                defaultPath: defaultOpenPath,
+            });
+            if (res) {
+                if (res.then) res.then(loadit);
+                else loadit(res);
+            }
+        }
 
-  
+        var ipc = require("electron").ipcRenderer;
+        ipc.on("loadfiles", loadfiles);
+        ipc.on("loadrecent", function (event, args) {
+            fileLoad([args]);
+        });
+        ipc.on("loaddirs", loaddirs);
+        ipc.on("saveworkstate", saveWorkstate);
 
-		var filters = [
-			{ name: 'All Supported Formats', extensions: ['nii', 'mgh','mgz','nrrd','tck', 'trk','gii','gz', 'jpg', 'png' , 'json' , 'txt'  ] },
-			{ name: 'NIFTI/MGH', extensions: ['nii','nii.gz', 'mgh','mgz','nrrd'] },
-			{ name: 'Streamline Formats', extensions: ['tck','trk'  ] },
-			{ name: 'Json', extensions: ['json' ] },
-			{ name: 'Dicoms/Bruker', extensions: ['*'] },
-			{ name: 'All Files', extensions: ['*'] }
-		  ]
+        $("<li><a>Load Files</a></li>").click(loadfiles).appendTo($menu);
 
-		function loadit(f)
-		{		
-				if (f.filePaths)
-					f = f.filePaths;
+        $("<li><a>Load Directory</a></li>").click(loaddirs).appendTo($menu);
 
-				f = f.map(function(s) {return s.replace(/\\/g,"/");}); // for windows
-				fileLoad(f); 
-				updateRecent(f); 
-		}
+        $("<li><a>Save Workstate</a></li>").click(saveWorkstate).appendTo($menu);
 
+        that.loadFile = fileLoad;
 
-		function loadfiles()
-		{
-			var res = dialog.showOpenDialog(null,{ title: 'open files',
-							properties: ['openFile','multiSelections'], filters:filters,
-							defaultPath: defaultOpenPath
-						})
-			if (res)
-			{						
-				if (res.then)
-					res.then(loadit);
-				else 
-					loadit(res);
-			}
-		}
+        function fileLoad(files, callback) {
+            if (files !== undefined && files.length > 0) {
+                var loadedFobj = [];
+                var fobj = [];
+                for (var k = 0; k < files.length; k++)
+                    fobj.push({
+                        webkitGetAsEntry: KFileEntry(files[k]),
+                    });
 
-		function loaddirs() 
-		{		
-			var res = dialog.showOpenDialog({ title: 'open directories',
-							properties: ['openDirectory','multiSelections'],
-							defaultPath: defaultOpenPath
-						})
-			if (res)
-			{						
-				if (res.then)
-					res.then(loadit);
-				else 
-					loadit(res);
-			}
-  		}
+                defaultOpenPath = files[0].split("/").slice(0, -1).join("/");
+                createLoadParamsFileDrop(
+                    { dataTransfer: { items: fobj, types: ["Files"] } },
+                    function (loadparams) {
+                        var aboutoabort = false;
+                        function serialize(k) {
+                            if (k >= loadparams.length || aboutoabort) {
+                                if (callback) {
+                                    if (loadedFobj.length > 0) callback(loadedFobj);
+                                }
+                                return;
+                            } else {
+                                if (loadparams[k].error) {
+                                    loadedFobj.push(loadparams[k]);
+                                    serialize(k + 1);
+                                } else {
+                                    var cb = loadparams[k].callback;
+                                    loadparams[k].callback = function (fob) {
+                                        if (cb) cb();
+                                        if (fob != undefined) {
+                                            logProcess("loaded " + fob.filename);
+                                        }
+                                        loadedFobj.push(fob);
+                                        serialize(k + 1);
+                                    };
+                                    that.progressSpinner(k / loadparams.length, function () {
+                                        aboutoabort = true;
+                                    });
+                                    KViewer.dataManager.loadData(loadparams[k]);
+                                }
+                            }
+                        }
 
-  		 
-  		var ipc = require('electron').ipcRenderer;
-	    ipc.on('loadfiles', loadfiles)
-	    ipc.on('loadrecent', function(event,args) {
-			fileLoad([args]);
-	    	})
-	    ipc.on('loaddirs', loaddirs)
-	    ipc.on('saveworkstate', saveWorkstate)
+                        serialize(0);
 
-  		
-		$("<li><a>Load Files</a></li>").click(loadfiles).appendTo($menu);
-						
-		$("<li><a>Load Directory</a></li>").click(loaddirs).appendTo($menu);
-
-		$("<li><a>Save Workstate</a></li>").click(saveWorkstate).appendTo($menu);
-						
-		that.loadFile = fileLoad;
-
-		function fileLoad(files,callback) {
-				if (files !== undefined && files.length > 0) {
-					var loadedFobj = []
-					var fobj = [];
-					for (var k = 0; k < files.length;k++)
-						fobj.push( {
-				 			 webkitGetAsEntry: KFileEntry(files[k])
-
-						});
-
-					defaultOpenPath = files[0].split("/").slice(0,-1).join("/");
-					createLoadParamsFileDrop( {dataTransfer: { items:fobj,types:["Files"]  } },
-								function (loadparams)
-								{
-									var aboutoabort = false;
-									function serialize(k)
-									{
-										if (k>= loadparams.length || aboutoabort)
-										{
-											if (callback)
-											{
-												if (loadedFobj.length > 0)
-												     callback(loadedFobj);
-											}
-											return
-										}
-										else
-										{
-											if (loadparams[k].error)
-											{
-												loadedFobj.push(loadparams[k]);
-												serialize(k+1);
-											}
-											else
-											{
-												var cb = loadparams[k].callback;
-												loadparams[k].callback = function(fob)
-												{
-													if (cb)
-														cb();
-													if (fob != undefined)
-													{
-		 												logProcess('loaded ' + fob.filename);
-													}
-													loadedFobj.push(fob);
-													serialize(k+1);
-												}
-												that.progressSpinner(k/loadparams.length,function() { aboutoabort = true});
-												KViewer.dataManager.loadData(loadparams[k]);
-
-											}
-										}
-									}
-
-									serialize(0);
-
-/*
+                        /*
 									for (var k = 0; k < loadparams.length;k++)
 									{
 										loadparams[k].progressSpinner = that.progressSpinner;	
 										KViewer.dataManager.loadData(loadparams[k]);
 									}
 */
-									
-								}
-					 , that.progressSpinner)
-
-				
-				}
-				else if (callback)
-					callback(loadedFobj);
-			}
-
-
-			function updateRecent(files)
-			{
-				 if (files == undefined)
-				 	return;
-				 fs.readFile("./recent.json",undefined, function(err,content)
-					 {
-						var recent = {};
-						var offs = 0;
-					 	if (content != undefined)
-					 	{
-					 		var names= JSON.parse(content);					 			
-					 		for (var k = 0;k < names.length;k++)
-					 			recent[names[k]] = k;
-					 		offs = names.length;
-					 	}
-
-						if (files.length > 5)
-							files = files.slice(0,5);
-
-						for (var k = 0;k < files.length;k++)
-						    recent[files[k]] = offs+k;
-
-						var recent = Object.keys(recent);					    
-					 	if (recent.length>10)
-							recent = recent.slice(recent.length-10,recent.length);
-
-						fs.writeFile("./recent.json",JSON.stringify(recent),undefined,function(){
-							ipc.send('rebuild-menu');
-							
-						});
-					 });
- 			 }
-			
-
-
-  }
-
-
-
-  that.runningBlobIndex=0
-  that.loadBlob = function(blob,name,callback)
-  {
-		that.runningBlobIndex++;
-		var id = "blob" + that.runningBlobIndex;
-		KViewer.dataManager.loadData({URLType:'cachefile',
-			fileID:id,
-			fileinfo:{Filename:name,ID:id},
-			file:blob,
-			callback: callback
-			})
- 
-  }
-
-  if (typeof miscupload != "undefined")
-  {
-	  $("<li><a>Open files (nii, etc ...) </a></li>").click(function(){
-				var $xxx = $('<input type="file" id="uploaderId" name="upload" '+
-				'style="visibility: hidden; width: 1px; height: 1px" multiple />').appendTo($(document.body));
-				$xxx[0].addEventListener('change', miscupload);
-				$xxx.trigger('click');
-	   }  ).appendTo($menu);
-	  $("<li><a>Open directory (dicoms)</a></li>").click(function(){
-				var $xxx = $('<input type="file" id="uploaderId" name="upload" '+
-				'style="visibility: hidden; width: 1px; height: 1px" multiple webkitdirectory />').appendTo($(document.body));
-				$xxx[0].addEventListener('change', miscupload);
-				$xxx.trigger('click');
-	   }  ).appendTo($menu);
-  }
-
-  $("<li><a>Close All</a></li>").click(function(){
-    signalhandler.send("close");
-    dataman.clearMemory();
-    master.roiTool.clearAll();
-    that.update();
-   }  ).appendTo($menu);
-	 
-  $menu.append($("<hr width='100%'> ")); 					 					
-
-  if (!electron)
-  {
-
-	  $("<li><a>Upload local files</a></li>").click(function() { uploadAll() } ).appendTo($menu);
-	  $("<li><a>Upload local files with native PID</a></li>").click(function() { uploadAll('useinternalPSID') } ).appendTo($menu);
-	  $menu.append($("<hr width='100%'> ")); 					 					
-  }
-
-  var sel = '';
-  if (state.viewer.zippedUpload)
-	  sel = 'check-';
-  var $zup;
-   $menu.append($zup = $("<li> zipped upload/save <i class='fa fa-"+sel+"circle-o'></i> </li>").click(
-   function()
-   {
-		var $fa = $zup.find(".fa");
-   	    if (state.viewer.zippedUpload)
-   	    {
-   	      state.viewer.zippedUpload = false;
-   	      $fa.removeClass("fa-check-circle-o").addClass("fa-circle-o");
-   	    }
-   	    else
-   	    {
-   	      state.viewer.zippedUpload = true;
-   	      $fa.addClass("fa-check-circle-o").removeClass("fa-circle-o");
-   	    }
-
-
-   }))
-
-   that.$topRow.on('mouseenter',
-   function()
-   {
-		var $fa = $zup.find(".fa");
-   	    if (state.viewer.zippedUpload)
-   	      $fa.addClass("fa-check-circle-o").removeClass("fa-circle-o");
-   	    else
-   	      $fa.removeClass("fa-check-circle-o").addClass("fa-circle-o");
-   });
-
-
-  that.$topRow.append( $("<li><a>Workspace</a></li>").append($menu) );
-
-  var $menu2 = $("<ul ></ul>");
-  var $diskcache =  $("<a></a>").appendTo($("<li></li>").appendTo($menu2));  
-  $("<li><a>Clear Disk Cache</a></li>").click(function(){storage.clear().then(that.update); }).appendTo($menu2);
-  var $diskcachehead = $("<li><a> DiskCache</a> </li>");
-  that.$topRow.append($diskcachehead.append($menu2) );
- 
-  that.$topRow.append( $("<li><a>DicomWeb</a></li>").click(function(e)
-  {
-         var prompt = "Paste a dicomweb link to a series or a study";
-         if (typeof lastDicomWebLink == "undefined")
-          lastDicomWebLink="";
-         alertify.prompt(prompt, function(e,str)
-         {
-         	if (e)
-         	{
-                loadDICOMwebURL(str);
-                lastDicomWebLink = str;
-         	}
-         },lastDicomWebLink );
-  	
-   } ))
-
-
-  var $innerDIV = $("<div ondragover='event.preventDefault();' class='annotation_tool_listDIV'></div>").appendTo(that.$container);
- 
-
-  if (!KViewer.standalone && userinfo.username==guestuser)
-  {
-  	    that.$leftToolistDiv.remove();
-        $innerDIV.css("width","100%");
-  }
- 
-
-  if (userinfo.username == guestuser)
-  {
-     //that.$leftToolistDiv.remove();
-     //$innerDIV.css("width","100%");
-  }
-
-  var $table = $("<table cellspacing=0 class='localfiletable'></table>").appendTo($innerDIV);
-  that.handleDrop = function(e,callback)
-  {
-  	//if (e.isDefaultPrevented && e.isDefaultPrevented()) // what's this???
-	//	return;
-   
-    e.preventDefault();
-    e.stopPropagation();
-
-	createLoadParamsFileDrop(e, function (loadparams)
-	{
-		for (var k = 0; k < loadparams.length;k++)
-		{
-			loadparams[k].progressSpinner = that.progressSpinner;		 
-			if (userinfo.username == guestuser | $.isNumeric(loadparams[k].fileID) | loadparams[k].buffer != undefined)
-				KViewer.dataManager.loadData(loadparams[k]);
-			else      
-				KViewer.dataManager.loadProxy(loadparams[k],false);
-		}
-
-        if (callback != undefined && typeof callback == "function")
-        {
-        	callback(loadparams)
+                    },
+                    that.progressSpinner
+                );
+            } else if (callback) callback(loadedFobj);
         }
 
-		KViewer.cacheManager.update();
+        function updateRecent(files) {
+            if (files == undefined) return;
+            fs.readFile("./recent.json", undefined, function (err, content) {
+                var recent = {};
+                var offs = 0;
+                if (content != undefined) {
+                    var names = JSON.parse(content);
+                    for (var k = 0; k < names.length; k++) recent[names[k]] = k;
+                    offs = names.length;
+                }
 
-	},that.progressSpinner);
+                if (files.length > 5) files = files.slice(0, 5);
 
-    cleanAllDropIndicators();
-  
-  }
-  that.$container[0].ondrop = that.handleDrop;
-  that.$container.on("dragover",function(e)
-  {
-  	return false;
-  });
+                for (var k = 0; k < files.length; k++) recent[files[k]] = offs + k;
 
+                var recent = Object.keys(recent);
+                if (recent.length > 10) recent = recent.slice(recent.length - 10, recent.length);
 
+                fs.writeFile("./recent.json", JSON.stringify(recent), undefined, function () {
+                    ipc.send("rebuild-menu");
+                });
+            });
+        }
+    }
 
+    that.runningBlobIndex = 0;
+    that.loadBlob = function (blob, name, callback) {
+        that.runningBlobIndex++;
+        var id = "blob" + that.runningBlobIndex;
+        KViewer.dataManager.loadData({
+            URLType: "cachefile",
+            fileID: id,
+            fileinfo: { Filename: name, ID: id },
+            file: blob,
+            callback: callback,
+        });
+    };
 
-  /***************************************************************************************
-   * resize callback
-   ****************************************************************************************/
+    if (typeof miscupload != "undefined") {
+        $("<li><a>Open files (nii, etc ...) </a></li>")
+            .click(function () {
+                var $xxx = $(
+                    '<input type="file" id="uploaderId" name="upload" ' +
+                        'style="visibility: hidden; width: 1px; height: 1px" multiple />'
+                ).appendTo($(document.body));
+                $xxx[0].addEventListener("change", miscupload);
+                $xxx.trigger("click");
+            })
+            .appendTo($menu);
+        $("<li><a>Open directory (dicoms)</a></li>")
+            .click(function () {
+                var $xxx = $(
+                    '<input type="file" id="uploaderId" name="upload" ' +
+                        'style="visibility: hidden; width: 1px; height: 1px" multiple webkitdirectory />'
+                ).appendTo($(document.body));
+                $xxx[0].addEventListener("change", miscupload);
+                $xxx.trigger("click");
+            })
+            .appendTo($menu);
+    }
 
-  that.resize = function(hei)
-  {
-      that.$container.height(hei);
-      $innerDIV.height(hei-that.$container.find('.KToolsTopMenu').height());
-  }
+    $("<li><a>Close All</a></li>")
+        .click(function () {
+            signalhandler.send("close");
+            dataman.clearMemory();
+            master.roiTool.clearAll();
+            that.update();
+        })
+        .appendTo($menu);
 
+    $menu.append($("<hr width='100%'> "));
 
-  /***************************************************************************************
-   * update the tool table
-   ****************************************************************************************/
+    if (!electron) {
+        $("<li><a>Upload local files</a></li>")
+            .click(function () {
+                uploadAll();
+            })
+            .appendTo($menu);
+        $("<li><a>Upload local files with native PID</a></li>")
+            .click(function () {
+                uploadAll("useinternalPSID");
+            })
+            .appendTo($menu);
+        $menu.append($("<hr width='100%'> "));
+    }
 
+    var sel = "";
+    if (state.viewer.zippedUpload) sel = "check-";
+    var $zup;
+    $menu.append(
+        ($zup = $("<li> zipped upload/save <i class='fa fa-" + sel + "circle-o'></i> </li>").click(function () {
+            var $fa = $zup.find(".fa");
+            if (state.viewer.zippedUpload) {
+                state.viewer.zippedUpload = false;
+                $fa.removeClass("fa-check-circle-o").addClass("fa-circle-o");
+            } else {
+                state.viewer.zippedUpload = true;
+                $fa.addClass("fa-check-circle-o").removeClass("fa-circle-o");
+            }
+        }))
+    );
 
-  that.update = function()
-  {
-    $table.children().remove();
-  
-  	var $thead = $("<thead>").appendTo($table);
-    var $row = $("<tr ></tr>").appendTo($thead);
-    $row.append($("<td class='fixedwidth' preventsortable='1' fixedwidth='7' ><i class='fa fa-square-o'></i></td>").click(function(e){ toggle_all(); }));
-    $row.append($("<td class='fixedwidth' preventsortable='1' fixedwidth='7'></td>"));
-    $row.append($("<td class='fixedwidth' preventsortable='1' fixedwidth='7'></td>"));
-    $row.append($("<td>FID </td>"));
-    $row.append($("<td>filename&nbsp&nbsp&nbsp</td>"));
-    $row.append($("<td>subfolder</td>"));
-    $row.append($("<td>type</td>"));
-    $row.append($("<td>size</td>"));
-    $row.append($("<td>PID</td>"));
-    $row.append($("<td>SID</td>"));
+    that.$topRow.on("mouseenter", function () {
+        var $fa = $zup.find(".fa");
+        if (state.viewer.zippedUpload) $fa.addClass("fa-check-circle-o").removeClass("fa-circle-o");
+        else $fa.removeClass("fa-check-circle-o").addClass("fa-circle-o");
+    });
 
-  	var $tbody = $("<tbody>").appendTo($table);
-    var filelist = dataman.getFileList();
-    for  (var k =0; k < filelist.length; k++)
-    {
+    that.$topRow.append($("<li><a>Workspace</a></li>").append($menu));
 
-       var fobj = dataman.getFile(filelist[k]);
-       var id = fobj.fileID;
+    var $menu2 = $("<ul ></ul>");
+    var $diskcache = $("<a></a>").appendTo($("<li></li>").appendTo($menu2));
+    $("<li><a>Clear Disk Cache</a></li>")
+        .click(function () {
+            storage.clear().then(that.update);
+        })
+        .appendTo($menu2);
+    var $diskcachehead = $("<li><a> DiskCache</a> </li>");
+    that.$topRow.append($diskcachehead.append($menu2));
 
-       if (id == undefined) // probably a bad bug, if this happens
-       		continue;
-
-       if (id.substring(0,5) == "atlas")
-       	  continue;
- 
-       var dragstuff = "draggable='true' data-type='file' data-piz='' data-sid='' data-tag='"+fobj.fileinfo.Tag+"' data-filename='"+fobj.filename+"' data-subfolder='' data-fileID='"+fobj.fileID+"' data-mime='"+fobj.contentType+"'";
-       dragstuff = dragstuff + " ondragstart='setdragstart(event);' ondragend='setdragend(event);' ";
-       
-       // dblclick makes problems for example with delete button. No solution so far
-       var $row = $("<tr  ondblclick='loadDataOndblClick(event);' class='filecache' " + dragstuff + "></tr>").appendTo($tbody);
-       if (fobj.modified) 
-           $row.addClass("modified");
-       $row.on("contextmenu", function (ev) { fileCacheContextMenu(ev); });
-       $row.append($("<td><i class='fa fa-square-o'></i> </td>").dblclick(function(e) {return false;}).click(function(e){ toggle_file(e.target); return false; }));
-
-
-	   //var editable = id.substring(0,9) == "localfile" | id.substring(0,5) == "proxy" | fobj.modified;
-       $row.append($("<td> <i class='tablebutton fa fa-fw fa-trash'></td>").click(function(k) {return function(ev){ev.preventDefault();ev.stopPropagation();
-			ignoreDblClickBeforeClose(ev);
-	  		 master.dataManager.delFile(k); that.update();  return false;} }(fobj.fileID) ));
-
-
-       if (fobj.editable | fobj.proxyev != undefined)
-       {
-         var $up = $("<i class='tablebutton fa fa-fw fa-upload'></i>").on('click', function(e) { prepTarget(e.target); uploadFiles(); });
-         if (userinfo.username != guestuser)
-              $row.append($("<td></td>").append($up));
-         else
-              $row.append($("<td></td>"));
-       }
-       else
-         $row.append($("<td> </td>"));
-
-
-       if (id.substring(0,9) == "localfile" || id.substring(0,5) == "proxy" )
-          $row.append($("<td>local</td>"));
-       else
-          $row.append($("<td>" + id + "</td>"));
-
-
-	   //var editable = id.substring(0,9) == "localfile" | id.substring(0,5) == "proxy" | fobj.modified;
-
-	   var types = {
-	   	 nii: "image imgTag",
-	   	 bmp: "file-image-o",
-	   	 ano: 'comment-o AnoTag',
-	   	 form: "file-text-o FormTag",
-	   	 json: "file-o",	   	 
-	   	 pdf: "file-pdf-o",
-	   	 txt: "file-text-o",
-	   	 tracts: "tree fiberTag"
-	   };
-
-
-		var symbol = "??";
-		if (types[fobj.contentType] != "undefined")
-		  symbol = "<i class='KTreeSymbol fa fa-" + types[fobj.contentType] +  " fa-fw' ></i>  ";
-
-
-
-	
-
-      var $namediv = $("<div >" + symbol + fobj.filename + " </div>").appendTo($("<td></td>").appendTo($row));
-      if (fobj.editable)
-			KSetContentEditable($namediv,function(sel) { return  function($el) 
-			   {
-						sel.filename = $el.text().trim(); 
-						if (sel.fileinfo && sel.fileinfo.Filename)
-						    sel.fileinfo.Filename = sel.filename;
-						if (sel.namedivs != undefined)
-							for (var i = 0; i < sel.namedivs.length;i++)
-								$(sel.namedivs[i]).text(sel.filename);
-			   } }(fobj),undefined,true);
-			   
-	  
-
-	  var subf = (fobj.fileinfo.SubFolder || "/");
-      var $subdiv = $("<div>" + subf + " </div>").appendTo($("<td></td>").appendTo($row));
-      if (fobj.editable)
-			KSetContentEditable($subdiv,function(sel) { return  function($el) 
-			   {
-						sel.fileinfo.SubFolder = $el.text().trim(); 
-			   } }(fobj),undefined,true);
-
-       
-       if ((fobj.fileinfo.Tag || "").search("/mask/") >= 0)
-          $row.append($("<td> ROI </td>"));
-       else if (id.substring(0,5) == "proxy" && fobj.proxyev && fobj.proxyev.file && fobj.proxyev.file.fileobject)
-		  $row.append($("<td>" + toFileSize(fobj.proxyev.file.fileobject.type) + " </td>"));
-       else
-       {
-		  if (fobj.contentType == "nii")
-		  {
-			$row.append($("<td> " + fobj.content.filetype +" (" +fobj.content.sizes+")</td>")); 
-		  } 
-		  else       
-            $row.append($("<td>" + fobj.contentType +"</td>"));
-       }
- 
-       if (id.substring(0,5) == "proxy" && fobj.proxyev && fobj.proxyev.file && fobj.proxyev.file.fileobject)
-			   $row.append($("<td>" + toFileSize(fobj.proxyev.file.fileobject.size) + " </td>"));
-
-	   else
-	       $row.append($("<td>" + toFileSize(fobj.fileinfo.filesize) + " </td>"));
-
-
-
-    
-          
-  
-       $row.append($("<td>" + fobj.fileinfo.patients_id + "</td>"));
-       $row.append($("<td>" + fobj.fileinfo.studies_id + "</td>"));
-
-     }
-     if (electron)
-	 	that.tablestate = {viscol:[true, false, false, true, true, true, true, true, false, false] };
-	 else 	
-	    if (that.tablestate == undefined)
-	     	that.tablestate = {viscol:[true, true, true, false, true, true, true, true, false, false] };
-
-     that.attachTableOperator($table.parent(),undefined,true);
-
-     if (storage != undefined)
-     {
-       $diskcachehead.show();
-       function showsum(sum,numfiles)
-       {        
-          var used = sum/storage.getCapacity()/1000;
-          $diskcache.text("used " + (sum/1024/1024/1024).toFixed(1) + " GB / " + (storage.getCapacity()/1024/1024/1024).toFixed(0) + "GB in " + numfiles + " files");
-          if (used > 95)
-          { 
-              $diskcachehead.css('color','red');
-              $diskcache.css('color','red');
-          }
-          else
-          { 
-              $diskcachehead.css('color','');
-              $diskcache.css('color','');
-          }
-
-       }
-
-       storage.ls().then(function(docKeys) {
-          var sum = 0;
-		  var numfiles = 0;
-          var fun = function () {storage.getContents(docKeys[0]).then(
-              function(content)
-              {
-				  
-                  if (docKeys.length > 0)
-                  {
-                    docKeys.splice(0,1);
-                    if (content != "")
-                    {
-                    	var finfo = JSON.parse(content);
-                    	if (finfo.filesize != undefined)                    	
-                    		sum += finfo.filesize
-						numfiles++;
+    that.$topRow.append(
+        $("<li><a>DicomWeb</a></li>").click(function (e) {
+            var prompt = "Paste a dicomweb link to a series or a study";
+            if (typeof lastDicomWebLink == "undefined") lastDicomWebLink = "";
+            alertify.prompt(
+                prompt,
+                function (e, str) {
+                    if (e) {
+                        loadDICOMwebURL(str);
+                        lastDicomWebLink = str;
                     }
-                    fun();
-                  }
-                  else
-                  {
-                    showsum(sum,numfiles);
-                    storage.size = sum;
-                  }
-              }) };  fun(); })
-    }
-    else
-      $diskcachehead.hide();
+                },
+                lastDicomWebLink
+            );
+        })
+    );
 
+    var $innerDIV = $("<div ondragover='event.preventDefault();' class='annotation_tool_listDIV'></div>").appendTo(
+        that.$container
+    );
 
-    function toggle_file(target)
-    {
-      if (!$(target).hasClass("fa"))
-         target = $(target).parent().find(".fa");
-      toggle(target);
+    if (!KViewer.standalone && userinfo.username == guestuser) {
+        that.$leftToolistDiv.remove();
+        $innerDIV.css("width", "100%");
     }
 
-    function toggle(target)
-    {
-      $(target).toggleClass("fa-square-o");
-      $(target).toggleClass("fa-check-square-o");
-      $(target).parent().parent().toggleClass("selected");
+    if (userinfo.username == guestuser) {
+        //that.$leftToolistDiv.remove();
+        //$innerDIV.css("width","100%");
     }
 
-    function toggle_all()
-    {
-       var rows = $table.find("tr");
-       for (var k = 1; k < rows.length;k++)
-          toggle($(rows[k]).find(".fa-square-o,.fa-check-square-o"));
+    var $table = $("<table cellspacing=0 class='localfiletable'></table>").appendTo($innerDIV);
+    that.handleDrop = function (e, callback) {
+        //if (e.isDefaultPrevented && e.isDefaultPrevented()) // what's this???
+        //	return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        createLoadParamsFileDrop(
+            e,
+            function (loadparams) {
+                for (var k = 0; k < loadparams.length; k++) {
+                    loadparams[k].progressSpinner = that.progressSpinner;
+                    if (
+                        (userinfo.username == guestuser) |
+                        $.isNumeric(loadparams[k].fileID) |
+                        (loadparams[k].buffer != undefined)
+                    )
+                        KViewer.dataManager.loadData(loadparams[k]);
+                    else KViewer.dataManager.loadProxy(loadparams[k], false);
+                }
+
+                if (callback != undefined && typeof callback == "function") {
+                    callback(loadparams);
+                }
+
+                KViewer.cacheManager.update();
+            },
+            that.progressSpinner
+        );
+
+        cleanAllDropIndicators();
+    };
+    that.$container[0].ondrop = that.handleDrop;
+    that.$container.on("dragover", function (e) {
+        return false;
+    });
+
+    /***************************************************************************************
+     * resize callback
+     ****************************************************************************************/
+
+    that.resize = function (hei) {
+        that.$container.height(hei);
+        $innerDIV.height(hei - that.$container.find(".KToolsTopMenu").height());
+    };
+
+    /***************************************************************************************
+     * update the tool table
+     ****************************************************************************************/
+
+    that.update = function () {
+        $table.children().remove();
+
+        var $thead = $("<thead>").appendTo($table);
+        var $row = $("<tr ></tr>").appendTo($thead);
+        $row.append(
+            $("<td class='fixedwidth' preventsortable='1' fixedwidth='7' ><i class='fa fa-square-o'></i></td>").click(
+                function (e) {
+                    toggle_all();
+                }
+            )
+        );
+        $row.append($("<td class='fixedwidth' preventsortable='1' fixedwidth='7'></td>"));
+        $row.append($("<td class='fixedwidth' preventsortable='1' fixedwidth='7'></td>"));
+        $row.append($("<td>FID </td>"));
+        $row.append($("<td>filename&nbsp&nbsp&nbsp</td>"));
+        $row.append($("<td>subfolder</td>"));
+        $row.append($("<td>type</td>"));
+        $row.append($("<td>size</td>"));
+        $row.append($("<td>PID</td>"));
+        $row.append($("<td>SID</td>"));
+
+        var $tbody = $("<tbody>").appendTo($table);
+        var filelist = dataman.getFileList();
+        for (var k = 0; k < filelist.length; k++) {
+            var fobj = dataman.getFile(filelist[k]);
+            var id = fobj.fileID;
+
+            if (id == undefined)
+                // probably a bad bug, if this happens
+                continue;
+
+            if (id.substring(0, 5) == "atlas") continue;
+
+            var dragstuff =
+                "draggable='true' data-type='file' data-piz='' data-sid='' data-tag='" +
+                fobj.fileinfo.Tag +
+                "' data-filename='" +
+                fobj.filename +
+                "' data-subfolder='' data-fileID='" +
+                fobj.fileID +
+                "' data-mime='" +
+                fobj.contentType +
+                "'";
+            dragstuff = dragstuff + " ondragstart='setdragstart(event);' ondragend='setdragend(event);' ";
+
+            // dblclick makes problems for example with delete button. No solution so far
+            var $row = $(
+                "<tr  ondblclick='loadDataOndblClick(event);' class='filecache' " + dragstuff + "></tr>"
+            ).appendTo($tbody);
+            if (fobj.modified) $row.addClass("modified");
+            $row.on("contextmenu", function (ev) {
+                fileCacheContextMenu(ev);
+            });
+            $row.append(
+                $("<td><i class='fa fa-square-o'></i> </td>")
+                    .dblclick(function (e) {
+                        return false;
+                    })
+                    .click(function (e) {
+                        toggle_file(e.target);
+                        return false;
+                    })
+            );
+
+            //var editable = id.substring(0,9) == "localfile" | id.substring(0,5) == "proxy" | fobj.modified;
+            $row.append(
+                $("<td> <i class='tablebutton fa fa-fw fa-trash'></td>").click(
+                    (function (k) {
+                        return function (ev) {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            ignoreDblClickBeforeClose(ev);
+                            master.dataManager.delFile(k);
+                            that.update();
+                            return false;
+                        };
+                    })(fobj.fileID)
+                )
+            );
+
+            if (fobj.editable | (fobj.proxyev != undefined)) {
+                var $up = $("<i class='tablebutton fa fa-fw fa-upload'></i>").on("click", function (e) {
+                    prepTarget(e.target);
+                    uploadFiles();
+                });
+                if (userinfo.username != guestuser) $row.append($("<td></td>").append($up));
+                else $row.append($("<td></td>"));
+            } else $row.append($("<td> </td>"));
+
+            if (id.substring(0, 9) == "localfile" || id.substring(0, 5) == "proxy") $row.append($("<td>local</td>"));
+            else $row.append($("<td>" + id + "</td>"));
+
+            //var editable = id.substring(0,9) == "localfile" | id.substring(0,5) == "proxy" | fobj.modified;
+
+            var types = {
+                nii: "image imgTag",
+                bmp: "file-image-o",
+                ano: "comment-o AnoTag",
+                form: "file-text-o FormTag",
+                json: "file-o",
+                pdf: "file-pdf-o",
+                txt: "file-text-o",
+                tracts: "tree fiberTag",
+            };
+
+            var symbol = "??";
+            if (types[fobj.contentType] != "undefined")
+                symbol = "<i class='KTreeSymbol fa fa-" + types[fobj.contentType] + " fa-fw' ></i>  ";
+
+            var $namediv = $("<div >" + symbol + fobj.filename + " </div>").appendTo($("<td></td>").appendTo($row));
+            if (fobj.editable)
+                KSetContentEditable(
+                    $namediv,
+                    (function (sel) {
+                        return function ($el) {
+                            sel.filename = $el.text().trim();
+                            if (sel.fileinfo && sel.fileinfo.Filename) sel.fileinfo.Filename = sel.filename;
+                            if (sel.namedivs != undefined)
+                                for (var i = 0; i < sel.namedivs.length; i++) $(sel.namedivs[i]).text(sel.filename);
+                        };
+                    })(fobj),
+                    undefined,
+                    true
+                );
+
+            var subf = fobj.fileinfo.SubFolder || "/";
+            var $subdiv = $("<div>" + subf + " </div>").appendTo($("<td></td>").appendTo($row));
+            if (fobj.editable)
+                KSetContentEditable(
+                    $subdiv,
+                    (function (sel) {
+                        return function ($el) {
+                            sel.fileinfo.SubFolder = $el.text().trim();
+                        };
+                    })(fobj),
+                    undefined,
+                    true
+                );
+
+            if ((fobj.fileinfo.Tag || "").search("/mask/") >= 0) $row.append($("<td> ROI </td>"));
+            else if (id.substring(0, 5) == "proxy" && fobj.proxyev && fobj.proxyev.file && fobj.proxyev.file.fileobject)
+                $row.append($("<td>" + toFileSize(fobj.proxyev.file.fileobject.type) + " </td>"));
+            else {
+                if (fobj.contentType == "nii") {
+                    $row.append($("<td> " + fobj.content.filetype + " (" + fobj.content.sizes + ")</td>"));
+                } else $row.append($("<td>" + fobj.contentType + "</td>"));
+            }
+
+            if (id.substring(0, 5) == "proxy" && fobj.proxyev && fobj.proxyev.file && fobj.proxyev.file.fileobject)
+                $row.append($("<td>" + toFileSize(fobj.proxyev.file.fileobject.size) + " </td>"));
+            else $row.append($("<td>" + toFileSize(fobj.fileinfo.filesize) + " </td>"));
+
+            $row.append($("<td>" + fobj.fileinfo.patients_id + "</td>"));
+            $row.append($("<td>" + fobj.fileinfo.studies_id + "</td>"));
+        }
+        if (electron) that.tablestate = { viscol: [true, false, false, true, true, true, true, true, false, false] };
+        else if (that.tablestate == undefined)
+            that.tablestate = { viscol: [true, true, true, false, true, true, true, true, false, false] };
+
+        that.attachTableOperator($table.parent(), undefined, true);
+
+        if (storage != undefined) {
+            $diskcachehead.show();
+            function showsum(sum, numfiles) {
+                var used = sum / storage.getCapacity() / 1000;
+                $diskcache.text(
+                    "used " +
+                        (sum / 1024 / 1024 / 1024).toFixed(1) +
+                        " GB / " +
+                        (storage.getCapacity() / 1024 / 1024 / 1024).toFixed(0) +
+                        "GB in " +
+                        numfiles +
+                        " files"
+                );
+                if (used > 95) {
+                    $diskcachehead.css("color", "red");
+                    $diskcache.css("color", "red");
+                } else {
+                    $diskcachehead.css("color", "");
+                    $diskcache.css("color", "");
+                }
+            }
+
+            storage.ls().then(function (docKeys) {
+                var sum = 0;
+                var numfiles = 0;
+                var fun = function () {
+                    storage.getContents(docKeys[0]).then(function (content) {
+                        if (docKeys.length > 0) {
+                            docKeys.splice(0, 1);
+                            if (content != "") {
+                                var finfo = JSON.parse(content);
+                                if (finfo.filesize != undefined) sum += finfo.filesize;
+                                numfiles++;
+                            }
+                            fun();
+                        } else {
+                            showsum(sum, numfiles);
+                            storage.size = sum;
+                        }
+                    });
+                };
+                fun();
+            });
+        } else $diskcachehead.hide();
+
+        function toggle_file(target) {
+            if (!$(target).hasClass("fa")) target = $(target).parent().find(".fa");
+            toggle(target);
+        }
+
+        function toggle(target) {
+            $(target).toggleClass("fa-square-o");
+            $(target).toggleClass("fa-check-square-o");
+            $(target).parent().parent().toggleClass("selected");
+        }
+
+        function toggle_all() {
+            var rows = $table.find("tr");
+            for (var k = 1; k < rows.length; k++) toggle($(rows[k]).find(".fa-square-o,.fa-check-square-o"));
+        }
+
+        function getVisible() {
+            var visible = [];
+            for (var fid in visibleROIs) {
+                visible.push(master.dataManager.files[fid].content);
+            }
+            return visible;
+        }
+        that.getVisible = getVisible;
+
+        signalhandler.send("cacheManagerUpdate");
+    };
+
+    /***************************************************************************************
+     * update the tool table
+     ****************************************************************************************/
+
+    function uploadAll(usenativePID) {
+        $(document.body).addClass("wait");
+
+        var fids = KViewer.dataManager.getFileList();
+        tempObjectInfo = [];
+        for (var k = 0; k < fids.length; k++) {
+            var modified = false;
+            var fobj = KViewer.dataManager.getFile(fids[k]);
+            if (fobj.modified) modified = true;
+
+            if ((fids[k].substring(0, 5) == "local") | (fids[k].substring(0, 5) == "proxy") | modified)
+                tempObjectInfo.push({ fileID: fids[k] });
+        }
+        uploadFiles(that.progressSpinner, usenativePID, function () {
+            if (usenativePID) refreshButton();
+            $(document.body).removeClass("wait");
+        });
     }
 
-    function getVisible()
-    {
-       var visible = [];
-       for (var fid in visibleROIs)
-       {
-          visible.push(master.dataManager.files[fid].content);
-       }
-       return visible;
+    /***************************************************************************************
+     * upload files
+     ****************************************************************************************/
+
+    function uploadFiles(progress, usenativePID, callback) {
+        if (projectInfo && projectInfo.rights.readonly == "on") {
+            alertify.error("project is readonly for user " + userinfo.username);
+            if (callback) callback();
+            return;
+        }
+
+        var filesToUpload = tempObjectInfo;
+        tempObjectInfo = [];
+
+        if (progress == undefined) progress = that.progressSpinner;
+
+        function doTheUpload() {
+            var fi = KViewer.dataManager.getFile(filesToUpload[0].fileID);
+            var finfo = { SubFolder: "", Tag: "", permission: "rwp" };
+            if (fi.fileinfo && fi.fileinfo.SubFolder) finfo.SubFolder = fi.fileinfo.SubFolder.replace(/^\/|\/$/g, "");
+            if (fi.fileinfo && fi.fileinfo.Tag) finfo.Tag = fi.fileinfo.Tag;
+
+            updateTag(finfo, [], userinfo.username);
+
+            var zip = false;
+            if (state.viewer.zippedUpload && !uploadFiles.ignoreZipSetting) zip = true;
+
+            if (
+                fi.fileinfo != undefined &&
+                fi.fileinfo.Filename != undefined &&
+                fi.fileinfo.Filename.search("\\.gz") != -1
+            )
+                zip = true;
+
+            if (
+                !uploadBinary(
+                    fi,
+                    finfo,
+                    function (id, response) {
+                        if (id.substring(0, 5) == "proxy") {
+                            KViewer.dataManager.delFile(id);
+                        } else {
+                            var newid = response.fileID;
+                            var fi = KViewer.dataManager.getFile(id);
+                            if (newid != id) {
+                                fi.fileID = newid;
+                                KViewer.dataManager.setFile(newid, fi);
+                                KViewer.dataManager.delFile(id, true);
+                            }
+                            fi.modified = false;
+                        }
+
+                        KViewer.cacheManager.update();
+                        if (ViewerSettings.selectionMode[1] == "f") refreshButton();
+                        else patientTableMirror.mirrorState();
+                        filesToUpload.splice(0, 1);
+                        if (filesToUpload.length > 0) doTheUpload();
+                        else {
+                            that.uploadFiles.ignoreZipSetting = false;
+                            if (callback) callback();
+                        }
+                    },
+                    progress,
+                    zip,
+                    usenativePID
+                )
+            ) {
+                filesToUpload.splice(0);
+            }
+        }
+
+        function cleanTag(tag) {
+            var tags = tag.split("/").filter((x) => x != "");
+            var obj = {};
+            for (var k in tags) obj[tags[k]] = true;
+            tags = Object.keys(obj);
+            if (tags.length == 0) return "";
+            else return "/" + tags.join("/") + "/";
+        }
+
+        if (filesToUpload[0].fileID.substring(0, 5) != "proxy") {
+            var str = "";
+            for (var k = 0; k < filesToUpload.length; k++) {
+                var f = KViewer.dataManager.getFile(filesToUpload[k].fileID);
+                if (f.fileinfo != undefined) {
+                    if ((f.fileinfo.patients_id == undefined && k == 0) | (usenativePID == undefined)) {
+                        doTheUpload();
+                        return;
+                    }
+                    var txt = f.fileinfo.patients_id + f.fileinfo.studies_id;
+                    if (f.fileinfo.SubFolder != undefined) {
+                        txt += " " + f.fileinfo.SubFolder + "/";
+                        if (f.fileinfo.Filename != undefined) txt += f.fileinfo.Filename;
+                        else txt += f.filename;
+                    } else txt += " " + f.filename;
+                    str += '<span  style="float:left"> ' + txt + " </span> <br>";
+                } else str += '<span  style="float:left"> ' + f.filename + " </span> <br>";
+            }
+
+            alertify.confirm("Do you really want to upload the following files? <br><br>" + str, function (e) {
+                if (e) doTheUpload();
+                else that.uploadFiles.ignoreZipSetting = false;
+            });
+        } else doTheUpload();
     }
-    that.getVisible = getVisible;
+    that.uploadFiles = uploadFiles;
+    that.uploadFiles.askonOverwrite = true;
+    that.uploadFiles.ignoreZipSetting = false;
 
- 	signalhandler.send('cacheManagerUpdate')
+    function prepTarget(target) {
+        for (var k = 0; k < 3; k++) {
+            if ($(target).is("tr")) break;
+            target = $(target).parent();
+        }
+        prepObjectInfo(target);
+        return target;
+    }
+    that.prepTarget = prepTarget;
 
-  }
-  
+    /***************************************************************************************
+     * filecontext menu
+     ****************************************************************************************/
 
-  /***************************************************************************************
-   * update the tool table
-   ****************************************************************************************/  
+    var fileCacheContextMenu = KContextMenu(
+        function (ev) {
+            var target = prepTarget(ev.target);
+            var $menu = $("<ul class='menu_context'>");
 
-  function uploadAll(usenativePID)
-  {
-      $(document.body).addClass('wait');
+            if (tempObjectInfo[0].mime == "nii") {
+                $menu.append($("<li onchoice='openasroi' >Open as ROI </li>"));
+                $menu.append($("<li onchoice='cloneasroi' >Clone as ROI </li>"));
+            }
+            if (tempObjectInfo[0].mime == "json") {
+                $menu.append($("<li onchoice='openasanno' >Open as annotation</li>"));
+                $menu.append($("<li onchoice='openastrans' >Open as transformation</li>"));
+            }
+            if (
+                (userinfo.username != guestuser) &
+                ((tempObjectInfo[0].fileID.search("local") > -1) | (tempObjectInfo[0].fileID.search("proxy") > -1))
+            ) {
+                //        $menu.append($("<li onchoice='assignpid' >Assign PID </li>"));
+                //        $menu.append($("<li onchoice='assignsid' >Assign SID </li>"));
+                $menu.append($("<li onchoice='upload' >Upload </li>"));
+            }
+            $menu.append($("<li onchoice='download' >Download </li>"));
+            $menu.append($("<li onchoice='remove' >Remove </li>"));
 
-      var fids = KViewer.dataManager.getFileList();
-      tempObjectInfo = [];
-      for (var k = 0; k < fids.length ;k++)
-      {
- 		  var modified = false;
- 		  var fobj = KViewer.dataManager.getFile(fids[k]);
- 		  if (fobj.modified)
- 		  	modified = true;
-      	  
-          if (fids[k].substring(0,5) == 'local' | fids[k].substring(0,5) == 'proxy' | modified)
-              tempObjectInfo.push({fileID:fids[k]});
-      }
-      uploadFiles(that.progressSpinner,usenativePID,function()
-      {
-      	 if (usenativePID)
-      	     refreshButton();
-         $(document.body).removeClass('wait');
-      	     
-      });
-  }
+            return $menu;
+        },
+        function (str, ev) {
+            if (str == "openasroi") {
+                for (var k = 0; k < tempObjectInfo.length; k++)
+                    KViewer.roiTool.pushROI(tempObjectInfo[k].fileID, tempObjectInfo[k].filename, "frommaskfile");
+            }
+            if (str == "cloneasroi") {
+                for (var k = 0; k < tempObjectInfo.length; k++)
+                    KViewer.roiTool.pushROI(tempObjectInfo[k].fileID, "untitled");
+            }
+            if (str == "openasanno") {
+                for (var k = 0; k < tempObjectInfo.length; k++) {
+                    var c = KViewer.dataManager.getFile(tempObjectInfo[k].fileID).content;
+                    KViewer.annotationTool.loadAnnotations({ content: c });
+                }
+                if (!KViewer.annotationTool.$toggle.hasClass("KView_tool_enabled"))
+                    KViewer.annotationTool.$toggle.trigger("click");
+            } else if ((str == "assignpid") | (str == "assignsid")) {
+                var prompt = "Enter " + (str == "assignpid") ? "PID" : "SID";
+                var field = str == "assignpid" ? "patients_id" : "studies_id";
+                alertify.prompt(prompt, function (e, str) {
+                    for (var k = 0; k < tempObjectInfo.length; k++)
+                        KViewer.dataManager.getFile(tempObjectInfo[k].fileID).fileinfo[field] = str;
+                    KViewer.cacheManager.update();
+                });
+            } else if (str == "upload") {
+                uploadFiles();
+            } else if (str == "download") {
+                for (var k = 0; k < tempObjectInfo.length; k++)
+                    saveNiftilocal(KViewer.dataManager.getFile(tempObjectInfo[k].fileID));
+            } else if (str == "remove") {
+                for (var k = 0; k < tempObjectInfo.length; k++) {
+                    KViewer.dataManager.delFile(tempObjectInfo[k].fileID);
+                    if (KViewer.roiTool.ROIs[tempObjectInfo[k].fileID])
+                        delete KViewer.roiTool.ROIs[tempObjectInfo[k].fileID];
+                }
+                KViewer.cacheManager.update();
+                KViewer.roiTool.update();
+            }
+        },
+        true
+    );
 
-
-
-  /***************************************************************************************
-   * upload files
-   ****************************************************************************************/  
-
-  function uploadFiles(progress,usenativePID,callback)
-  {
-
-
-	 if (projectInfo && projectInfo.rights.readonly == "on")
-	 {
-		alertify.error("project is readonly for user " + userinfo.username)
-		if (callback)
-		    callback();
-		return;
- 	 }
-
-     var filesToUpload = tempObjectInfo;
-     tempObjectInfo = [];
-
-	 if (progress == undefined)
-	 	progress = that.progressSpinner;
-
-
-     function doTheUpload()
-     {
-      
-          var fi = KViewer.dataManager.getFile(filesToUpload[0].fileID);
-		  var finfo = {SubFolder:"",Tag:"",permission:"rwp"};
-		  if (fi.fileinfo && fi.fileinfo.SubFolder)
-		  		finfo.SubFolder = fi.fileinfo.SubFolder.replace(/^\/|\/$/g, "");
-		  if (fi.fileinfo && fi.fileinfo.Tag)
-		  		finfo.Tag = fi.fileinfo.Tag
-          
-          updateTag(finfo,[],userinfo.username);
-
-		  var zip = false;
-		  if (state.viewer.zippedUpload  && !uploadFiles.ignoreZipSetting)
-		  	zip = true;
-
-          if (fi.fileinfo != undefined && fi.fileinfo.Filename != undefined && fi.fileinfo.Filename.search("\\.gz") != -1)
-              zip = true;
-
-          if (!uploadBinary(fi,finfo,
-          function (id,response)
-          {
-               if (id.substring(0,5) == 'proxy')
-               {
-                  KViewer.dataManager.delFile(id);  
-               }
-               else
-               {
-                 var newid = response.fileID;
-                 var fi = KViewer.dataManager.getFile(id);
-                 if (newid != id)
-                 {                    
-                   fi.fileID = newid;
-                   KViewer.dataManager.setFile(newid,fi);
-                   KViewer.dataManager.delFile(id,true);
-                 }
-                 fi.modified = false;
-               }
-
-               KViewer.cacheManager.update();
-               if (ViewerSettings.selectionMode[1] == 'f')
-				   refreshButton();
-               else
-               	   patientTableMirror.mirrorState();
-               filesToUpload.splice(0,1);
-               if (filesToUpload.length > 0)
-                   doTheUpload();
-               else
-               {
-               	 that.uploadFiles.ignoreZipSetting = false;
-               	 if (callback)
-                    callback();
-               }
-
-          },progress,zip,usenativePID)) { filesToUpload.splice(0); }
-     }
-
-     function cleanTag(tag)
-     { 
-        var tags = tag.split("/").filter((x) => x!="");
-        var obj = {}
-        for (var k in tags)
-            obj[tags[k]] = true;
-        tags = Object.keys(obj);
-        if (tags.length==0)
-            return "";
-        else
-         	return "/" + tags.join("/") + "/"
-     }
-
-     if (filesToUpload[0].fileID.substring(0,5) != "proxy" ) 
-     {
-     	   var str = ""
-           for (var k = 0; k < filesToUpload.length;k++)
-           {
-           	   var f = KViewer.dataManager.getFile(filesToUpload[k].fileID);
-           	   if (f.fileinfo != undefined)
-           	   {
-           	   	   if ((f.fileinfo.patients_id == undefined && k == 0) | usenativePID==undefined)
-           	   	   {
-           	   	   	  doTheUpload()
-           	   	   	  return;
-           	   	   }
-           	   	   var txt = f.fileinfo.patients_id + f.fileinfo.studies_id 
-           	   	   if (f.fileinfo.SubFolder != undefined)
-           	   	   {
-           	   	       txt += " " + f.fileinfo.SubFolder +"/";
-           	   	       if (f.fileinfo.Filename != undefined)
-           	   	           txt +=f.fileinfo.Filename
-           	   	       else
-                           txt +=f.filename;           	   	   }
-           	   	   else
-           	   	       txt += " " + f.filename;
-                   str += '<span  style="float:left"> ' + txt+ ' </span> <br>';
-           	   }
-               else 
-                   str += '<span  style="float:left"> ' + f.filename+ ' </span> <br>';
-           }
-
-
-		   alertify.confirm('Do you really want to upload the following files? <br><br>' + str,
-		   function(e)
-		   {
-		       if (e)
-                   doTheUpload();
-		       else
-		           that.uploadFiles.ignoreZipSetting = false;
-		   });
-
-     }
-     else
-        doTheUpload();
-  
-  }
-  that.uploadFiles = uploadFiles;
-  that.uploadFiles.askonOverwrite = true;
-  that.uploadFiles.ignoreZipSetting = false;
-
-  function prepTarget(target)
-  {
-      for (var k = 0;k< 3;k++)
-      {
-        if ($(target).is("tr"))
-           break;
-        target = $(target).parent();
-      }
-      prepObjectInfo(target);
-      return target;
-  }
-  that.prepTarget = prepTarget;
-
-
-
-  /***************************************************************************************
-   * filecontext menu
-   ****************************************************************************************/ 
- 
-  var fileCacheContextMenu = KContextMenu(
-  function(ev) {
-      var target = prepTarget(ev.target)
-      var $menu = $("<ul class='menu_context'>")
-
-      if (tempObjectInfo[0].mime == "nii")
-      {
-          $menu.append($("<li onchoice='openasroi' >Open as ROI </li>"));
-          $menu.append($("<li onchoice='cloneasroi' >Clone as ROI </li>"));
-      }
-      if (tempObjectInfo[0].mime == "json")
-      {
-          $menu.append($("<li onchoice='openasanno' >Open as annotation</li>"));
-          $menu.append($("<li onchoice='openastrans' >Open as transformation</li>"));
-      }
-      if (userinfo.username != guestuser & (tempObjectInfo[0].fileID.search('local')>-1 | tempObjectInfo[0].fileID.search('proxy')>-1))
-      {
-//        $menu.append($("<li onchoice='assignpid' >Assign PID </li>"));
-//        $menu.append($("<li onchoice='assignsid' >Assign SID </li>"));
-        $menu.append($("<li onchoice='upload' >Upload </li>"));
-      }
-      $menu.append($("<li onchoice='download' >Download </li>"));
-      $menu.append($("<li onchoice='remove' >Remove </li>"));
-
-
-      return $menu;
-  },
-  function (str,ev)
-  {
-      if (str=="openasroi")
-      {
-          for (var k = 0; k < tempObjectInfo.length;k++)
-              KViewer.roiTool.pushROI(tempObjectInfo[k].fileID,tempObjectInfo[k].filename,'frommaskfile');
-      } 
-      if (str=="cloneasroi")
-      {
-          for (var k = 0; k < tempObjectInfo.length;k++)
-              KViewer.roiTool.pushROI(tempObjectInfo[k].fileID,'untitled');
-      } 
-      if (str=="openasanno")
-      {
-          for (var k = 0; k < tempObjectInfo.length;k++)
-          {
-               var c = KViewer.dataManager.getFile(tempObjectInfo[k].fileID).content;
-               KViewer.annotationTool.loadAnnotations({content:c});
-          }
-          if (!KViewer.annotationTool.$toggle.hasClass("KView_tool_enabled"))
-               KViewer.annotationTool.$toggle.trigger("click");
-      }
-      else if (str=="assignpid" | str == "assignsid")
-      {
-         var prompt = "Enter " + (str=="assignpid")?"PID":"SID";
-         var field = (str=="assignpid")?"patients_id":"studies_id";
-         alertify.prompt(prompt, function(e,str)
-         {
-            for (var k = 0; k < tempObjectInfo.length;k++)
-              KViewer.dataManager.getFile(tempObjectInfo[k].fileID).fileinfo[field] = str;
-            KViewer.cacheManager.update();
-         } );
-
-      }
-      else if (str=="upload")
-      {
-        uploadFiles();
-      }
-      else if (str=="download")
-      {
-          for (var k = 0; k < tempObjectInfo.length;k++)
-             saveNiftilocal(KViewer.dataManager.getFile(tempObjectInfo[k].fileID));
-         
-      }
-      else if (str=="remove")
-      {
-         for (var k = 0; k < tempObjectInfo.length;k++)
-         {	  
-            KViewer.dataManager.delFile(tempObjectInfo[k].fileID);
-            if (KViewer.roiTool.ROIs[tempObjectInfo[k].fileID])
-                delete  KViewer.roiTool.ROIs[tempObjectInfo[k].fileID];
-         }	   
-         KViewer.cacheManager.update();
-         KViewer.roiTool.update();
-      }
-
-  }, true);
-
-
- // that.update();
-  return that;
+    // that.update();
+    return that;
 }
 
-
-function KFileEntry(filepath)
-{
-	return function ()
-	 {
-	 	try 
-	 	{
-			var stat = fs.statSync(filepath);
-	 	}
-	 	catch(err)
-	 	{
-	 		return {error:err};
-	 	}
-		if (stat.isDirectory())
-		{
-		   return { name: filepath, local:true ,isDir:true,
-			 createReader: function() {
-				return { readEntries: function (cb)
-				{
-					if (this.isread)
-						cb([]);
-					else
-					{
-						this.isread = true;
-						fs.readdir(filepath,function(err,files) { 
-							for (var k = 0;k < files.length; k++)
-								files[k] = KFileEntry(filepath + "/" + files[k])();
-							cb(files); 
-
-						} );
-					}
-				}
-
-
-			 } } }
-		}
-		else 
-		   return { name: filepath, local:true };
-	 } 
+function KFileEntry(filepath) {
+    return function () {
+        try {
+            var stat = fs.statSync(filepath);
+        } catch (err) {
+            return { error: err };
+        }
+        if (stat.isDirectory()) {
+            return {
+                name: filepath,
+                local: true,
+                isDir: true,
+                createReader: function () {
+                    return {
+                        readEntries: function (cb) {
+                            if (this.isread) cb([]);
+                            else {
+                                this.isread = true;
+                                fs.readdir(filepath, function (err, files) {
+                                    for (var k = 0; k < files.length; k++)
+                                        files[k] = KFileEntry(filepath + "/" + files[k])();
+                                    cb(files);
+                                });
+                            }
+                        },
+                    };
+                },
+            };
+        } else return { name: filepath, local: true };
+    };
 }

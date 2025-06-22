@@ -1,9 +1,6 @@
-
-
-
 /**
-* @module MiscFunctions
-*/
+ * @module MiscFunctions
+ */
 
 var resources = {
     lang: "en",
@@ -41,7 +38,6 @@ var resources = {
 
             batchtestmode: "send jobs to your matlab console",
 
-
             isosurfROI: "enable 3D isosurface view of ROI",
             jumptoROI: "jump to center of ROI",
             selectcolor: "select a different color",
@@ -53,11 +49,12 @@ var resources = {
 
             playstoptimeseries: "play or stop timeseries movie",
             showhide: "show/hide content",
-            drawonlyonsimilarcolors: "draw on colors similar to center voxel (use colormap limits to control sensitivity)",
-            regionfillsimilarcolors: "unrestricted region filling (use colormap limits and mouse left/right to control sensitivity)",
+            drawonlyonsimilarcolors:
+                "draw on colors similar to center voxel (use colormap limits to control sensitivity)",
+            regionfillsimilarcolors:
+                "unrestricted region filling (use colormap limits and mouse left/right to control sensitivity)",
             regionfillwithinpen: "region filling within pen",
             misctools: "miscellaneous tools",
-
 
             mcpsys: "create mcp reorientation system from two/three markers",
             addnewanno: "add new marker to annotation",
@@ -65,100 +62,65 @@ var resources = {
             showhideanno: "show/hide annotation",
             jumptopoint: "jump to this point",
             delannopoint: "delete this point",
-
-        }
-    }
+        },
+    },
 };
 
-
-
-
-
-if (typeof jQuery != "undefined")
-{
-
-    $.prototype.appendTooltip = function(id)
-    {
+if (typeof jQuery != "undefined") {
+    $.prototype.appendTooltip = function (id) {
         var tout;
 
         var fadeOuttimer = {
-            clear: function() {
-                clearInterval(this.id)
+            clear: function () {
+                clearInterval(this.id);
             },
-            callback: function()
-            {
+            callback: function () {
                 inhibit();
-            }
+            },
         };
 
-
-        this.on('mouseenter', function(event) {
-            fadeOuttimer.id = setInterval(function() {
-                fadeOuttimer.callback()
+        this.on("mouseenter", function (event) {
+            fadeOuttimer.id = setInterval(function () {
+                fadeOuttimer.callback();
             }, 8000);
-            clearInterval(tout)
-            tout = setTimeout(function() {
-
+            clearInterval(tout);
+            tout = setTimeout(function () {
                 $("#KJobinfoTooltip").remove();
                 var ttips = resources.tooltips[resources.lang];
-                var text 
-                if (typeof id == "function")
-                    text = id();
-                else 
-                    text = ttips[id];
-                if (text == undefined)
-                    text = id;
+                var text;
+                if (typeof id == "function") text = id();
+                else text = ttips[id];
+                if (text == undefined) text = id;
                 var $div = $("<div id='standardTooltip'> " + text + " </div>");
                 $div.css("top", event.clientY);
                 $div.css("left", event.clientX + 15);
                 $div.appendTo($(document.body));
 
-                if ($div.position().left + $div.width() > $(document.body).width())
-                {
-                    $div.css('left', $(document.body).width() - $div.width() - 10);
-                    $div.css('top', $div.position().top + 15);
+                if ($div.position().left + $div.width() > $(document.body).width()) {
+                    $div.css("left", $(document.body).width() - $div.width() - 10);
+                    $div.css("top", $div.position().top + 15);
                 }
                 if ($div.position().top + $div.height() > $(document.body).height())
-                    $div.css('top', $(document.body).height() - $div.height() - 10);
+                    $div.css("top", $(document.body).height() - $div.height() - 10);
 
                 $div.hide();
                 $div.fadeIn(200);
-
-
             }, 800);
-
-
-
         });
 
-
-
-
-
-
-
-
-
-        var inhibit = function()
-        {
+        var inhibit = function () {
             fadeOuttimer.clear();
             clearInterval(tout);
             $("#standardTooltip").remove();
-        }
+        };
 
-        this.on('mouseleave mouseclick mousedown', inhibit);
+        this.on("mouseleave mouseclick mousedown", inhibit);
 
         return this;
-
-    }
-
-
-
-
+    };
 }
 
-
-/* 
+/*
  * Make a function that calculates the distance squared of (x, y, z) to the center of the sphere at (0, 0, 0) or to the center of the cylinder (0, 0)
  * @param sx2: squared scaling factor for x.
  * @param sy2: squared scaling factor for y.
@@ -167,33 +129,32 @@ if (typeof jQuery != "undefined")
  * @param shape (string): "sphere", "cylinder", the shape of the tool
  * @return (function(x, y, z))
  */
-function makefunction_distance_to_center_2(sx2, sy2, sz2, slicing, shape)
-{
+function makefunction_distance_to_center_2(sx2, sy2, sz2, slicing, shape) {
     var distance_to_center_2;
-    if (shape == "cylinder")
-    {
-        if (slicing == 0)  // to get a cylinder, calculate the distance to the center only with two dims. the dims depend on the view the user clicked on.
-            distance_to_center_2 = function(x, y, z) { return y * y * sy2 + z * z * sz2; };
+    if (shape == "cylinder") {
+        if (slicing == 0)
+            // to get a cylinder, calculate the distance to the center only with two dims. the dims depend on the view the user clicked on.
+            distance_to_center_2 = function (x, y, z) {
+                return y * y * sy2 + z * z * sz2;
+            };
         else if (slicing == 1)
-            distance_to_center_2 = function(x, y, z) { return x * x * sx2 + z * z * sz2; };
+            distance_to_center_2 = function (x, y, z) {
+                return x * x * sx2 + z * z * sz2;
+            };
         else if (slicing == 2)
-            distance_to_center_2 = function(x, y, z) { return x * x * sx2 + y * y * sy2; };    
-    }
-    else if (shape == "sphere")   // regular sphere shaped tool
-    {
-        distance_to_center_2 = function(x, y, z) { return x * x * sx2 + y * y * sy2 + z * z * sz2; };
-    }
-    else
-    {
+            distance_to_center_2 = function (x, y, z) {
+                return x * x * sx2 + y * y * sy2;
+            };
+    } else if (shape == "sphere") {
+        // regular sphere shaped tool
+        distance_to_center_2 = function (x, y, z) {
+            return x * x * sx2 + y * y * sy2 + z * z * sz2;
+        };
+    } else {
         throw Error("Invalid tool shape.");
     }
     return distance_to_center_2;
 }
-
-
-
-
-
 
 function zeroPad(num, places) {
     var zero = places - num.toString().length + 1;
@@ -201,120 +162,88 @@ function zeroPad(num, places) {
 }
 
 if (typeof alertify != "undefined")
-    alertify.lazy_error = function(errstr,type,delay)
-    {
-        if (delay == undefined)
-            delay = 5000;
+    alertify.lazy_error = function (errstr, type, delay) {
+        if (delay == undefined) delay = 5000;
 
-        if (!alertify[type])
-        {
+        if (!alertify[type]) {
             alertify.error(errstr);
             alertify[type] = true;
-            setTimeout(function() { alertify[type] = false;},delay);
-        }    	
-    }
+            setTimeout(function () {
+                alertify[type] = false;
+            }, delay);
+        }
+    };
 
-if (Array.prototype.chunk == undefined)
-{
-    
-    Array.prototype.chunk = 
-    Object.defineProperty(Array.prototype, 'chunk', {
-        value:  
-        function(fn, chunksize, delay, aggregate, onready)
-        {
-            var forchunk = function(_this, fn, chunksize, delay)
-            {
-                if (delay == undefined)
-                    delay = 0;
-                _this.interval_id = setInterval(function(_this) {
-                    return function()
-                    {
-                        if (_this.cnt == undefined)
-                            _this.cnt = 0;
-                        for (var k = 0; k < chunksize & k + _this.cnt < _this.length; k++)
-                        {
-                            var resval = fn(_this[k + _this.cnt], k + _this.cnt, _this);
-                        }
-                        if (aggregate)
-                        {
-                            aggregate(_this.cnt);
-                        }
-    
-                        _this.cnt += chunksize;
-                        if (_this.cnt >= _this.length | resval === false)
-                        {
-                            clearInterval(_this.interval_id);
-                            delete _this.cnt;
-                            delete _this.interval_id;
-                            if (onready != undefined)
-                                onready();
-                        }
-    
-                    }
-                }(_this), delay);
-    
-    
-            }
-            ;
-    
+if (Array.prototype.chunk == undefined) {
+    Array.prototype.chunk = Object.defineProperty(Array.prototype, "chunk", {
+        value: function (fn, chunksize, delay, aggregate, onready) {
+            var forchunk = function (_this, fn, chunksize, delay) {
+                if (delay == undefined) delay = 0;
+                _this.interval_id = setInterval(
+                    (function (_this) {
+                        return function () {
+                            if (_this.cnt == undefined) _this.cnt = 0;
+                            for (var k = 0; (k < chunksize) & (k + _this.cnt < _this.length); k++) {
+                                var resval = fn(_this[k + _this.cnt], k + _this.cnt, _this);
+                            }
+                            if (aggregate) {
+                                aggregate(_this.cnt);
+                            }
+
+                            _this.cnt += chunksize;
+                            if ((_this.cnt >= _this.length) | (resval === false)) {
+                                clearInterval(_this.interval_id);
+                                delete _this.cnt;
+                                delete _this.interval_id;
+                                if (onready != undefined) onready();
+                            }
+                        };
+                    })(_this),
+                    delay
+                );
+            };
             forchunk(this, fn, chunksize, delay);
-        }
+        },
     });
-    
+
     //Float32Array.prototype.chunk =
-    Object.defineProperty(Float32Array.prototype, 'chunk', {
-        value:  
-        function(fn, chunksize, delay, aggregate, onready)
-        {
-            var forchunk = function(_this, fn, chunksize, delay)
-            {
-                if (delay == undefined)
-                    delay = 0;
-                _this.interval_id = setInterval(function(_this) {
-                    return function()
-                    {
-                        if (_this.cnt == undefined)
-                            _this.cnt = 0;
-                        for (var k = 0; k < chunksize & k + _this.cnt < _this.length; k++)
-                        {
-                            fn(_this[k + _this.cnt], k + _this.cnt, _this);
-                        }
-                        if (aggregate)
-                        {
-                            aggregate(_this.cnt);
-                        }
-    
-                        _this.cnt += chunksize;
-                        if (_this.cnt >= _this.length)
-                        {
-                            clearInterval(_this.interval_id);
-                            delete _this.cnt;
-                            delete _this.interval_id;
-                            if (onready != undefined)
-                                onready();
-                        }
-    
-                    }
-                }(_this), delay);
-    
-    
-            }
-            ;
-    
+    Object.defineProperty(Float32Array.prototype, "chunk", {
+        value: function (fn, chunksize, delay, aggregate, onready) {
+            var forchunk = function (_this, fn, chunksize, delay) {
+                if (delay == undefined) delay = 0;
+                _this.interval_id = setInterval(
+                    (function (_this) {
+                        return function () {
+                            if (_this.cnt == undefined) _this.cnt = 0;
+                            for (var k = 0; (k < chunksize) & (k + _this.cnt < _this.length); k++) {
+                                fn(_this[k + _this.cnt], k + _this.cnt, _this);
+                            }
+                            if (aggregate) {
+                                aggregate(_this.cnt);
+                            }
+
+                            _this.cnt += chunksize;
+                            if (_this.cnt >= _this.length) {
+                                clearInterval(_this.interval_id);
+                                delete _this.cnt;
+                                delete _this.interval_id;
+                                if (onready != undefined) onready();
+                            }
+                        };
+                    })(_this),
+                    delay
+                );
+            };
             forchunk(this, fn, chunksize, delay);
-        }
-    }
-    );
-    
+        },
+    });
 }
-    
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// Octree
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 /** The octree used for fast position lookup of fibers
  * @class
@@ -323,63 +252,49 @@ if (Array.prototype.chunk == undefined)
 function Octree(position, size, accuracy) {
     this.maxDistance = Math.max(size[0], Math.max(size[1], size[2]));
     this.accuracy = 0;
-    this.root = new Octree.Cell(this,position,size,0);
+    this.root = new Octree.Cell(this, position, size, 0);
     this.numPoints = 0;
 }
 
-
-Octree.fromBoundingBox = function(bbox) {
-    return new Octree(bbox.min.clone(),bbox.getSize().clone());
-}
-;
+Octree.fromBoundingBox = function (bbox) {
+    return new Octree(bbox.min.clone(), bbox.getSize().clone());
+};
 
 Octree.MaxLevel = 4;
 
-
-Octree.prototype.add = function(p, data) {
+Octree.prototype.add = function (p, data) {
     this.numPoints++;
     this.root.add(p, data);
-}
-;
+};
 
-
-Octree.prototype.has = function(p) {
+Octree.prototype.has = function (p) {
     return this.root.has(p);
-}
-;
+};
 
-
-Octree.prototype.findNearestPoint = function(p, options) {
+Octree.prototype.findNearestPoint = function (p, options) {
     options.includeData = options.includeData ? options.includeData : false;
     options.bestDist = options.maxDist ? options.maxDist : Infinity;
     options.notSelf = options.notSelf ? options.notSelf : false;
 
     var result = this.root.findNearestPoint(p, options);
     if (result) {
-        if (options.includeData)
-            return result;
-        else
-            return result.point;
-    }
-    else
-        return null ;
-}
-;
+        if (options.includeData) return result;
+        else return result.point;
+    } else return null;
+};
 
-Octree.prototype.findNearbyPoints = function(p, r, options) {
+Octree.prototype.findNearbyPoints = function (p, r, options) {
     options = options || {};
     var result = {
         points: [],
-        data: []
+        data: [],
     };
     this.root.findNearbyPoints(p, r, result, options);
     return result;
-}
-;
+};
 
-
-Octree.prototype.getAllCellsAtLevel = function(cell, level, result) {
-    if (typeof level == 'undefined') {
+Octree.prototype.getAllCellsAtLevel = function (cell, level, result) {
+    if (typeof level == "undefined") {
         level = cell;
         cell = this.root;
     }
@@ -390,17 +305,16 @@ Octree.prototype.getAllCellsAtLevel = function(cell, level, result) {
         }
         return result;
     } else {
-        cell.children.forEach(function(child) {
-            this.getAllCellsAtLevel(child, level, result);
-        }
-        .bind(this));
+        cell.children.forEach(
+            function (child) {
+                this.getAllCellsAtLevel(child, level, result);
+            }.bind(this)
+        );
         return result;
     }
-}
-;
+};
 
-
-Octree.Cell = function(tree, position, size, level) {
+Octree.Cell = function (tree, position, size, level) {
     this.tree = tree;
     this.position = position;
     this.size = size;
@@ -408,12 +322,10 @@ Octree.Cell = function(tree, position, size, level) {
     this.points = [];
     this.data = [];
     this.children = [];
-}
-;
+};
 
-Octree.Cell.prototype.has = function(p) {
-    if (!this.contains(p))
-        return null ;
+Octree.Cell.prototype.has = function (p) {
+    if (!this.contains(p)) return null;
     if (this.children.length > 0) {
         for (var i = 0; i < this.children.length; i++) {
             var duplicate = this.children[i].has(p);
@@ -421,7 +333,7 @@ Octree.Cell.prototype.has = function(p) {
                 return duplicate;
             }
         }
-        return null ;
+        return null;
     } else {
         var minDistSqrt = this.tree.accuracy * this.tree.accuracy;
         for (var i = 0; i < this.points.length; i++) {
@@ -431,13 +343,11 @@ Octree.Cell.prototype.has = function(p) {
                 return o;
             }
         }
-        return null ;
+        return null;
     }
-}
-;
+};
 
-Octree.Cell.prototype.add = function(p, data) {
-
+Octree.Cell.prototype.add = function (p, data) {
     if (this.children.length > 0) {
         this.addToChildren(p, data);
     } else {
@@ -447,31 +357,29 @@ Octree.Cell.prototype.add = function(p, data) {
             this.split();
         }
     }
-}
-;
+};
 
-Octree.Cell.prototype.addToChildren = function(p, data) {
+Octree.Cell.prototype.addToChildren = function (p, data) {
     for (var i = 0; i < this.children.length; i++) {
         if (this.children[i].contains(p)) {
             this.children[i].add(p, data);
             break;
         }
     }
-}
-;
+};
 
-Octree.Cell.prototype.contains = function(p) {
-    return p[0] >= this.position[0] - this.tree.accuracy
-    && p[1] >= this.position[1] - this.tree.accuracy
-    && p[2] >= this.position[2] - this.tree.accuracy
-    && p[0] < this.position[0] + this.size[0] + this.tree.accuracy
-    && p[1] < this.position[1] + this.size[1] + this.tree.accuracy
-    && p[2] < this.position[2] + this.size[2] + this.tree.accuracy;
-}
-;
+Octree.Cell.prototype.contains = function (p) {
+    return (
+        p[0] >= this.position[0] - this.tree.accuracy &&
+        p[1] >= this.position[1] - this.tree.accuracy &&
+        p[2] >= this.position[2] - this.tree.accuracy &&
+        p[0] < this.position[0] + this.size[0] + this.tree.accuracy &&
+        p[1] < this.position[1] + this.size[1] + this.tree.accuracy &&
+        p[2] < this.position[2] + this.size[2] + this.tree.accuracy
+    );
+};
 
-
-Octree.Cell.prototype.split = function() {
+Octree.Cell.prototype.split = function () {
     var x = this.position[0];
     var y = this.position[1];
     var z = this.position[2];
@@ -479,41 +387,38 @@ Octree.Cell.prototype.split = function() {
     var h2 = this.size[1] / 2;
     var d2 = this.size[2] / 2;
     var whd = [w2, h2, d2];
-    this.children.push(new Octree.Cell(this.tree,[x, y, z],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x + w2, y, z],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x, y, z + d2],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x + w2, y, z + d2],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x, y + h2, z],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x + w2, y + h2, z],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x, y + h2, z + d2],whd,this.level + 1));
-    this.children.push(new Octree.Cell(this.tree,[x + w2, y + h2, z + d2],whd,this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x, y, z], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x + w2, y, z], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x, y, z + d2], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x + w2, y, z + d2], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x, y + h2, z], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x + w2, y + h2, z], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x, y + h2, z + d2], whd, this.level + 1));
+    this.children.push(new Octree.Cell(this.tree, [x + w2, y + h2, z + d2], whd, this.level + 1));
     for (var i = 0; i < this.points.length; i++) {
         this.addToChildren(this.points[i], this.data[i]);
     }
     this.points = [];
     this.data = [];
+};
 
-}
-;
-
-Octree.Cell.prototype.squareDistanceToCenter = function(p) {
+Octree.Cell.prototype.squareDistanceToCenter = function (p) {
     var dx = p[0] - (this.position[0] + this.size[0] / 2);
     var dy = p[1] - (this.position[1] + this.size[1] / 2);
     var dz = p[2] - (this.position[2] + this.size[2] / 2);
     return dx * dx + dy * dy + dz * dz;
-}
+};
 
-Octree.Cell.prototype.findNearestPoint = function(p, options) {
-    var nearest = null ;
-    var nearestData = null ;
+Octree.Cell.prototype.findNearestPoint = function (p, options) {
+    var nearest = null;
+    var nearestData = null;
     var bestDist = options.bestDist;
 
     if (this.points.length > 0 && this.children.length == 0) {
         for (var i = 0; i < this.points.length; i++) {
             var dist = this.points[i].distance(p);
             if (dist <= bestDist) {
-                if (dist == 0 && options.notSelf)
-                    continue;
+                if (dist == 0 && options.notSelf) continue;
                 bestDist = dist;
                 nearest = this.points[i];
                 nearestData = this.data[i];
@@ -524,26 +429,30 @@ Octree.Cell.prototype.findNearestPoint = function(p, options) {
     var children = this.children;
 
     var children = this.children
-    .map(function(child) {
-        return {
-            child: child,
-            dist: child.squareDistanceToCenter(p)
-        }
-    })
-    .sort(function(a, b) {
-        return a.dist - b.dist;
-    })
-    .map(function(c) {
-        return c.child;
-    });
+        .map(function (child) {
+            return {
+                child: child,
+                dist: child.squareDistanceToCenter(p),
+            };
+        })
+        .sort(function (a, b) {
+            return a.dist - b.dist;
+        })
+        .map(function (c) {
+            return c.child;
+        });
 
     if (children.length > 0) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             if (child.points.length > 0) {
-                if (p[0] < child.position[0] - bestDist || p[0] > child.position[0] + child.size[0] + bestDist ||
-                p[1] < child.position[1] - bestDist || p[1] > child.position[1] + child.size[1] + bestDist ||
-                p[2] < child.position[2] - bestDist || p[2] > child.position[2] + child.size[2] + bestDist
+                if (
+                    p[0] < child.position[0] - bestDist ||
+                    p[0] > child.position[0] + child.size[0] + bestDist ||
+                    p[1] < child.position[1] - bestDist ||
+                    p[1] > child.position[1] + child.size[1] + bestDist ||
+                    p[2] < child.position[2] - bestDist ||
+                    p[2] > child.position[2] + child.size[2] + bestDist
                 ) {
                     continue;
                 }
@@ -562,37 +471,37 @@ Octree.Cell.prototype.findNearestPoint = function(p, options) {
     }
     return {
         point: nearest,
-        data: nearestData
-    }
-}
-;
+        data: nearestData,
+    };
+};
 
-Octree.Cell.prototype.findNearbyPoints = function(p, r, result, options) {
+Octree.Cell.prototype.findNearbyPoints = function (p, r, result, options) {
     for (var i = 0; i < this.points.length; i++) {
         var dx = this.points[i][0] - p[0];
         var dy = this.points[i][1] - p[1];
         var dz = this.points[i][2] - p[2];
-        var dist = (dx * dx + dy * dy + dz * dz);
+        var dist = dx * dx + dy * dy + dz * dz;
         if (dist <= r * r) {
-            if (dist == 0 && options.notSelf)
-                continue;
+            if (dist == 0 && options.notSelf) continue;
             result.points.push(this.points[i]);
-            if (options.includeData)
-                result.data.push(this.data[i]);
+            if (options.includeData) result.data.push(this.data[i]);
         }
     }
 
-
-    var children = this.children
+    var children = this.children;
 
     if (children.length > 0) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             //if (child.points.length > 0)
             {
-                if (p[0] < child.position[0] - r || p[0] > child.position[0] + child.size[0] + r ||
-                p[1] < child.position[1] - r || p[1] > child.position[1] + child.size[1] + r ||
-                p[2] < child.position[2] - r || p[2] > child.position[2] + child.size[2] + r
+                if (
+                    p[0] < child.position[0] - r ||
+                    p[0] > child.position[0] + child.size[0] + r ||
+                    p[1] < child.position[1] - r ||
+                    p[1] > child.position[1] + child.size[1] + r ||
+                    p[2] < child.position[2] - r ||
+                    p[2] > child.position[2] + child.size[2] + r
                 ) {
                     continue;
                 }
@@ -600,104 +509,74 @@ Octree.Cell.prototype.findNearbyPoints = function(p, r, result, options) {
             }
         }
     }
-}
-;
+};
 
+function getWorkerScriptAsBlob(scriptName) {
+    if (scriptStore[scriptName] == undefined) {
+        console.error("script " + scriptName + " not found");
+        return;
+    }
 
-function getWorkerScriptAsBlob(scriptName)
-{
+    var r = /importScripts\([\"\'](?<id>[\w\/\.]+.js)[\"\']\)/g;
+    var code = "";
+    var m;
+    var str = scriptStore[scriptName];
+    while ((m = RegExp(r).exec(str)) !== null) {
+        var id = m.groups.id;
+        if (id.substring(0, 3) == "../") id = id.substring(3);
+        if (scriptStore[id] == undefined) console.log("script " + id + " not found");
+        code += scriptStore[id] + "\n";
+    }
+    code += scriptStore[scriptName];
 
-   if (scriptStore[scriptName] == undefined)
-   {
-       console.error("script " +scriptName+ " not found")     
-       return;
-   }
-    
-   var r = /importScripts\([\"\'](?<id>[\w\/\.]+.js)[\"\']\)/g; 
-   var code = '';
-   var m;
-   var str = scriptStore[scriptName];
-   while ((m = RegExp(r).exec(str)) !== null)
-       {
-         var id = m.groups.id
-         if (id.substring(0,3) == '../')
-             id = id.substring(3);
-         if (scriptStore[id] == undefined)
-             console.log("script " +id+ " not found")
-         code += scriptStore[id] + "\n";
-       }
-   code += scriptStore[scriptName];
-   
-   blob = new Blob([code], {type: 'application/javascript'});
-   return URL.createObjectURL(blob)
+    blob = new Blob([code], { type: "application/javascript" });
+    return URL.createObjectURL(blob);
 }
 
-function startWorker(scriptname)
-{
-        if (typeof url_pref != "undefined")
-        {
-           if (url_pref == "import:")
-               scriptname = getWorkerScriptAsBlob(scriptname)
-           else
-               scriptname = url_pref + scriptname+ '?' +  static_info.softwareversion;
+function startWorker(scriptname) {
+    if (typeof url_pref != "undefined") {
+        if (url_pref == "import:") scriptname = getWorkerScriptAsBlob(scriptname);
+        else scriptname = url_pref + scriptname + "?" + static_info.softwareversion;
+    }
 
-        }
-       
-        return new Worker(scriptname);
+    return new Worker(scriptname);
 }
-
 
 executeImageWorker.running_workers = 0;
-function executeImageWorker(execObj,Buffers,progress,onready,worker)
-{
-
-        if (worker == undefined)
-        {
-           
-            worker = startWorker('KImageProcWorker.js');
-            worker.postMessage = worker.webkitPostMessage || worker.postMessage;
-            worker.addEventListener('message', function(e) {
+function executeImageWorker(execObj, Buffers, progress, onready, worker) {
+    if (worker == undefined) {
+        worker = startWorker("KImageProcWorker.js");
+        worker.postMessage = worker.webkitPostMessage || worker.postMessage;
+        worker.addEventListener(
+            "message",
+            function (e) {
                 e = e.data;
-                if (e.msg == 'done')
-                {
-                    if (progress != undefined)
-                        progress();
+                if (e.msg == "done") {
+                    if (progress != undefined) progress();
                     executeImageWorker.running_workers--;
                     onready(e);
-                }
-                else
-                    if (progress != undefined)
-                        progress(e.msg);
-            }, false);
+                } else if (progress != undefined) progress(e.msg);
+            },
+            false
+        );
 
-            worker.kill = function()
-            {
-                executeImageWorker.running_workers--;
-                worker.postMessage({'msg':'kill'},[]);
-            }
+        worker.kill = function () {
+            executeImageWorker.running_workers--;
+            worker.postMessage({ msg: "kill" }, []);
+        };
+    }
+
+    executeImageWorker.running_workers++;
+    setTimeout(function () {
+        try {
+            worker.postMessage(execObj, Buffers); // Send data to our worker.
+        } catch (err) {
+            console.log(execObj);
+            throw err;
         }
-
-        executeImageWorker.running_workers++;
-        setTimeout(function() {
-            try{
-        		worker.postMessage(execObj,Buffers); // Send data to our worker.
-            } catch (err)
-            {
-                console.log(execObj)
-                throw err
-            }
-        },250);
-		return worker;		
+    }, 250);
+    return worker;
 }
-
-
-
-
-
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -706,110 +585,85 @@ function executeImageWorker(execObj,Buffers,progress,onready,worker)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** A generic contextmenu
-* @param {function} themenu - A function returning an "ul" containing the menu
-* @param {function} theselfun - called on menu selection with signature theselfun(onchoice,mouseupevent,mousedownevent). First argument contains onchoice attribute of menu "li"
-* @param {logical} loose - ??
-* @param {logical} keepOpenAfterClick - menu disappears only on mouse leave
-* @param {logical} selectonrelease    - allow item selection on moushold- mouseup, can be dangerous for unexperienced users
-* @return {function} - a menu creater function that should be called upon click/mousedown etc.
-*/
+ * @param {function} themenu - A function returning an "ul" containing the menu
+ * @param {function} theselfun - called on menu selection with signature theselfun(onchoice,mouseupevent,mousedownevent). First argument contains onchoice attribute of menu "li"
+ * @param {logical} loose - ??
+ * @param {logical} keepOpenAfterClick - menu disappears only on mouse leave
+ * @param {logical} selectonrelease    - allow item selection on moushold- mouseup, can be dangerous for unexperienced users
+ * @return {function} - a menu creater function that should be called upon click/mousedown etc.
+ */
 
-
-
-
-
-
-function KContextMenu(themenu, theselfun, loose, keepOpenAfterClick, eventonmenu, selectonmouseup)
-{
+function KContextMenu(themenu, theselfun, loose, keepOpenAfterClick, eventonmenu, selectonmouseup) {
     var last_ev;
-    var createFun = function(ev)
-    {
-        if (ev != undefined)
-        {
+    var createFun = function (ev) {
+        if (ev != undefined) {
             ev.preventDefault();
             ev.stopPropagation();
         }
         last_ev = ev;
         var target = ev.target;
         var $cmdiv = $("<div class='patientTableContextmenu'>");
-        
+
         var mymenu = themenu(ev);
-        if (mymenu == undefined)
-            return;
+        if (mymenu == undefined) return;
         // this was always called twice, with (ev)...?
         //var $menu = themenu(ev).appendTo($cmdiv);
         var $menu = mymenu.appendTo($cmdiv);
 
-
         // correct for chrome bug, where a hover is not triggered during mousedown
-        $menu.find("li").each(function(i, a) {
-            $(a).mouseenter(function() {
-                $(this).addClass('jsHover');
-            })
-            .mouseleave(function() {
-                $(this).removeClass('jsHover');
-            })
+        $menu.find("li").each(function (i, a) {
+            $(a)
+                .mouseenter(function () {
+                    $(this).addClass("jsHover");
+                })
+                .mouseleave(function () {
+                    $(this).removeClass("jsHover");
+                });
         });
-        
-        if(keepOpenAfterClick)
-        {
-            var offs_top  = -10;
+
+        if (keepOpenAfterClick) {
+            var offs_top = -10;
             var offs_left = -5;
-        }
-        else
-        {
-            var offs_top  = 5;
+        } else {
+            var offs_top = 5;
             var offs_left = 5;
         }
-
-
 
         $cmdiv.css("display", "block");
         $cmdiv.css({
             left: ev.pageX + offs_left,
-            top: ev.pageY + offs_top
+            top: ev.pageY + offs_top,
         });
         $cmdiv.show();
-        var selFun = function(ev2)
-        {
+        var selFun = function (ev2) {
             var str;
-            var $target = $(ev2.target)
-            for (var k = 0; k < 3; k++)
-            {
-                str = $target.attr("onchoice")
-                if (str != undefined)
-                    break;
-                else
-                    $target = $target.parent();
+            var $target = $(ev2.target);
+            for (var k = 0; k < 3; k++) {
+                str = $target.attr("onchoice");
+                if (str != undefined) break;
+                else $target = $target.parent();
             }
 
-            if (str != 'preventSelection' && !$target.hasClass("inactive"))
-            {
+            if (str != "preventSelection" && !$target.hasClass("inactive")) {
                 ev2.preventDefault();
                 ev2.stopPropagation();
-                if (str != undefined | !loose) // (keepOpenAfterClick | !loose )  // | ev2.type == "mousedown"  | ev2.type == "mouseup") )
-                {
+                if ((str != undefined) | !loose) {
+                    // (keepOpenAfterClick | !loose )  // | ev2.type == "mousedown"  | ev2.type == "mouseup") )
                     $cmdiv.remove();
                     fadeOuttimer.clear();
                     $(document.body).off("mouseup mousedown");
                 }
 
-                if (theselfun(str, ev2, ev) == "close")
-                    return;
+                if (theselfun(str, ev2, ev) == "close") return;
 
-                if (keepOpenAfterClick)
-                {
+                if (keepOpenAfterClick) {
                     createFun(last_ev);
                 }
-
             }
-        }
-        ;
-
-
+        };
         $(document.body).append($cmdiv);
 
-/*
+        /*
         var uls = $cmdiv.find("ul,div");
         var left = 0;
         for (var k = 0; k < uls.length;k++)
@@ -826,63 +680,52 @@ function KContextMenu(themenu, theselfun, loose, keepOpenAfterClick, eventonmenu
         }
 */
 
-        var disp = $cmdiv.css('display');
-        if ($cmdiv.offset().left  + $cmdiv.width() > $(document.body).width())
-            $cmdiv.css('left', -( $cmdiv.width() - $(document.body).width())- offs_left-5);
+        var disp = $cmdiv.css("display");
+        if ($cmdiv.offset().left + $cmdiv.width() > $(document.body).width())
+            $cmdiv.css("left", -($cmdiv.width() - $(document.body).width()) - offs_left - 5);
         if ($(document.body).height() != 0 && $cmdiv.offset().top + $cmdiv.height() > $(document.body).height())
-            $cmdiv.css('top', -( $cmdiv.height() - $(document.body).height())- offs_top-10);
+            $cmdiv.css("top", -($cmdiv.height() - $(document.body).height()) - offs_top - 10);
 
         var $which = $(document.body);
-        if (eventonmenu)
-        {
-             $which = $cmdiv;
-             $(document.body).on("mousedown",function()
-             {
-                   $(document.body).off("mousedown");
-                   $cmdiv.off("mouseup mousedown");            
-                   $cmdiv.remove();
-             })
-
+        if (eventonmenu) {
+            $which = $cmdiv;
+            $(document.body).on("mousedown", function () {
+                $(document.body).off("mousedown");
+                $cmdiv.off("mouseup mousedown");
+                $cmdiv.remove();
+            });
         }
 
-        if (keepOpenAfterClick || selectonmouseup === false )
-            $which.on("mousedown", selFun);
-        else
-            $which.on("mouseup mousedown", selFun);
+        if (keepOpenAfterClick || selectonmouseup === false) $which.on("mousedown", selFun);
+        else $which.on("mouseup mousedown", selFun);
 
-        $which.on("contextmenu",function(e)
-        {
+        $which.on("contextmenu", function (e) {
             e.preventDefault();
         });
 
-        $cmdiv.on("mouseleave", function(ev) {
-
+        $cmdiv.on("mouseleave", function (ev) {
             $which.off("mouseup mousedown");
             fadeOuttimer.clear();
             $cmdiv.remove();
         });
 
         var fadeOuttimer = {
-            clear: function() {
-                clearInterval(this.id)
+            clear: function () {
+                clearInterval(this.id);
             },
-            callback: function()
-            {
+            callback: function () {
                 this.clear();
                 $which.off("mouseup mousedown");
                 $cmdiv.fadeOut(1000);
-            }
+            },
         };
-        fadeOuttimer.id = setInterval(function() {
-            fadeOuttimer.callback()
+        fadeOuttimer.id = setInterval(function () {
+            fadeOuttimer.callback();
         }, 10000000);
-
-    }
+    };
 
     return createFun;
-
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -890,101 +733,70 @@ function KContextMenu(themenu, theselfun, loose, keepOpenAfterClick, eventonmenu
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** open a shared link. Information comes from php within "sharedLink" variable 
+/** open a shared link. Information comes from php within "sharedLink" variable
  * @param {function} onready - called after establishment of shared viewing state
-*/
-function openSharedLink(sharedLink,onready)
-{
-
+ */
+function openSharedLink(sharedLink, onready) {
     // extend the state with the shared link. Can be done now safely, as the presets are not overwritten
     // dangerous. can destroy project state and everything ...
     //$.extend(state, share dLink, true);
 
-   
     // etabslish tree state
-    if (userinfo.username != guestuser && sharedLink.project != undefined)
-    {
-        if (sharedLink.onlyContent)
-        {
+    if (userinfo.username != guestuser && sharedLink.project != undefined) {
+        if (sharedLink.onlyContent) {
             // set settings
-            if (sharedLink.ViewerSettings !== undefined)
-            {
-                state.viewer = sharedLink.ViewerSettings;
-                stateManager.applyState(state);
-            } 
-            sharedLink.project = currentModule;
-            loadSharedContent()
-        }
-        else 
-            selectProject(sharedLink.project, function() {
-
-
-            // set settings
-            if (sharedLink.ViewerSettings !== undefined)
-            {
+            if (sharedLink.ViewerSettings !== undefined) {
                 state.viewer = sharedLink.ViewerSettings;
                 stateManager.applyState(state);
             }
-
-            state.search_row = sharedLink.search_row;
-            state.search_row_a = sharedLink.search_row_a;
-
-            switchto(state.viewer.selectionMode,undefined,function()
-            {
-
-
-                patientTableMirror.nodesExpanded = sharedLink.expandedNodes || [];
-                patientTableMirror.selectedItems = sharedLink.selectedItems || [];
-                patientTableMirror.mirrorState();
-
-
-
-
-
-                currentPSID = sharedLink.currentPSID || {};
-                if (currentPSID.patients_id)
-                {
-                    if (state.viewer.selectionMode[1] == 's')
-                    {
-                        setEditModeText(currentPSID.patients_id + riddelim + currentPSID.studies_id);
-                    }
-                    if (state.viewer.selectionMode[1] == 'p')
-                    {
-                        setEditModeText(currentPSID.patients_id);
-                    }
+            sharedLink.project = currentModule;
+            loadSharedContent();
+        } else
+            selectProject(sharedLink.project, function () {
+                // set settings
+                if (sharedLink.ViewerSettings !== undefined) {
+                    state.viewer = sharedLink.ViewerSettings;
+                    stateManager.applyState(state);
                 }
-                loadSharedContent();
-            });
-        });
-    }
-    else
-    {
 
-            // set settings
-        if (sharedLink.ViewerSettings !== undefined)
-        {
+                state.search_row = sharedLink.search_row;
+                state.search_row_a = sharedLink.search_row_a;
+
+                switchto(state.viewer.selectionMode, undefined, function () {
+                    patientTableMirror.nodesExpanded = sharedLink.expandedNodes || [];
+                    patientTableMirror.selectedItems = sharedLink.selectedItems || [];
+                    patientTableMirror.mirrorState();
+
+                    currentPSID = sharedLink.currentPSID || {};
+                    if (currentPSID.patients_id) {
+                        if (state.viewer.selectionMode[1] == "s") {
+                            setEditModeText(currentPSID.patients_id + riddelim + currentPSID.studies_id);
+                        }
+                        if (state.viewer.selectionMode[1] == "p") {
+                            setEditModeText(currentPSID.patients_id);
+                        }
+                    }
+                    loadSharedContent();
+                });
+            });
+    } else {
+        // set settings
+        if (sharedLink.ViewerSettings !== undefined) {
             state.viewer = sharedLink.ViewerSettings;
             stateManager.applyState(state);
         }
 
         loadSharedContent();
-
     }
 
-    function loadSharedContent()
-    {
+    function loadSharedContent() {
+        $(document.body).addClass("wait");
 
-        $(document.body).addClass("wait");		
+        if (sharedLink.toolstate) KToolWindow.reestablishToolState(sharedLink.toolstate);
 
-        if (sharedLink.toolstate)
-             KToolWindow.reestablishToolState(sharedLink.toolstate);
-
-  
-        if (sharedLink.naviMode != undefined)
-        {
-            KViewer.navigationTool.switchToNavimode( sharedLink.naviMode);
-            if (sharedLink.navi_reorientationMatrix!= undefined && sharedLink.navi_reorientationMatrix.notID)
-            {
+        if (sharedLink.naviMode != undefined) {
+            KViewer.navigationTool.switchToNavimode(sharedLink.naviMode);
+            if (sharedLink.navi_reorientationMatrix != undefined && sharedLink.navi_reorientationMatrix.notID) {
                 KViewer.reorientationMatrix.notID = true;
                 var transform = sharedLink.navi_reorientationMatrix;
                 KViewer.reorientationMatrix.name = transform.name;
@@ -994,95 +806,87 @@ function openSharedLink(sharedLink,onready)
 
             //KViewer.reorientationMatrix = sharedLink.navi_reorientationMatrix;
         }
-        
+
         // load annos
-        if (sharedLink.annotations != undefined)
-        {
-            if (markerProxy != undefined)
-            {
+        if (sharedLink.annotations != undefined) {
+            if (markerProxy != undefined) {
                 markerProxy.delAll();
                 markerProxy.import(sharedLink.annotations.content);
-                if (sharedLink.annotations.panelenabled)
-                {
-                    for(var p in markerProxy.markersets)
-                         markerProxy.markersets[p].showPanel();
+                if (sharedLink.annotations.panelenabled) {
+                    for (var p in markerProxy.markersets) markerProxy.markersets[p].showPanel();
                 }
             }
         }
         // load atlas deffield
         if (sharedLink.atlas_defField != undefined)
             KViewer.dataManager.loadData({
-                URLType: 'serverfile',
+                URLType: "serverfile",
                 fileID: sharedLink.atlas_defField,
                 json: {
-                    project: sharedLink.project
+                    project: sharedLink.project,
                 },
-                callback: KViewer.atlasTool.addAtlas
-            });
-        
-        if (sharedLink.fmri_tmodes != undefined)
-           KViewer.dataManager.loadData({
-                URLType: 'serverfile',
-                fileID: sharedLink.fmri_tmodes
+                callback: KViewer.atlasTool.addAtlas,
             });
 
-        if (sharedLink.dummyNifti_params)
-        {
-            var dumpa = sharedLink.dummyNifti_params
-            KViewer.lastDummyNifti = createDummyNifti(dumpa.sizes,dumpa.bbox_max,dumpa.bbox_min,dumpa.perm,dumpa.flip)
+        if (sharedLink.fmri_tmodes != undefined)
+            KViewer.dataManager.loadData({
+                URLType: "serverfile",
+                fileID: sharedLink.fmri_tmodes,
+            });
+
+        if (sharedLink.dummyNifti_params) {
+            var dumpa = sharedLink.dummyNifti_params;
+            KViewer.lastDummyNifti = createDummyNifti(
+                dumpa.sizes,
+                dumpa.bbox_max,
+                dumpa.bbox_min,
+                dumpa.perm,
+                dumpa.flip
+            );
         }
-        
+
         // load viewport content
         var params = sharedLink.viewports || [];
         var q = [];
         var derived_q = [];
 
-
-
-
-        if (sharedLink.atlases != undefined & !electron)
-            for (var k = 0; k < sharedLink.atlases.length; k++)
-            {            
-               var param = ({ URLType: 'serverfile', fileID:sharedLink.atlases[k].fileID,
-                        json:{project:sharedLink.atlases[k].project},intent:{atlas:true,project:sharedLink.atlases[k].project}});
-               if (param.json.project == undefined)
-                  param.json.project =    sharedLink.project    
-               q.push(param);     
+        if ((sharedLink.atlases != undefined) & !electron)
+            for (var k = 0; k < sharedLink.atlases.length; k++) {
+                var param = {
+                    URLType: "serverfile",
+                    fileID: sharedLink.atlases[k].fileID,
+                    json: { project: sharedLink.atlases[k].project },
+                    intent: { atlas: true, project: sharedLink.atlases[k].project },
+                };
+                if (param.json.project == undefined) param.json.project = sharedLink.project;
+                q.push(param);
             }
 
         var asyncjobs = {};
 
-        for (var k = 0; k < params.length; k++)
-        {
-            if (params[k])
-            {
-                if (params[k].fileID && params[k].fileID.refvisit_tck)
-                {
-                    derived_q.push(params[k])
+        for (var k = 0; k < params.length; k++) {
+            if (params[k]) {
+                if (params[k].fileID && params[k].fileID.refvisit_tck) {
+                    derived_q.push(params[k]);
                     continue;
-                }
-                else if (params[k].id.search("atlas") > -1)
-                {
+                } else if (params[k].id.search("atlas") > -1) {
                     if (params[k].project != undefined)
                         params[k].json = {
-                            project: params[k].project
+                            project: params[k].project,
                         };
                     else
                         params[k].json = {
-                            project: sharedLink.project
+                            project: sharedLink.project,
                             //static_info.atlas.project
                         };
-                    params[k].intent.atlas=true;
+                    params[k].intent.atlas = true;
                     params[k].fileID = params[k].fileID.replace("atlas_", "");
-                }
-                else
+                } else
                     params[k].json = {
-                        project: sharedLink.project
-                    }
-                if (params[k].intent)
-                {
-                    if (params[k].intent.isosurf != undefined)
-                    {
+                        project: sharedLink.project,
+                    };
+                if (params[k].intent) {
+                    if (params[k].intent.isosurf != undefined) {
                         asyncjobs["isosurf"] = true;
                     }
                 }
@@ -1090,137 +894,116 @@ function openSharedLink(sharedLink,onready)
                 q.push(params[k]);
             }
         }
-       
 
-        if (electron)
-        {
-            for (var k = 0; k < q.length;k++)
-            {
-                var filepath = q[k].fileID; 
+        if (electron) {
+            for (var k = 0; k < q.length; k++) {
+                var filepath = q[k].fileID;
 
                 var overwritten = false;
-                if (openSharedLink.overrides != undefined )
-                {
-                    if (openSharedLink.overrides[q[k].fileID] != undefined)
-                        filepath = q[k].fileID
-                    else if (openSharedLink.overrides[q[k].name] != undefined)
-                        filepath = q[k].name
-                    if (openSharedLink.overrides[filepath] != undefined)
-                    {
-                        console.log("override " + filepath + "=>" + openSharedLink.overrides[filepath])
-                        filepath = openSharedLink.overrides[filepath]
+                if (openSharedLink.overrides != undefined) {
+                    if (openSharedLink.overrides[q[k].fileID] != undefined) filepath = q[k].fileID;
+                    else if (openSharedLink.overrides[q[k].name] != undefined) filepath = q[k].name;
+                    if (openSharedLink.overrides[filepath] != undefined) {
+                        console.log("override " + filepath + "=>" + openSharedLink.overrides[filepath]);
+                        filepath = openSharedLink.overrides[filepath];
                         openSharedLink.overrides[q[k].fileID] = filepath;
                         openSharedLink.overrides[q[k].name] = filepath;
-                        overwritten=true;
+                        overwritten = true;
                     }
                 }
 
-                if (!overwritten)
-                {
-                    if (sharedLink.absolutePath)
-                        filepath = path.join(sharedLink.absolutePath,filepath);
+                if (!overwritten) {
+                    if (sharedLink.absolutePath) filepath = path.join(sharedLink.absolutePath, filepath);
                 }
 
-                filepath = filepath.replace(/\\/g,"/"); // for windows
+                filepath = filepath.replace(/\\/g, "/"); // for windows
 
                 q[k].URLType = "localfile";
-                q[k].file =  {name:filepath,local:true};
+                q[k].file = { name: filepath, local: true };
                 q[k].filename = filepath;
-                q[k].fileID = "localfile:"+filepath;
+                q[k].fileID = "localfile:" + filepath;
             }
         }
 
-        if (sharedLink.WorkstatePostCode != undefined && sharedLink.WorkstatePostCode.trim() != "")
-        {
-            KViewer.WorkstatePostCode = sharedLink.WorkstatePostCode
+        if (sharedLink.WorkstatePostCode != undefined && sharedLink.WorkstatePostCode.trim() != "") {
+            KViewer.WorkstatePostCode = sharedLink.WorkstatePostCode;
         }
-        
-        setTimeout(function(){
-            $(document.body).addClass("wait");		
-            loadingQueue.execQueue(q, function() {
-                if (sharedLink.navi_movingObjs && sharedLink.navi_movingObjs.length > 0)
-                {
+
+        setTimeout(function () {
+            $(document.body).addClass("wait");
+            loadingQueue.execQueue(q, function () {
+                if (sharedLink.navi_movingObjs && sharedLink.navi_movingObjs.length > 0) {
                     for (var k = 0; k < sharedLink.navi_movingObjs.length; k++)
-                        KViewer.navigationTool.movingObjs[sharedLink.navi_movingObjs[k]] =
-                        KViewer.dataManager.getFile(sharedLink.navi_movingObjs[k]);
+                        KViewer.navigationTool.movingObjs[sharedLink.navi_movingObjs[k]] = KViewer.dataManager.getFile(
+                            sharedLink.navi_movingObjs[k]
+                        );
                     KViewer.navigationTool.updateMoving();
                 }
-                if (sharedLink.navi_warp_enabled)
-                {
-                     KViewer.navigationTool.transform.toggle();
+                if (sharedLink.navi_warp_enabled) {
+                    KViewer.navigationTool.transform.toggle();
                 }
-                if (sharedLink.mainviewport != undefined)
-                {
+                if (sharedLink.mainviewport != undefined) {
                     KViewer.currentPoint = math.matrix(sharedLink.position);
                     KViewer.toggleMainViewport(sharedLink.mainviewport, true);
-                }
-                else
-                    KViewer.resetCrossHair( math.matrix(sharedLink.position));
+                } else KViewer.resetCrossHair(math.matrix(sharedLink.position));
 
-                if (sharedLink.tracking_params)
-                {
-                    $.extend(KViewer.obj3dTool.tracking_panel.params,sharedLink.tracking_params);
+                if (sharedLink.tracking_params) {
+                    $.extend(KViewer.obj3dTool.tracking_panel.params, sharedLink.tracking_params);
                     KViewer.obj3dTool.tracking_panel.update();
                 }
 
-                if (sharedLink.ironSight)
-                {
+                if (sharedLink.ironSight) {
                     ironSight.toggle();
                 }
 
-                if (sharedLink.WMQLpanels != undefined)
-                {
-                    for (var k = 0; k < sharedLink.WMQLpanels.length;k++)
-                    {
-                        KWMQLPanel.openPanel(KViewer.obj3dTool.objs[sharedLink.WMQLpanels[k].tract_id],
-                                             KViewer.atlasTool.objs[sharedLink.WMQLpanels[k].atlas_id],
-                                             sharedLink.WMQLpanels[k]);
-
+                if (sharedLink.WMQLpanels != undefined) {
+                    for (var k = 0; k < sharedLink.WMQLpanels.length; k++) {
+                        KWMQLPanel.openPanel(
+                            KViewer.obj3dTool.objs[sharedLink.WMQLpanels[k].tract_id],
+                            KViewer.atlasTool.objs[sharedLink.WMQLpanels[k].atlas_id],
+                            sharedLink.WMQLpanels[k]
+                        );
                     }
                 }
 
-
-
                 signalhandler.send("reslice positionChange");
 
-
-                for (var k=0;k < derived_q.length;k++)
-                {
-                    if (derived_q[k].fileID.refvisit_tck != undefined)                    
-                    {
+                for (var k = 0; k < derived_q.length; k++) {
+                    if (derived_q[k].fileID.refvisit_tck != undefined) {
                         var vport_id = derived_q[k].fileID.viewport_id;
                         var vmap_params = derived_q[k].fileID.refvisit_params;
-                        var fibid = derived_q[k].fileID.refvisit_tck;      
-                        var medv = KViewer.viewports[vport_id].medViewer                
-                        if (medv == undefined)
-                            continue;
+                        var fibid = derived_q[k].fileID.refvisit_tck;
+                        var medv = KViewer.viewports[vport_id].medViewer;
+                        if (medv == undefined) continue;
                         var objs = KViewer.viewports[vport_id].medViewer.objects3D;
-                        for (var j = 0; j < objs.length;j++)
-                            if (KViewer.viewports[vport_id].medViewer.objects3D[j].fibers && 
-                                KViewer.viewports[vport_id].medViewer.objects3D[j].fibers.fileID == fibid)
-                            {
+                        for (var j = 0; j < objs.length; j++)
+                            if (
+                                KViewer.viewports[vport_id].medViewer.objects3D[j].fibers &&
+                                KViewer.viewports[vport_id].medViewer.objects3D[j].fibers.fileID == fibid
+                            ) {
                                 var tck = KViewer.viewports[vport_id].medViewer.objects3D[j];
                                 var fobj;
-                                if (vmap_params.terminal)
-                                {
-        				  	  	    tck.visitworker_terms = tck.createVisitMap(vmap_params.undersamp,vmap_params.terminal,true,true);
-        				  	  	    fobj = tck.visitworker_terms.fobj;
+                                if (vmap_params.terminal) {
+                                    tck.visitworker_terms = tck.createVisitMap(
+                                        vmap_params.undersamp,
+                                        vmap_params.terminal,
+                                        true,
+                                        true
+                                    );
+                                    fobj = tck.visitworker_terms.fobj;
+                                } else {
+                                    tck.visitworker = tck.createVisitMap(vmap_params.undersamp, undefined, true, true);
+                                    fobj = tck.visitworker.fobj;
                                 }
-                                else
-                                {
-        				  	  	    tck.visitworker = tck.createVisitMap(vmap_params.undersamp,undefined,true,true);        
-        				  	  	    fobj = tck.visitworker.fobj;
-                                }
-                                var target_vid = derived_q[k].intent.viewportID
-                                KViewer.viewports[target_vid].setContent(fobj,{intent:derived_q[k].intent});                                       
+                                var target_vid = derived_q[k].intent.viewportID;
+                                KViewer.viewports[target_vid].setContent(fobj, { intent: derived_q[k].intent });
 
                                 fobj;
                             }
-				  	  }
+                    }
                 }
 
-
-      /*
+                /*
                 setTimeout(function()
                 {
                     for (var r = 0;r < markerProxy.markersets.length;r++)
@@ -1229,25 +1012,22 @@ function openSharedLink(sharedLink,onready)
                              markerProxy.markersets[r].onupdate[x]();
                     }   
                 },1000);
-        */    
+        */
 
-                if (sharedLink.TableHidden)
-                    KViewer.toggleTableHide();
-
+                if (sharedLink.TableHidden) KViewer.toggleTableHide();
 
                 if (markerProxy != undefined && sharedLink.currentAnnot != undefined)
-                   markerProxy.setCurrentSet(sharedLink.currentAnnot,true);
+                    markerProxy.setCurrentSet(sharedLink.currentAnnot, true);
 
-                if (sharedLink.zoomedViewport != -1 &&  KViewer.viewports[sharedLink.zoomedViewport] != undefined )
+                if (sharedLink.zoomedViewport != -1 && KViewer.viewports[sharedLink.zoomedViewport] != undefined)
                     KViewer.viewports[sharedLink.zoomedViewport].zoomViewPort();
 
-                $(document.body).removeClass("wait");		
-                $("#KLoadingFrame").css('display','none')
+                $(document.body).removeClass("wait");
+                $("#KLoadingFrame").css("display", "none");
 
-                if (KViewer.hasControlsOn() != sharedLink.controlsOn)
-                    KViewer.toggleElementsForScreenShot();
+                if (KViewer.hasControlsOn() != sharedLink.controlsOn) KViewer.toggleElementsForScreenShot();
 
-/*                
+                /*                
                 var ival = 100;
                 function waitForAsyncs()
                 {
@@ -1267,1175 +1047,950 @@ function openSharedLink(sharedLink,onready)
                 setTimeout(waitForAsyncs,100)
 */
 
-                var post_fun = function() {}
-                if (openSharedLink.callback != undefined)
-                   post_fun = openSharedLink.callback.execute;
-                
-                if (sharedLink.WorkstatePostCode != undefined)
-                {
-                    eval("var wdpc_fun = " +sharedLink.WorkstatePostCode);
-                    wdpc_fun(post_fun)
-                }
-                else
-                    post_fun();
-                
-                if (onready)
-                    onready();
+                var post_fun = function () {};
+                if (openSharedLink.callback != undefined) post_fun = openSharedLink.callback.execute;
 
+                if (sharedLink.WorkstatePostCode != undefined) {
+                    eval("var wdpc_fun = " + sharedLink.WorkstatePostCode);
+                    wdpc_fun(post_fun);
+                } else post_fun();
+
+                if (onready) onready();
             });
-        },0);
+        }, 0);
     }
 }
 
-
-
-
-
-
-function saveWorkstate(that)
-{
-    var s = gatherState('savestate');
-    if (electron)
-    {
-        uploadJSON("workstate.json",s,{subfolder:'workstates',tag:'/workstate/'},function(){});					
-    }
-    else
-    {
-
-        saveDialog("workstate", function(name,finfo)
-        {
-         
-                finfo.tag = '/workstate/';
+function saveWorkstate(that) {
+    var s = gatherState("savestate");
+    if (electron) {
+        uploadJSON("workstate.json", s, { subfolder: "workstates", tag: "/workstate/" }, function () {});
+    } else {
+        saveDialog(
+            "workstate",
+            function (name, finfo) {
+                finfo.tag = "/workstate/";
                 finfo.subfolder = "workstates";
                 that.lastProjectStatename = name;
-                uploadJSON(name,s,finfo,function(){});					
-        } ,that.lastProjectStatename);
-
-
+                uploadJSON(name, s, finfo, function () {});
+            },
+            that.lastProjectStatename
+        );
     }
-
 }
-
-
 
 /** objectifies viewing state including all currently loaded files etc.
  * @return {object} - an object containg all state information
  */
-function gatherState(issuer)
-{
+function gatherState(issuer) {
+    function mapID(obj) {
+        var id;
 
-    function mapID(obj)
-    {
-        var id ;
-
-        if (obj.content && obj.content.refvisit_params)
-        {
-            id = {refvisit_tck:obj.content.refvisit_tck.fibers.fileID,
-                  viewport_id:obj.content.refvisit_tck.viewer.viewport.viewPortID,
-                  refvisit_params:obj.content.refvisit_params}
+        if (obj.content && obj.content.refvisit_params) {
+            id = {
+                refvisit_tck: obj.content.refvisit_tck.fibers.fileID,
+                viewport_id: obj.content.refvisit_tck.viewer.viewport.viewPortID,
+                refvisit_params: obj.content.refvisit_params,
+            };
             return id;
-
-
         }
-        if (obj.fileID)
-            id = obj.fileID;
-        if (obj.currentFileID)
-            id = obj.currentFileID;
-        if (obj.trackingVolID)
-            id = obj.trackingVolID;
-        if (id == undefined && obj.atlas)
-        {
-            id =obj.atlas.fileID
+        if (obj.fileID) id = obj.fileID;
+        if (obj.currentFileID) id = obj.currentFileID;
+        if (obj.trackingVolID) id = obj.trackingVolID;
+        if (id == undefined && obj.atlas) {
+            id = obj.atlas.fileID;
         }
 
-        if (id == undefined)
-            return undefined;
-        if (electron)
-        {
+        if (id == undefined) return undefined;
+        if (electron) {
             var file = KViewer.dataManager.getFile(id);
             return file.fileinfo.SubFolder + "/" + file.fileinfo.filename;
-
-        }
-        else        
-        {
+        } else {
             return id;
         }
     }
 
     // gather viewport content and overlays
     var imgs = [];
-    for (var k = 0; k < KViewer.viewports.length; k++)
-    {
-        if (KViewer.viewports[k] == undefined)
-            continue;
-        if(KViewer.viewports[k].getCurrentViewer)
-            var viewer = KViewer.viewports[k].getCurrentViewer();
-        else
-            viewer = undefined;   
+    for (var k = 0; k < KViewer.viewports.length; k++) {
+        if (KViewer.viewports[k] == undefined) continue;
+        if (KViewer.viewports[k].getCurrentViewer) var viewer = KViewer.viewports[k].getCurrentViewer();
+        else viewer = undefined;
         var viewportProperties = undefined;
-        if (KViewer.viewports[k].getProperties)
-            viewportProperties = KViewer.viewports[k].getProperties();
-    
-        
-        if (viewer != undefined 
-            && ( ( viewer.currentFileID != undefined & viewer.currentFileID != "") || (viewer.nii != undefined && viewer.nii.dummy != undefined) ) )
-        {
-            var myid = "ID" + viewer.currentFileID;
-            if (viewer.currentFileID=="WorkstatePostCode")
-                continue;
-            if (viewer.viewerType == "medViewer")
-            {
+        if (KViewer.viewports[k].getProperties) viewportProperties = KViewer.viewports[k].getProperties();
 
+        if (
+            viewer != undefined &&
+            ((viewer.currentFileID != undefined) & (viewer.currentFileID != "") ||
+                (viewer.nii != undefined && viewer.nii.dummy != undefined))
+        ) {
+            var myid = "ID" + viewer.currentFileID;
+            if (viewer.currentFileID == "WorkstatePostCode") continue;
+            if (viewer.viewerType == "medViewer") {
                 var gl_props;
                 if (viewer.isGLenabled() && viewer.gl != undefined)
-                    gl_props = {alpha:viewer.gl.camera.alpha,
-                                  beta:viewer.gl.camera.beta,
-                                  radius:viewer.gl.camera.radius,
-                                  target:viewer.gl.camera.target,
-                                  position:viewer.gl.camera.position,
-                                  planesVisibility:viewer.gl.getPlanesVisibility()};
+                    gl_props = {
+                        alpha: viewer.gl.camera.alpha,
+                        beta: viewer.gl.camera.beta,
+                        radius: viewer.gl.camera.radius,
+                        target: viewer.gl.camera.target,
+                        position: viewer.gl.camera.position,
+                        planesVisibility: viewer.gl.getPlanesVisibility(),
+                    };
 
-
-                if (viewer.currentFileID != undefined)
-                {
-
+                if (viewer.currentFileID != undefined) {
                     var main_img = {
                         id: myid,
                         fileID: mapID(viewer), //viewer.currentFileID,
-                        URLType: 'serverfile',
-                        name:viewer.currentFilename,
-                        intent:
-                        {
+                        URLType: "serverfile",
+                        name: viewer.currentFilename,
+                        intent: {
                             viewportID: k,
-                            viewportProperties:viewportProperties,
+                            viewportProperties: viewportProperties,
                             zooms: viewer.getRelativeZoomLims(),
                             cmap: viewer.histoManager.cmapindex,
-                            windowing: viewer.histoManager.getManuallyEnteredClim(issuer == 'savestate'),
+                            windowing: viewer.histoManager.getManuallyEnteredClim(issuer == "savestate"),
                             gl: viewer.isGLenabled(),
-                            gl_props:gl_props,
-                            isosurf: (viewer.refSurfView!=undefined)?viewer.refSurfView.getViewProperties():undefined,
+                            gl_props: gl_props,
+                            isosurf:
+                                viewer.refSurfView != undefined ? viewer.refSurfView.getViewProperties() : undefined,
                             slicing: viewer.getSlicingDimOfWorld(),
-                            showcolored_type:viewer.showcolored_type,
-                            showcolored:viewer.showcolored,
-                            transfactor:viewer.transfactor
-                        }
+                            showcolored_type: viewer.showcolored_type,
+                            showcolored: viewer.showcolored,
+                            transfactor: viewer.transfactor,
+                        },
                     };
 
-                    if (viewer.mosaicview && viewer.mosaicview.active)
-                    {
-                        main_img.mosaic = {border:viewer.mosaicview.border,
-                          nx: viewer.mosaicview.nx,
-                          nx_cont: viewer.mosaicview.nx_cont,
-                          zoom: viewer.mosaicview.zoom,
-                          start:viewer.mosaicview.start,
-                          end:viewer.mosaicview.end,
-                          clipratio:viewer.mosaicview.clipratio,
-                          number_color:viewer.mosaicview.number_color
-                                          };
-                    }
-        
-                    if (viewer.nii && viewer.nii.quiver_params)
-                    {
-                        main_img.intent.quiver_params = viewer.nii.quiver_params;
+                    if (viewer.mosaicview && viewer.mosaicview.active) {
+                        main_img.mosaic = {
+                            border: viewer.mosaicview.border,
+                            nx: viewer.mosaicview.nx,
+                            nx_cont: viewer.mosaicview.nx_cont,
+                            zoom: viewer.mosaicview.zoom,
+                            start: viewer.mosaicview.start,
+                            end: viewer.mosaicview.end,
+                            clipratio: viewer.mosaicview.clipratio,
+                            number_color: viewer.mosaicview.number_color,
+                        };
                     }
 
+                    if (viewer.nii && viewer.nii.quiver_params) {
+                        main_img.intent.quiver_params = viewer.nii.quiver_params;
+                    }
 
                     imgs.push(main_img);
                 }
                 if (viewer.overlays != undefined)
-                    for (var j = 0; j < viewer.overlays.length; j++)
-                    {
+                    for (var j = 0; j < viewer.overlays.length; j++) {
                         var myid = "ID" + viewer.overlays[j].currentFileID;
 
                         imgs.push({
                             id: myid + "ovl",
                             fileID: mapID(viewer.overlays[j]),
-                            name:viewer.overlays[j].currentFilename,
-                            URLType: 'serverfile',
-                            intent:
-                            {
+                            name: viewer.overlays[j].currentFilename,
+                            URLType: "serverfile",
+                            intent: {
                                 overlay: true,
                                 viewportID: k,
-                                isosurf: (viewer.overlays[j].refSurfView!=undefined)?viewer.overlays[j].refSurfView.getViewProperties():undefined,
+                                isosurf:
+                                    viewer.overlays[j].refSurfView != undefined
+                                        ? viewer.overlays[j].refSurfView.getViewProperties()
+                                        : undefined,
                                 cmap: viewer.overlays[j].histoManager.cmapindex,
                                 transparent: viewer.overlays[j].histoManager.blending,
-                                windowing: viewer.overlays[j].histoManager.getManuallyEnteredClim(issuer=='savestate'),
-                                showcolored:viewer.overlays[j].showcolored,
-                                showcolored_type:viewer.overlays[j].showcolored_type,
-                                posnegsym:viewer.overlays[j].histoManager.posnegsym,
-                                blocky:viewer.overlays[j].histoManager.blocky,
-                                visible:viewer.overlays[j].visible,
-                                hideview:viewer.overlays[j].hideview,
-                                quiver_params:viewer.overlays[j].nii.quiver_params,
-                                outlines: (viewer.overlays[j].outlines != undefined)?((viewer.overlays[j].color != undefined)?viewer.overlays[j].color:0):undefined
-                            }
+                                windowing: viewer.overlays[j].histoManager.getManuallyEnteredClim(
+                                    issuer == "savestate"
+                                ),
+                                showcolored: viewer.overlays[j].showcolored,
+                                showcolored_type: viewer.overlays[j].showcolored_type,
+                                posnegsym: viewer.overlays[j].histoManager.posnegsym,
+                                blocky: viewer.overlays[j].histoManager.blocky,
+                                visible: viewer.overlays[j].visible,
+                                hideview: viewer.overlays[j].hideview,
+                                quiver_params: viewer.overlays[j].nii.quiver_params,
+                                outlines:
+                                    viewer.overlays[j].outlines != undefined
+                                        ? viewer.overlays[j].color != undefined
+                                            ? viewer.overlays[j].color
+                                            : 0
+                                        : undefined,
+                            },
                         });
-
-                 
-
-
                     }
                 if (viewer.ROIs != undefined)
-                    for (var j = 0; j < viewer.ROIs.length; j++)
-                    {
+                    for (var j = 0; j < viewer.ROIs.length; j++) {
                         var col;
-                        if (viewer.ROIs[j].color.color != undefined)
-                            col  = viewer.ROIs[j].color.getjson();
-                        else
-                            col = viewer.ROIs[j].color;
-                        if (typeof col == "string")
-                            col = col.join(",")
-                        
-                        if (viewer.ROIs[j].roi.fileID.substring(0,10) == 'ROI_ATLAS_')
-                        {
-                            var tmp =  viewer.ROIs[j].roi.fileID.substring(10)
-                            var fid = tmp.substring(0,tmp.lastIndexOf("_"))
+                        if (viewer.ROIs[j].color.color != undefined) col = viewer.ROIs[j].color.getjson();
+                        else col = viewer.ROIs[j].color;
+                        if (typeof col == "string") col = col.join(",");
+
+                        if (viewer.ROIs[j].roi.fileID.substring(0, 10) == "ROI_ATLAS_") {
+                            var tmp = viewer.ROIs[j].roi.fileID.substring(10);
+                            var fid = tmp.substring(0, tmp.lastIndexOf("_"));
                             var myid = "ID" + fid;
-                            var akeys = tmp.substring(tmp.lastIndexOf("_")+1).split(",");
+                            var akeys = tmp.substring(tmp.lastIndexOf("_") + 1).split(",");
                             imgs.push({
                                 id: myid + "roi",
                                 fileID: mapID(KViewer.dataManager.getFile(fid)),
-                                name:viewer.ROIs[j].roi.filename,
-                                URLType: 'serverfile',
-                                intent:
-                                {
-                                    atlaskey:akeys,
-                                    labelname:viewer.ROIs[j].roi.filename,
+                                name: viewer.ROIs[j].roi.filename,
+                                URLType: "serverfile",
+                                intent: {
+                                    atlaskey: akeys,
+                                    labelname: viewer.ROIs[j].roi.filename,
                                     roi: true,
-                                    isosurf: (viewer.isGLenabled() && viewer.ROIs[j].refSurfView!=undefined)?viewer.ROIs[j].refSurfView.getViewProperties():undefined,
+                                    isosurf:
+                                        viewer.isGLenabled() && viewer.ROIs[j].refSurfView != undefined
+                                            ? viewer.ROIs[j].refSurfView.getViewProperties()
+                                            : undefined,
                                     color: col,
                                     viewportID: k,
-                                    visible:viewer.ROIs[j].visible
-                                }
+                                    visible: viewer.ROIs[j].visible,
+                                },
                             });
-                        }
-                        else
-                        {
-                            
+                        } else {
                             var myid = "ID" + viewer.ROIs[j].roi.fileID;
                             var roi = viewer.ROIs[j].roi;
                             imgs.push({
                                 id: myid + "roi",
                                 fileID: mapID(roi),
-                                name:roi.filename,
-                                URLType: 'serverfile',
-                                intent:
-                                {
+                                name: roi.filename,
+                                URLType: "serverfile",
+                                intent: {
                                     roi: true,
-                                    isosurf: (viewer.ROIs[j].refSurfView!=undefined)?viewer.ROIs[j].refSurfView.getViewProperties():undefined,
+                                    isosurf:
+                                        viewer.ROIs[j].refSurfView != undefined
+                                            ? viewer.ROIs[j].refSurfView.getViewProperties()
+                                            : undefined,
                                     color: col,
                                     viewportID: k,
-                                    visible:viewer.ROIs[j].visible
-                                }
+                                    visible: viewer.ROIs[j].visible,
+                                },
                             });
                         }
                     }
                 if (viewer.objects3D != undefined)
-                    for (var j = 0; j < viewer.objects3D.length; j++)
-                    {
+                    for (var j = 0; j < viewer.objects3D.length; j++) {
                         var obj = viewer.objects3D[j];
                         var fid, assoc_annot;
                         var clim;
                         var more_intent;
-                        if (obj.getViewProperties)
-                            more_intent = obj.getViewProperties()
-                        else
-                            more_intent = {};
-                        if (viewer.currentFileID == undefined)
-                            more_intent.gl_props = gl_props
-                        if (obj.fibers != undefined | obj.contour != undefined)
-                        {
-
-                            if (obj.fibers)
-                            {
-                                fid = mapID(obj.fibers);     
-                                if (obj.fibers.tckjsonref)  
-                                {
+                        if (obj.getViewProperties) more_intent = obj.getViewProperties();
+                        else more_intent = {};
+                        if (viewer.currentFileID == undefined) more_intent.gl_props = gl_props;
+                        if ((obj.fibers != undefined) | (obj.contour != undefined)) {
+                            if (obj.fibers) {
+                                fid = mapID(obj.fibers);
+                                if (obj.fibers.tckjsonref) {
                                     fid = [];
-                                    for (var ik in obj.fibers.tckjsonref)                                        
-                                        fid.push(mapID(obj.fibers.tckjsonref[ik]));
-                                }
-                                else
-                                {
-                                    if (obj.children && obj.children.length > 0)
-                                    {
-                                        if (obj.fibers.fileinfo == undefined)
-                                           continue; 
-                                        
-                                        var json = KViewer.obj3dTool.save(obj.fibers,undefined,true)
+                                    for (var ik in obj.fibers.tckjsonref) fid.push(mapID(obj.fibers.tckjsonref[ik]));
+                                } else {
+                                    if (obj.children && obj.children.length > 0) {
+                                        if (obj.fibers.fileinfo == undefined) continue;
+
+                                        var json = KViewer.obj3dTool.save(obj.fibers, undefined, true);
                                         more_intent.jsonsubsets = json;
                                     }
                                 }
-                                if (obj.Selection && obj.parent)
-                                    more_intent.select = obj.Selection.name;
+                                if (obj.Selection && obj.parent) more_intent.select = obj.Selection.name;
 
                                 more_intent.from_sharedlink = true;
-                                if ((obj.subsetToDisplay != undefined && obj.subsetToDisplay.length > 0) | 
-                                      (obj.isParentView && obj.subsetToDisplay == undefined))
-
-                                {
+                                if (
+                                    (obj.subsetToDisplay != undefined && obj.subsetToDisplay.length > 0) |
+                                    (obj.isParentView && obj.subsetToDisplay == undefined)
+                                ) {
                                     more_intent.visible = true; // not yet
                                     more_intent.donotmakecurrent = true; // not yet
-                                }
-                                else
-                                {
+                                } else {
                                     more_intent.visible = false; // not yet
                                     more_intent.donotmakecurrent = true; // not yet
                                 }
-                                if (obj.isCurrent)
-                                  more_intent.donotmakecurrent = false;
-                                    
-                                if (obj.Selection && obj.Selection.colmode)
-                                {
-                                    more_intent.colmode = { name: obj.Selection.colmode.name,
-                                                                clim:obj.Selection.colmode.histoManager.clim,
-                                                                cmap:obj.Selection.colmode.histoManager.cmapindex}
+                                if (obj.isCurrent) more_intent.donotmakecurrent = false;
 
+                                if (obj.Selection && obj.Selection.colmode) {
+                                    more_intent.colmode = {
+                                        name: obj.Selection.colmode.name,
+                                        clim: obj.Selection.colmode.histoManager.clim,
+                                        cmap: obj.Selection.colmode.histoManager.cmapindex,
+                                    };
                                 }
-        
-                                if (obj.trackingVol)
-                                {
+
+                                if (obj.trackingVol) {
                                     fid = mapID(obj);
                                     more_intent.createFiberTracking = obj.getViewProperties();
-                                }                                    
+                                }
 
-                                                                  
                                 var annots = markerProxy.getSets();
-                                for (var r = 0;r < annots.length;r++)
-                                    if (annots[r].uuid == obj.associated_annotation)
-                                    {
+                                for (var r = 0; r < annots.length; r++)
+                                    if (annots[r].uuid == obj.associated_annotation) {
                                         more_intent.assoc = r;
                                         break;
                                     }
-                            }
-                            else
-                            {
-                                fid = mapID(obj.contour);     
+                            } else {
+                                fid = mapID(obj.contour);
                                 more_intent.select = obj.select;
-                
                             }
                             more_intent.fibcut = obj.fibcut;
                             more_intent.fibcut_proj = obj.fibcut_proj;
                             more_intent.fibcut_thres = obj.fibcut_thres;
                             more_intent.color = obj.color;
-                            
                         }
 
-
-                        var atlasiso = undefined
+                        var atlasiso = undefined;
                         var project = undefined;
                         var clim;
                         var cmap;
-                        if (obj.surf != undefined && obj.surf.fileID.substring(0,5) != "SURF_")
-                        {                            
+                        if (obj.surf != undefined && obj.surf.fileID.substring(0, 5) != "SURF_") {
                             fid = mapID(obj.surf);
-                            for (var jj=0;jj <obj.overlays.length; jj++)
-                            {
+                            for (var jj = 0; jj < obj.overlays.length; jj++) {
                                 var ovl = obj.overlays[jj];
-                                var intent = {surfcol: fid,
-                                              viewportID: k}
-                                if (ovl.histoManager)
-                                {
-                                    intent.cmap =  ovl.histoManager.cmapindex
-                                    intent.clim = ovl.histoManager.clim 
-                                    intent.posnegsym = ovl.histoManager.posnegsym 
-                                    
+                                var intent = { surfcol: fid, viewportID: k };
+                                if (ovl.histoManager) {
+                                    intent.cmap = ovl.histoManager.cmapindex;
+                                    intent.clim = ovl.histoManager.clim;
+                                    intent.posnegsym = ovl.histoManager.posnegsym;
                                 }
 
-                                intent.hasPanel = ( ovl.atlas != undefined && ovl.atlas.panel != undefined)? ovl.atlas.panel.getState() : undefined
-
+                                intent.hasPanel =
+                                    ovl.atlas != undefined && ovl.atlas.panel != undefined
+                                        ? ovl.atlas.panel.getState()
+                                        : undefined;
 
                                 imgs.push({
-                                    id: myid,                          
+                                    id: myid,
                                     fileID: mapID(ovl),
-                                    URLType: 'serverfile',
-                                    name:ovl.filename,
-                                    intent:intent})
-                            }                            
-                            if (obj.surf.atlasref)
-                            {
-                                fid = mapID(obj.surf.atlasref.atlas),
-                                project =  obj.surf.atlasref.atlas.project,
-                                atlasiso = obj.surf.atlasref.label;
+                                    URLType: "serverfile",
+                                    name: ovl.filename,
+                                    intent: intent,
+                                });
                             }
-                            else if (obj.refRoiView != undefined)
-                                continue;
+                            if (obj.surf.atlasref) {
+                                (fid = mapID(obj.surf.atlasref.atlas)),
+                                    (project = obj.surf.atlasref.atlas.project),
+                                    (atlasiso = obj.surf.atlasref.label);
+                            } else if (obj.refRoiView != undefined) continue;
                         }
 
-                        if (obj.surf != undefined && obj.refRoiView != undefined)
-                            continue;
-                     
-                        if (obj.histoManager)
-                        {
-                            cmap =  obj.histoManager.cmapindex
-                            clim = obj.histoManager.clim 
+                        if (obj.surf != undefined && obj.refRoiView != undefined) continue;
+
+                        if (obj.histoManager) {
+                            cmap = obj.histoManager.cmapindex;
+                            clim = obj.histoManager.clim;
                         }
 
-                        if (obj.cmat != undefined)
-                        {
+                        if (obj.cmat != undefined) {
                             fid = mapID(obj.cmat);
-                            clim = obj.histoManager.getManuallyEnteredClim(issuer == 'savestate');
+                            clim = obj.histoManager.getManuallyEnteredClim(issuer == "savestate");
                         }
 
                         if (Array.isArray(fid))
-                            for (var ik in fid)
-                                {
-                                    pushit(fid[ik])
-                                }
-                        else
-                            pushit(fid);
-                        function pushit(fid_)                        
-                            {
+                            for (var ik in fid) {
+                                pushit(fid[ik]);
+                            }
+                        else pushit(fid);
+                        function pushit(fid_) {
                             imgs.push({
-                                id: fid_ + (atlasiso?"atlas":"") + "3D",
+                                id: fid_ + (atlasiso ? "atlas" : "") + "3D",
                                 fileID: fid_,
                                 project: project,
-                                name:obj.filename,
-                                URLType: 'serverfile',
+                                name: obj.filename,
+                                URLType: "serverfile",
                                 intent: $.extend(
-                                {
-                                    GL: true,
-                                    gl: true,
-                                    atlasiso:atlasiso,
-                                    viewportID: k,
-                                    cuts: obj.cuts,
-                                    assoc_annot: assoc_annot,
-                                    windowing: clim,
-                                    cmap:cmap
-                                },more_intent)
+                                    {
+                                        GL: true,
+                                        gl: true,
+                                        atlasiso: atlasiso,
+                                        viewportID: k,
+                                        cuts: obj.cuts,
+                                        assoc_annot: assoc_annot,
+                                        windowing: clim,
+                                        cmap: cmap,
+                                    },
+                                    more_intent
+                                ),
                             });
-                            }
+                        }
 
-                        if (obj.surf != undefined)
-                        {
-                           
-
+                        if (obj.surf != undefined) {
                         }
                     }
                 if (viewer.atlas != undefined)
-                    for (var j = 0; j < viewer.atlas.length; j++)
-                    {
+                    for (var j = 0; j < viewer.atlas.length; j++) {
                         var obj = viewer.atlas[j];
                         imgs.push({
-                            id: myid + "atlas" +k,
+                            id: myid + "atlas" + k,
                             fileID: mapID(obj.atlas),
                             project: obj.atlas.project,
-                            name:obj.atlas.filename,
-                            URLType: 'serverfile',
-                            intent:
-                            {
-                                atlas:true,
+                            name: obj.atlas.filename,
+                            URLType: "serverfile",
+                            intent: {
+                                atlas: true,
                                 viewportID: k,
-                                hasPanel :   ( obj.atlas.panel != undefined)? obj.atlas.panel.getState() : undefined,
-                            }
+                                hasPanel: obj.atlas.panel != undefined ? obj.atlas.panel.getState() : undefined,
+                            },
                         });
                     }
-
-
-            }
-            else if (viewer.viewerType == "formViewer")
-            {
-                if (viewer.currentFileID == 'NA')
-                {
+            } else if (viewer.viewerType == "formViewer") {
+                if (viewer.currentFileID == "NA") {
                     var fid = KViewer.formManager.getFormByID(viewer.currentFormID).name;
                     imgs.push({
-                        id: "ID" + fid + 'formNA'  + Math.random(),
+                        id: "ID" + fid + "formNA" + Math.random(),
                         fileID: fid,
-                        URLType: 'form',
+                        URLType: "form",
                         intent: {
                             viewportID: k,
-                            viewportProperties:viewportProperties,
-                            
-                        }
+                            viewportProperties: viewportProperties,
+                        },
                     });
-                }
-                else
-                {
+                } else {
                     var fid = mapID(viewer);
                     imgs.push({
                         id: "ID" + fid + "form",
                         fileID: fid,
-                        URLType: 'serverfile',
+                        URLType: "serverfile",
                         intent: {
                             viewportID: k,
-                            viewportProperties:viewportProperties,
-                            
-                        }
+                            viewportProperties: viewportProperties,
+                        },
                     });
                 }
-            }
-            else
-            {
+            } else {
                 var fid = mapID(viewer);
                 var obj = {
                     id: "ID" + fid,
                     fileID: mapID(viewer),
                     filename: viewer.currentFilename,
-                    name:viewer.currentFilename,
-                    URLType: 'serverfile',
+                    name: viewer.currentFilename,
+                    URLType: "serverfile",
                     intent: {
                         viewportID: k,
-                        viewportProperties:viewportProperties,
-                        
-                    }
+                        viewportProperties: viewportProperties,
+                    },
+                };
+                if (viewer.viewerType == "jsonViewer") {
+                    obj.intent.unfold = viewer.unfolded;
+                    obj.intent.state = viewer.getState();
                 }
-                if (viewer.viewerType == "jsonViewer")
-                {
-                   obj.intent.unfold = viewer.unfolded;
-                   obj.intent.state = viewer.getState();
-                }
-                if (viewer.viewerType == "tableViewer")
-                {
+                if (viewer.viewerType == "tableViewer") {
                     obj.intent.tablestate = viewer.getState();
                     obj.intent.tobj = viewer.getTobj();
                 }
 
                 imgs.push(obj);
             }
-
         }
     }
 
-
     var atlas_defField;
-    if (KViewer.atlasTool.defField != undefined)
-        atlas_defField = KViewer.atlasTool.defField.fileID;
+    if (KViewer.atlasTool.defField != undefined) atlas_defField = KViewer.atlasTool.defField.fileID;
 
     var atlases = [];
     for (a in KViewer.atlasTool.objs)
-        atlases.push({fileID:KViewer.atlasTool.objs[a].fileID,
-                       project:KViewer.atlasTool.objs[a].project});
+        atlases.push({ fileID: KViewer.atlasTool.objs[a].fileID, project: KViewer.atlasTool.objs[a].project });
 
-    var fmri_tmodes = undefined
-    if (KViewer.curveTool.fmri.tmodes != undefined)
-        fmri_tmodes = KViewer.curveTool.fmri.tmodes.fileID;
+    var fmri_tmodes = undefined;
+    if (KViewer.curveTool.fmri.tmodes != undefined) fmri_tmodes = KViewer.curveTool.fmri.tmodes.fileID;
 
-    
     var WMQLpanels = [];
     if (typeof KWMQLpanel != "undefined")
-    for (var k in KWMQLPanel.panels)
-    {
-        if (KWMQLPanel.panels[k].visible)
-        {
-            WMQLpanels.push(KWMQLPanel.panels[k].getState());
+        for (var k in KWMQLPanel.panels) {
+            if (KWMQLPanel.panels[k].visible) {
+                WMQLpanels.push(KWMQLPanel.panels[k].getState());
+            }
         }
-            
-    }
 
     // gather settings
-    KViewer.saveState()
+    KViewer.saveState();
     var vset = $.extend(true, {}, ViewerSettings);
     vset.crosshairModeDefault = KViewer.crosshairMode;
     vset.histoModeDefault = KViewer.histoMode;
 
     var position;
-    if (KViewer.currentPoint)
-        position = KViewer.currentPoint._data;
+    if (KViewer.currentPoint) position = KViewer.currentPoint._data;
     // and pack everything
 
-    var annotations = {content:markerProxy.objectify()};
+    var annotations = { content: markerProxy.objectify() };
 
     var currentAnnot = -1;
     var keys = Object.keys(markerProxy.markersets);
-	for (var k=0;k < keys.length;k++)	
-	{
-	   if (markerProxy.currentSet == markerProxy.markersets[keys[k]])
-            currentAnnot = k;
-     }
-     
-    var iron_visible = false;
-    if (typeof ironSight != "undefined" && ironSight.visible)
-        iron_visible = true;
-   
-    var navi_reorientationMatrix
-    var navi_warp_enabled;
-    if (KViewer.navigationTool.isinstance)
-    {
-        navi_warp_enabled = KViewer.navigationTool.transform.$toggle.hasClass("KViewPort_tool_enabled")
-        navi_reorientationMatrix =
-        {
-            matrix:KViewer.reorientationMatrix.matrix,
-            notID:KViewer.reorientationMatrix.notID
-        }
+    for (var k = 0; k < keys.length; k++) {
+        if (markerProxy.currentSet == markerProxy.markersets[keys[k]]) currentAnnot = k;
     }
 
+    var iron_visible = false;
+    if (typeof ironSight != "undefined" && ironSight.visible) iron_visible = true;
+
+    var navi_reorientationMatrix;
+    var navi_warp_enabled;
+    if (KViewer.navigationTool.isinstance) {
+        navi_warp_enabled = KViewer.navigationTool.transform.$toggle.hasClass("KViewPort_tool_enabled");
+        navi_reorientationMatrix = {
+            matrix: KViewer.reorientationMatrix.matrix,
+            notID: KViewer.reorientationMatrix.notID,
+        };
+    }
 
     var shareinfo = {
         project: project,
         viewports: imgs,
         position: position,
         annotations: annotations,
-        currentAnnot:currentAnnot,
-        search_row:state.search_row,
-        search_row_a: state.search_row_a,        
-        WMQLpanels:WMQLpanels,
-        ironSight:iron_visible,
-        naviMode:KViewer.navigationMode,
+        currentAnnot: currentAnnot,
+        search_row: state.search_row,
+        search_row_a: state.search_row_a,
+        WMQLpanels: WMQLpanels,
+        ironSight: iron_visible,
+        naviMode: KViewer.navigationMode,
         navi_movingObjs: Object.keys(KViewer.navigationTool.movingObjs),
         navi_reorientationMatrix: navi_reorientationMatrix,
-        navi_warp_enabled : navi_warp_enabled,
+        navi_warp_enabled: navi_warp_enabled,
         mainviewport: KViewer.mainViewport,
         ViewerSettings: vset,
         atlas_defField: atlas_defField,
-        atlases:atlases,
-        fmri_tmodes:fmri_tmodes,
+        atlases: atlases,
+        fmri_tmodes: fmri_tmodes,
         TableHidden: TableHidden,
-        WorkstatePostCode:KViewer.WorkstatePostCode,
+        WorkstatePostCode: KViewer.WorkstatePostCode,
         enabledTool: KTool_enabled(),
         toolstate: KToolWindow.getToolsState(),
-        styletheme:userinfo.styletheme,
-        zoomedViewport:KViewer.zoomedViewport,
-        controlsOn:KViewer.hasControlsOn(),
-        electron:electron
+        styletheme: userinfo.styletheme,
+        zoomedViewport: KViewer.zoomedViewport,
+        controlsOn: KViewer.hasControlsOn(),
+        electron: electron,
     };
 
-    if (KViewer.obj3dTool.tracking_panel && KViewer.obj3dTool.tracking_panel.params)
-    {
-        shareinfo.tracking_params = KViewer.obj3dTool.tracking_panel.params
+    if (KViewer.obj3dTool.tracking_panel && KViewer.obj3dTool.tracking_panel.params) {
+        shareinfo.tracking_params = KViewer.obj3dTool.tracking_panel.params;
     }
 
-    if (KViewer.lastDummyNifti != undefined)
-    {
-        shareinfo.dummyNifti_params = KViewer.lastDummyNifti.dummy_params
+    if (KViewer.lastDummyNifti != undefined) {
+        shareinfo.dummyNifti_params = KViewer.lastDummyNifti.dummy_params;
     }
 
-    
-    if (typeof projectInfo != "undefined")
-        shareinfo.project = projectInfo.name;
+    if (typeof projectInfo != "undefined") shareinfo.project = projectInfo.name;
 
-    if (typeof patientTableMirror != "undefined")
-    {
-        var expanded = {}
-        for (var k in patientTableMirror.nodesExpanded )
-            if (patientTableMirror.nodesExpanded[k] == true)
-            {
+    if (typeof patientTableMirror != "undefined") {
+        var expanded = {};
+        for (var k in patientTableMirror.nodesExpanded)
+            if (patientTableMirror.nodesExpanded[k] == true) {
                 v = true;
-                for (var j in patientTableMirror.nodesExpanded )
-                {
-                   if (k!=j)
-                   {
-                      if (k.substring(0,j.length) == j)
-                      {
-                          v = v & patientTableMirror.nodesExpanded[j];
-                      }
-
-                   }
+                for (var j in patientTableMirror.nodesExpanded) {
+                    if (k != j) {
+                        if (k.substring(0, j.length) == j) {
+                            v = v & patientTableMirror.nodesExpanded[j];
+                        }
+                    }
                 }
-                if (v)
-                  expanded[k] = true;
+                if (v) expanded[k] = true;
             }
 
-        shareinfo.expandedNodes= expanded;
-        shareinfo.selectedItems= patientTableMirror.selectedItems;
-        shareinfo.currentPSID= currentPSID;
-        shareinfo.ProjectSettings= ProjectSettings;
-
+        shareinfo.expandedNodes = expanded;
+        shareinfo.selectedItems = patientTableMirror.selectedItems;
+        shareinfo.currentPSID = currentPSID;
+        shareinfo.ProjectSettings = ProjectSettings;
     }
 
-    if (typeof shareTour != "undefined")
-        shareinfo.tour = shareTour;
-
-
+    if (typeof shareTour != "undefined") shareinfo.tour = shareTour;
 
     return shareinfo;
 }
 
 /** called to creae shared link
  */
-function shareLink()
-{
-    var shareinfo = gatherState('savestate');
+function shareLink() {
+    var shareinfo = gatherState("savestate");
     shareinfo.date = createSQLDate();
-    shareinfo.ViewerSettings.owner = userinfo.username
-    
+    shareinfo.ViewerSettings.owner = userinfo.username;
+
     var sharedID = "";
-    var uid = ""
-    if (sharedLink && sharedLink.shareID)
-    {
+    var uid = "";
+    if (sharedLink && sharedLink.shareID) {
         uid = sharedLink.shareID;
 
-        alertify.confirm("Overwrite old link (or create new)?",function(e) {
-            if (e)
-            {
+        alertify.confirm("Overwrite old link (or create new)?", function (e) {
+            if (e) {
                 sharedID = "&shareID=" + uid + "&ID=" + sharedLink.ID;
-                ajaxRequest('command=share&json=' + encodeURIComponent(JSON.stringify(shareinfo)) + sharedID, function(result) { })
-            }
-            else
-                createnew();
+                ajaxRequest(
+                    "command=share&json=" + encodeURIComponent(JSON.stringify(shareinfo)) + sharedID,
+                    function (result) {}
+                );
+            } else createnew();
         });
-
-    }
-    else
-       createnew()
-    function createnew()
-    {
-        uid = generateRandomString(32)
-        var url = myownurl() + "?sharelink=" +uid;
-        alertify.prompt( [{msg:"Copy the link below to clipboard: Ctrl+C, Enter"},
-                          {msg:"Optional comment"}],
-            function(e,str) {
-            if (e)
-            {
-                uid = str[0].split("=")[1];
-                if (uid != undefined && uid.length > 10)
-                {
-                    shareinfo.comment = str[1];
-                    sharedID = "&shareID=" + uid
-                    ajaxRequest('command=share&json=' + encodeURIComponent(JSON.stringify(shareinfo)) + sharedID, function(result) { 
-                    });
+    } else createnew();
+    function createnew() {
+        uid = generateRandomString(32);
+        var url = myownurl() + "?sharelink=" + uid;
+        alertify.prompt(
+            [{ msg: "Copy the link below to clipboard: Ctrl+C, Enter" }, { msg: "Optional comment" }],
+            function (e, str) {
+                if (e) {
+                    uid = str[0].split("=")[1];
+                    if (uid != undefined && uid.length > 10) {
+                        shareinfo.comment = str[1];
+                        sharedID = "&shareID=" + uid;
+                        ajaxRequest(
+                            "command=share&json=" + encodeURIComponent(JSON.stringify(shareinfo)) + sharedID,
+                            function (result) {}
+                        );
+                    } else alertify.error("invalid shareID");
                 }
-                else
-                    alertify.error("invalid shareID")
-            }
-            }, url);
+            },
+            url
+        );
+    }
+}
+
+function startImageLoader(loaders, callback) {
+    var loaders_ = [];
+    for (var k = 0; k < loaders.length; k++) {
+        var l = loaders[k];
+        if (l.url != undefined) l.pattern = l.url;
+        l.enabled = true;
+        if (l.viewportID == undefined) {
+            l.viewportID = "0,1,2";
+            l.intent.slicing = [1, 0, 2];
+        }
+        loaders_[k] = l;
     }
 
-
+    startAutoloader(loaders_, undefined, undefined, callback);
 }
 
+function startAutoloader(loader, psid, onerror, callback) {
+    // rows can be a file list from patient table or similar.
+    // if rows is undefined, the search will performed with an ajax over the whole patient table.
 
+    // close all is already applied further down
+    //signalhandler.send("close");
 
+    if ((state.viewer.selectionMode[1] == "a") | (loader == undefined)) return;
 
-function startImageLoader(loaders,callback)
-{
+    var queue = [];
+    var queue_ovlsrois = [];
 
-
-   var loaders_ = []
-   for (var k = 0; k < loaders.length;k++)
-   {
-       var l = loaders[k];
-       if (l.url != undefined)
-          l.pattern = l.url;
-       l.enabled = true;
-       if (l.viewportID == undefined)
-       {
-            l.viewportID = "0,1,2";
-            l.intent.slicing = [1,0,2];
-       }
-       loaders_[k] = l;
-   }
-
-
-   startAutoloader(loaders_,undefined , undefined, callback);
-
-
-}
-
-
-
-
-
-
-
-
-
-
-function startAutoloader(loader, psid, onerror, callback)
-{
-	// rows can be a file list from patient table or similar.
-	// if rows is undefined, the search will performed with an ajax over the whole patient table.
-
-   // close all is already applied further down
-   //signalhandler.send("close");
-
-
-   if (state.viewer.selectionMode[1] == 'a' | loader == undefined)
-   	  return;
-
-   var queue = [];
-   var queue_ovlsrois = [];
-
-
-   // iterate over all loaders
-   for (var i=0;i<loader.length;i++)
-   {
+    // iterate over all loaders
+    for (var i = 0; i < loader.length; i++) {
         var currentLoader = loader[i];
-        if (currentLoader.intent.auto_tag == undefined)
-        	currentLoader.intent.auto_tag = i;
+        if (currentLoader.intent.auto_tag == undefined) currentLoader.intent.auto_tag = i;
 
-        
-		if(currentLoader.enabled !== undefined) // pattern must be set!!!
-			if(currentLoader.enabled === false) // pattern must be set!!!
-				continue;
-		if(currentLoader.pattern === undefined | currentLoader.pattern.trim() === '') // pattern must be set!!!
-		{
-			console.log('error in autolader. no pattern set.')
-			continue;
-		}
+        if (currentLoader.enabled !== undefined)
+            if (currentLoader.enabled === false)
+                // pattern must be set!!!
+                // pattern must be set!!!
+                continue;
+        if ((currentLoader.pattern === undefined) | (currentLoader.pattern.trim() === "")) {
+            // pattern must be set!!!
+            console.log("error in autolader. no pattern set.");
+            continue;
+        }
 
-		var pat = currentLoader.pattern;
+        var pat = currentLoader.pattern;
 
-        if (ViewerSettings.forms_user_specific_naming)
-        {
-            if (pat.search("\\$USER") == -1)
-            {
-                pat = pat.replace("\.form\.json",".$USER.form.json");
+        if (ViewerSettings.forms_user_specific_naming) {
+            if (pat.search("\\$USER") == -1) {
+                pat = pat.replace(".form.json", ".$USER.form.json");
             }
         }
-       
-		pat = pat.replace("\$USER",userinfo.username);
 
-       
-		if(psid != undefined) 
-		{
-			// check if the pattern contains a specific piz (with this, an image from the same set can be loaded for all patients, e.g. for atlases)
-          	if(pat.search('PIZ') == -1)   
-              {
-					
-				pat = pat.split(" OR ").map(function (x) { return x+ ' PPIZ:'+ psid.piz }).join(" OR ");
+        pat = pat.replace("$USER", userinfo.username);
 
-			  }
-
-            // No, you also want to be able to select studies in patient mode -->> append the study ID only in study mode. IN patient mode, will select ANY study from this patient            
-            //if( psid.sid != undefined && ViewerSettings.selectionMode[1] == "s")
-		// 0 = patient or study, 1=patient, 2=study
-
-
-            if( psid.sid != undefined && ViewerSettings.autoloaderLevel != 1 )
-            {
-            	
-           		if(pat.search('StudyID') == -1)
-					pat = pat.split(" OR ").map(function (x) { return x+ ' SStudyID:'+ psid.sid }).join(" OR ");
+        if (psid != undefined) {
+            // check if the pattern contains a specific piz (with this, an image from the same set can be loaded for all patients, e.g. for atlases)
+            if (pat.search("PIZ") == -1) {
+                pat = pat
+                    .split(" OR ")
+                    .map(function (x) {
+                        return x + " PPIZ:" + psid.piz;
+                    })
+                    .join(" OR ");
             }
-		}
-		
-		// extend with varpattern, e.g for autoloaders
-		pat = (pat + (currentLoader.varpattern!==undefined?currentLoader.varpattern:''));
-		// abuse the pattern as fileID, so that datamanger can store already loaded files	
-  		var fi = {ID: pat};
-		
+
+            // No, you also want to be able to select studies in patient mode -->> append the study ID only in study mode. IN patient mode, will select ANY study from this patient
+            //if( psid.sid != undefined && ViewerSettings.selectionMode[1] == "s")
+            // 0 = patient or study, 1=patient, 2=study
+
+            if (psid.sid != undefined && ViewerSettings.autoloaderLevel != 1) {
+                if (pat.search("StudyID") == -1)
+                    pat = pat
+                        .split(" OR ")
+                        .map(function (x) {
+                            return x + " SStudyID:" + psid.sid;
+                        })
+                        .join(" OR ");
+            }
+        }
+
+        // extend with varpattern, e.g for autoloaders
+        pat = pat + (currentLoader.varpattern !== undefined ? currentLoader.varpattern : "");
+        // abuse the pattern as fileID, so that datamanger can store already loaded files
+        var fi = { ID: pat };
 
         var shared = {};
 
-	    if (fi != -1)
-			{
-			// extract the numeric values from the loader def if not already in numeric strcuture. To be implemented elsewhere
-			
-			var slicing =[];
-			var cmaps = [];
-			var select = [];
-			var color = [];
-			var ids = [undefined];
-			if (currentLoader.viewportID != undefined)
-			{
-				ids  = currentLoader.viewportID.toString().split(",");
-				ids.forEach(function(part,index,array) { array[index] = parseInt(part); });
-			}
-			if(currentLoader.intent !== undefined)
-			{
-				if (currentLoader.intent.color != undefined && Array.isArray(currentLoader.intent.color))
-					color = currentLoader.intent.color.slice(0);
-				if (currentLoader.intent.select != undefined)
-					select = currentLoader.intent.select.slice(0);
-				if (currentLoader.intent.slicing != undefined)
-				{
-					slicing   = currentLoader.intent.slicing.toString().split(",");  
-					slicing.forEach(function(part,index,array) { if ($.isNumeric(part)) array[index] = parseInt(part); else array[index] = part; });
-				}
-				if (currentLoader.intent.cmap != undefined)
-				{
-					cmaps   = currentLoader.intent.cmap.toString().split(",");  
-					cmaps.forEach(function(part,index,array) { if ($.isNumeric(part)) array[index] = parseInt(part); else array[index] = part; });
-				}
-			}
+        if (fi != -1) {
+            // extract the numeric values from the loader def if not already in numeric strcuture. To be implemented elsewhere
 
-			 for (var j=0;j< ids.length; j++)
-				 {
-						// auto loader defaults
-						var finalLoader =  new Object();
-						finalLoader.clim = undefined;
-						finalLoader.windowing = undefined;
-						finalLoader.cmap = undefined;
-						finalLoader.transparent = undefined;
-						finalLoader.overlay = false;
-						finalLoader.gl = false;
-						
-						// extend with current loader first
-						$.extend(true, finalLoader, currentLoader); 
+            var slicing = [];
+            var cmaps = [];
+            var select = [];
+            var color = [];
+            var ids = [undefined];
+            if (currentLoader.viewportID != undefined) {
+                ids = currentLoader.viewportID.toString().split(",");
+                ids.forEach(function (part, index, array) {
+                    array[index] = parseInt(part);
+                });
+            }
+            if (currentLoader.intent !== undefined) {
+                if (currentLoader.intent.color != undefined && Array.isArray(currentLoader.intent.color))
+                    color = currentLoader.intent.color.slice(0);
+                if (currentLoader.intent.select != undefined) select = currentLoader.intent.select.slice(0);
+                if (currentLoader.intent.slicing != undefined) {
+                    slicing = currentLoader.intent.slicing.toString().split(",");
+                    slicing.forEach(function (part, index, array) {
+                        if ($.isNumeric(part)) array[index] = parseInt(part);
+                        else array[index] = part;
+                    });
+                }
+                if (currentLoader.intent.cmap != undefined) {
+                    cmaps = currentLoader.intent.cmap.toString().split(",");
+                    cmaps.forEach(function (part, index, array) {
+                        if ($.isNumeric(part)) array[index] = parseInt(part);
+                        else array[index] = part;
+                    });
+                }
+            }
 
-						// extend with intent, intent wins !!!
-						$.extend(finalLoader, currentLoader.intent); 
+            for (var j = 0; j < ids.length; j++) {
+                // auto loader defaults
+                var finalLoader = new Object();
+                finalLoader.clim = undefined;
+                finalLoader.windowing = undefined;
+                finalLoader.cmap = undefined;
+                finalLoader.transparent = undefined;
+                finalLoader.overlay = false;
+                finalLoader.gl = false;
 
-						finalLoader.viewportID = ids[j];   // overwrite id with single number
-						if(color[j] != undefined)
-						   finalLoader.color = color[j];   
-						if(select[j] != undefined)
-						   finalLoader.select = select[j];   
-						if(slicing[j] != undefined)
-						   finalLoader.slicing = slicing[j]; 
-						if(cmaps[j] != undefined)
-						   finalLoader.cmap = cmaps[j];   
+                // extend with current loader first
+                $.extend(true, finalLoader, currentLoader);
 
+                // extend with intent, intent wins !!!
+                $.extend(finalLoader, currentLoader.intent);
 
-                        // additional information could be stored in clims. not so nice, add field for that in future. and ideally as object
-                        if( finalLoader.clim !== undefined)
-                            $.extend(true, finalLoader, extractDetailsFromClimString(currentLoader.clim) )
-                        if( finalLoader.windowing !== undefined)
-                        {
-                            if (currentLoader.windowing != undefined)
-                                $.extend(true, finalLoader, extractDetailsFromClimString(currentLoader.windowing))
-                        }
+                finalLoader.viewportID = ids[j]; // overwrite id with single number
+                if (color[j] != undefined) finalLoader.color = color[j];
+                if (select[j] != undefined) finalLoader.select = select[j];
+                if (slicing[j] != undefined) finalLoader.slicing = slicing[j];
+                if (cmaps[j] != undefined) finalLoader.cmap = cmaps[j];
 
-                        finalLoader = $.extend(true,{viewportID:ids[j], slicing:slicing[j]},finalLoader)
-						finalLoader.shared =shared;
+                // additional information could be stored in clims. not so nice, add field for that in future. and ideally as object
+                if (finalLoader.clim !== undefined)
+                    $.extend(true, finalLoader, extractDetailsFromClimString(currentLoader.clim));
+                if (finalLoader.windowing !== undefined) {
+                    if (currentLoader.windowing != undefined)
+                        $.extend(true, finalLoader, extractDetailsFromClimString(currentLoader.windowing));
+                }
 
-                        // set the file params
-                        
-                        var item = {fileID: fi.ID, URLType: 'serverfile',intent: finalLoader  };
-                        item.intendedName = finalLoader.intendedName;
-                        item.filetype = finalLoader.filetype;
+                finalLoader = $.extend(true, { viewportID: ids[j], slicing: slicing[j] }, finalLoader);
+                finalLoader.shared = shared;
 
-                        //finalLoader.fileparams = {fileID: fi.ID, URLType: 'serverfile'  }
-                        // queue.push( $.extend(true, { viewportID:ids[j], slicing:slicing[j] },   finalLoader   ) ); //make a deep copy and add j
-                        if (onerror != undefined)
-                            item.onerror = onerror;
-                        if (item.intent.roi || item.intent.overlay || item.intent.createFiberTracking) // these are loader after all the others
-                            queue_ovlsrois.push(item);
-                        else
-                            queue.push(item);
-				 }
-			 }
-		  else
-		  {
-		  	 if (onerror == undefined)
-			   $.notify("no file found with pattern " + currentLoader.pattern );
-			 else 
-			     onerror("no file found with pattern " + currentLoader.pattern );
-		  }
-		} // END iterate over all loaders
-   
+                // set the file params
 
-	   queue = queue.concat(queue_ovlsrois);
+                var item = { fileID: fi.ID, URLType: "serverfile", intent: finalLoader };
+                item.intendedName = finalLoader.intendedName;
+                item.filetype = finalLoader.filetype;
 
-	   var fileQuerys = [];
-       for (var k = 0;k < queue.length;k++)
-		  fileQuerys[k] = queue[k].fileID;
+                //finalLoader.fileparams = {fileID: fi.ID, URLType: 'serverfile'  }
+                // queue.push( $.extend(true, { viewportID:ids[j], slicing:slicing[j] },   finalLoader   ) ); //make a deep copy and add j
+                if (onerror != undefined) item.onerror = onerror;
+                if (item.intent.roi || item.intent.overlay || item.intent.createFiberTracking)
+                    // these are loader after all the others
+                    queue_ovlsrois.push(item);
+                else queue.push(item);
+            }
+        } else {
+            if (onerror == undefined) $.notify("no file found with pattern " + currentLoader.pattern);
+            else onerror("no file found with pattern " + currentLoader.pattern);
+        }
+    } // END iterate over all loaders
 
-		if (KViewer.dataManager.getFileList().length >0)
-		{
-		   KViewer.closeAll(undefined, loader.whattoclose );	
-		}
+    queue = queue.concat(queue_ovlsrois);
 
-  	   $(document.body).addClass('wait');
-		  
-	   if (typeof ajaxRequest != "undefined")
-  	       ajaxRequest('command=resolve_file_query&json=' + JSON.stringify({fileQuerys:fileQuerys}) , onresolution);
-  	   else
-  	   {
-  	       var resolved_files = [];
-           for (var k = 0; k < queue.length;k++)
-           {
-            	queue[k].URLType = 'foreignurl';   
-            	resolved_files[k]  = queue[k].fileID;
-           }
+    var fileQuerys = [];
+    for (var k = 0; k < queue.length; k++) fileQuerys[k] = queue[k].fileID;
 
-           onresolution({resolved_files:resolved_files});
+    if (KViewer.dataManager.getFileList().length > 0) {
+        KViewer.closeAll(undefined, loader.whattoclose);
+    }
 
-  	   }
-  	    
-	   function onresolution (result){
-			 	var resolved = [];
-			 	for (var k = 0; k < result.resolved_files.length;k++)
-			 	{
-			 		if ( result.resolved_files[k] == "")  // file not present, create file in case
-			 		{
-			 			if (queue[k].intent && queue[k].intent.defaultform)
-			 			{
-			 			     var m = translatepatterntoname(queue[k].fileID);
-                             queue[k].URLType = 'form';
-                             var s = m.split("/"); s = s[s.length-1];                             
-                             queue[k].fileID = s.split("\.")[0];
-							 resolved.push(queue[k]);
+    $(document.body).addClass("wait");
 
-			 			}
-			 			if (queue[k].intent && queue[k].intent.autocreateroi)
-			 			{
-							 	queue[k].URLType = 'createROI';
-							 	queue[k].intendedName = translatepatterntoname(queue[k].fileID)
-							 	queue[k].fileID =  queue[queue[k].intent.autocreateroi].fileID;
-							 	resolved.push(queue[k]);
-			 			}
-			 			if (queue[k].intent && queue[k].intent.autocreate_ano)
-			 			{
-							 	queue[k].URLType = 'createANO';
-							 	var pattern = queue[k].fileID;
-							 	queue[k].fileID =  queue[k].intent.autocreate_ano;
-							 	queue[k].fileID.name = translatepatterntoname(pattern);
-							 	resolved.push(queue[k]);
-
-			 			}
-
-			 			function translatepatterntoname(pattern)
-			 			{
-			 				var subf,name;
-							var m = pattern.match(/FFilename:\w+/);
-							if (m) // old style
- 							{
-  			 				    name = m[0].substring(10);
-                                var m = pattern.match(/FSubFolder:\w+/);
-                                if (m)
-                                  subf = m[0].substring(11);
-
-                                if (subf == undefined)
-                                    return name;
-                                else
-                                    return subf +"/"+name;
- 							}
- 							else // simple spattern style
- 							{
- 							    var ps = pattern.split(/[ \n]/)
-                                return ps[0];
-
- 							}
-
-
-			 			}
-			 			
-			 		}
-			 		else
-			 		{
-			 		    if (queue[k].URLType == 'foreignurl')
-                        {
-                        	var ttfile = result.resolved_files[k]; // might return multi matches
-                            queue[k].url = ttfile;
-                            queue[k].fileID = ttfile;
-                            if (queue[k].intent && queue[k].intent.intendedID)
-                                 queue[k].fileID = queue[k].intent.intendedID;
-
-	                        resolved.push(queue[k]);
-                        }
-                        else
-                        {
-                           	queue[k].fileID = result.resolved_files[k][0];
-	                        resolved.push(queue[k]);
-
-                        	if(queue[k].intent.onmultimatches == 'loadall')
-                        	{
-                        		var flist = result.resolved_files[k];
-                        		for(var j=1; j<flist.length; j++)
-                        		{
-                        			var newqitem = $.extend(true, {}, queue[k])
-									newqitem.fileID = result.resolved_files[k][j];
-									newqitem.intent.viewportID = queue[k].intent.viewportID + j;
-									resolved.push(newqitem);
-                        		}
-                        	}
-                        }
-			 		}
-			 	}
-			 
-			    if (ViewerSettings.calcpanel && ViewerSettings.calcpanel.enabled)
-			         resolved.push({fileID:"meta_"+currentPSID.patients_id + currentPSID.studies_id,
-			   				URLType:"serverfile", intent:{auto_tag:"pinfo"}})
-			    
-		        $(document.body).removeClass('wait');
-
-		        KViewer.setViewPortLayout();
-
-			    if (resolved.length > 0)
-			    {
-				   loadingQueue.execQueue(resolved,function() 
-				   {
-  						if(ViewerSettings.autoloaders) // new version of settings
-						{
-                            setTimeout(function() {
-    							KViewer.toggleMainViewport(ViewerSettings.mainViewport,true);
-                            },250);
-						}
-						else
-						{
-							KViewer.toggleMainViewport(ViewerSettings.viewPortAutoDefaults.mainViewPort,true);
-						}
-						if (ViewerSettings.calcpanel && ViewerSettings.calcpanel.enabled)
-						{
-							var autoinput = [];
-							var pinfo;
-							for (var k = 0;k < queue.length;k++)
-							{								
-								if (queue[k].obj)
-									autoinput[queue[k].intent.auto_tag] = queue[k].obj;
-								else
-									autoinput[queue[k].intent.auto_tag] = KViewer.dataManager.getFile(queue[k].fileID);
-							}
-							for (var k = 0;k < loadingQueue.fobjs.length;k++)
-							{
-								if ( loadingQueue.fobjs[k].filename && loadingQueue.fobjs[k].filename.search("study meta") > -1)
-								{
-									pinfo = JSON.parse(loadingQueue.fobjs[k].content);
-									break;
-								}
-							}
-							KCalcPanel(ViewerSettings.calcpanel,autoinput,pinfo);
-						}
-
-						if (callback)
-							callback();
-				   });
-			    }
-               else
-               {
-                    if (callback)
-                        callback();
-
-               }
-
-			 }
-					  
-
-
-
-
-      function extractDetailsFromClimString(lstr)
-      {
-            var out = {clim:""};
-           	if($.type(lstr) !== "string")
-            {
-           		out.clim = lstr;
-           		return;
-           	}
-            if (lstr.length > 0)
-      			{
-      			   if (lstr.search("overlay") != -1)
-      			   {
-      			   		out.overlay = true;
-      			   		lstr = lstr.replace("ovl","").trim();
-      			   }
-      			   if (lstr.search("GL") != -1)
-      			   {
-      			   		out.gl = true;
-      			   		lstr = lstr.replace("GL","").trim();
-      			   }
-      			   if (lstr.search("transparent") != -1)
-      			   {
-      			   		out.transparent = true;
-      			   		lstr = lstr.replace("transparent","").trim();
-      			   }
-      			   for (var k = 0; k < colormap.names.length;k++)
-      			   {
-      			   		if (lstr.search(colormap.names[k]) != -1)
-      			   		{
-      			   		 lstr = lstr.replace(colormap.names[k],"").trim();
-      						 out.cmap = colormap.names[k];
-      			   		}
-      			   }
-      			   if (lstr.length > 0)  // this is what remains from the clims
-      			   {
-      				   out.clim = lstr.split(",");
-      				   out.clim.forEach(function(part,index,array) { array[index] = parseFloat(part); });
-      				   if(out.clim.length != 2 )
-      				     	out.clim = "";
-      			   }
-      			}
-            return out;
+    if (typeof ajaxRequest != "undefined")
+        ajaxRequest("command=resolve_file_query&json=" + JSON.stringify({ fileQuerys: fileQuerys }), onresolution);
+    else {
+        var resolved_files = [];
+        for (var k = 0; k < queue.length; k++) {
+            queue[k].URLType = "foreignurl";
+            resolved_files[k] = queue[k].fileID;
         }
 
+        onresolution({ resolved_files: resolved_files });
+    }
 
+    function onresolution(result) {
+        var resolved = [];
+        for (var k = 0; k < result.resolved_files.length; k++) {
+            if (result.resolved_files[k] == "") {
+                // file not present, create file in case
+                if (queue[k].intent && queue[k].intent.defaultform) {
+                    var m = translatepatterntoname(queue[k].fileID);
+                    queue[k].URLType = "form";
+                    var s = m.split("/");
+                    s = s[s.length - 1];
+                    queue[k].fileID = s.split(".")[0];
+                    resolved.push(queue[k]);
+                }
+                if (queue[k].intent && queue[k].intent.autocreateroi) {
+                    queue[k].URLType = "createROI";
+                    queue[k].intendedName = translatepatterntoname(queue[k].fileID);
+                    queue[k].fileID = queue[queue[k].intent.autocreateroi].fileID;
+                    resolved.push(queue[k]);
+                }
+                if (queue[k].intent && queue[k].intent.autocreate_ano) {
+                    queue[k].URLType = "createANO";
+                    var pattern = queue[k].fileID;
+                    queue[k].fileID = queue[k].intent.autocreate_ano;
+                    queue[k].fileID.name = translatepatterntoname(pattern);
+                    resolved.push(queue[k]);
+                }
+
+                function translatepatterntoname(pattern) {
+                    var subf, name;
+                    var m = pattern.match(/FFilename:\w+/);
+                    if (m) {
+                        // old style
+                        name = m[0].substring(10);
+                        var m = pattern.match(/FSubFolder:\w+/);
+                        if (m) subf = m[0].substring(11);
+
+                        if (subf == undefined) return name;
+                        else return subf + "/" + name;
+                    } // simple spattern style
+                    else {
+                        var ps = pattern.split(/[ \n]/);
+                        return ps[0];
+                    }
+                }
+            } else {
+                if (queue[k].URLType == "foreignurl") {
+                    var ttfile = result.resolved_files[k]; // might return multi matches
+                    queue[k].url = ttfile;
+                    queue[k].fileID = ttfile;
+                    if (queue[k].intent && queue[k].intent.intendedID) queue[k].fileID = queue[k].intent.intendedID;
+
+                    resolved.push(queue[k]);
+                } else {
+                    queue[k].fileID = result.resolved_files[k][0];
+                    resolved.push(queue[k]);
+
+                    if (queue[k].intent.onmultimatches == "loadall") {
+                        var flist = result.resolved_files[k];
+                        for (var j = 1; j < flist.length; j++) {
+                            var newqitem = $.extend(true, {}, queue[k]);
+                            newqitem.fileID = result.resolved_files[k][j];
+                            newqitem.intent.viewportID = queue[k].intent.viewportID + j;
+                            resolved.push(newqitem);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (ViewerSettings.calcpanel && ViewerSettings.calcpanel.enabled)
+            resolved.push({
+                fileID: "meta_" + currentPSID.patients_id + currentPSID.studies_id,
+                URLType: "serverfile",
+                intent: { auto_tag: "pinfo" },
+            });
+
+        $(document.body).removeClass("wait");
+
+        KViewer.setViewPortLayout();
+
+        if (resolved.length > 0) {
+            loadingQueue.execQueue(resolved, function () {
+                if (ViewerSettings.autoloaders) {
+                    // new version of settings
+                    setTimeout(function () {
+                        KViewer.toggleMainViewport(ViewerSettings.mainViewport, true);
+                    }, 250);
+                } else {
+                    KViewer.toggleMainViewport(ViewerSettings.viewPortAutoDefaults.mainViewPort, true);
+                }
+                if (ViewerSettings.calcpanel && ViewerSettings.calcpanel.enabled) {
+                    var autoinput = [];
+                    var pinfo;
+                    for (var k = 0; k < queue.length; k++) {
+                        if (queue[k].obj) autoinput[queue[k].intent.auto_tag] = queue[k].obj;
+                        else autoinput[queue[k].intent.auto_tag] = KViewer.dataManager.getFile(queue[k].fileID);
+                    }
+                    for (var k = 0; k < loadingQueue.fobjs.length; k++) {
+                        if (
+                            loadingQueue.fobjs[k].filename &&
+                            loadingQueue.fobjs[k].filename.search("study meta") > -1
+                        ) {
+                            pinfo = JSON.parse(loadingQueue.fobjs[k].content);
+                            break;
+                        }
+                    }
+                    KCalcPanel(ViewerSettings.calcpanel, autoinput, pinfo);
+                }
+
+                if (callback) callback();
+            });
+        } else {
+            if (callback) callback();
+        }
+    }
+
+    function extractDetailsFromClimString(lstr) {
+        var out = { clim: "" };
+        if ($.type(lstr) !== "string") {
+            out.clim = lstr;
+            return;
+        }
+        if (lstr.length > 0) {
+            if (lstr.search("overlay") != -1) {
+                out.overlay = true;
+                lstr = lstr.replace("ovl", "").trim();
+            }
+            if (lstr.search("GL") != -1) {
+                out.gl = true;
+                lstr = lstr.replace("GL", "").trim();
+            }
+            if (lstr.search("transparent") != -1) {
+                out.transparent = true;
+                lstr = lstr.replace("transparent", "").trim();
+            }
+            for (var k = 0; k < colormap.names.length; k++) {
+                if (lstr.search(colormap.names[k]) != -1) {
+                    lstr = lstr.replace(colormap.names[k], "").trim();
+                    out.cmap = colormap.names[k];
+                }
+            }
+            if (lstr.length > 0) {
+                // this is what remains from the clims
+                out.clim = lstr.split(",");
+                out.clim.forEach(function (part, index, array) {
+                    array[index] = parseFloat(part);
+                });
+                if (out.clim.length != 2) out.clim = "";
+            }
+        }
+        return out;
+    }
 }
 
-
-
-function openItemByFileSelectorPattern(psid,pattern)
-{
+function openItemByFileSelectorPattern(psid, pattern) {
     /*
     psid = "11296343#20151203135549"
     // pattern = "resolution/ADC_s*.nii
@@ -2443,47 +1998,36 @@ function openItemByFileSelectorPattern(psid,pattern)
 echo "<mark class=\"link\" onclick=\"openItemByFileSelectorPattern(psid,pattern)\"> ddk </mark>"
 */
 
-    var x = psid.split("#")
-    var p ;
-    if (x.length == 1)
-       p = "PPIZ:"+x[0];
-    else
-       p = "PPIZ:"+x[0] + " SStudyID:#"+x[1]
-    var fileQuerys = [pattern + " " + p]
+    var x = psid.split("#");
+    var p;
+    if (x.length == 1) p = "PPIZ:" + x[0];
+    else p = "PPIZ:" + x[0] + " SStudyID:#" + x[1];
+    var fileQuerys = [pattern + " " + p];
 
-    ajaxRequest('command=resolve_file_query&json=' + JSON.stringify({fileQuerys:fileQuerys}) , function(result)
-    {
-
-            var queue = [];
-            for (var k = 0; k < result.resolved_files.length;k++)
-            {
-                if ( result.resolved_files[k] == "")  // file not present, create file in case
-                {
-                    alertify.error("file not found!")
-                    return;			 		
-                }
-                else
-                {
-
-	                KViewer.dataManager.delFile( result.resolved_files[k][0],true);
-                    var q = {}
-                    q.URLType = "serverfile"
-                    q.fileID = result.resolved_files[k][0]
-                    q.intent = {}
-                    queue.push(q)                       
-                }
+    ajaxRequest("command=resolve_file_query&json=" + JSON.stringify({ fileQuerys: fileQuerys }), function (result) {
+        var queue = [];
+        for (var k = 0; k < result.resolved_files.length; k++) {
+            if (result.resolved_files[k] == "") {
+                // file not present, create file in case
+                alertify.error("file not found!");
+                return;
+            } else {
+                KViewer.dataManager.delFile(result.resolved_files[k][0], true);
+                var q = {};
+                q.URLType = "serverfile";
+                q.fileID = result.resolved_files[k][0];
+                q.intent = {};
+                queue.push(q);
             }
-            loadingQueue.execQueue(queue,function(res) 
-               {
-                    signalhandler.send("updateFilelink",{id:res[0].fileID});                                       
-                    var panelview = KPanelView(KViewer,"",{addClass:"floatingViewporthidetitle"});
-                    panelview.setContent(res[0],{})
-                    res;
-               });
-
-    })
+        }
+        loadingQueue.execQueue(queue, function (res) {
+            signalhandler.send("updateFilelink", { id: res[0].fileID });
+            var panelview = KPanelView(KViewer, "", { addClass: "floatingViewporthidetitle" });
+            panelview.setContent(res[0], {});
+            res;
+        });
+    });
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2491,33 +2035,24 @@ echo "<mark class=\"link\" onclick=\"openItemByFileSelectorPattern(psid,pattern)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-DataView.prototype.getUTF8String = function(offset, length) {
+DataView.prototype.getUTF8String = function (offset, length) {
     var utf16 = new ArrayBuffer(length * 2);
     var utf16View = new Uint16Array(utf16);
     for (var i = 0; i < length; ++i) {
         utf16View[i] = this.getUint8(offset + i);
     }
-    return String.fromCharCode.apply(null , utf16View);
-}
-;
+    return String.fromCharCode.apply(null, utf16View);
+};
 
-
-
-
-function webgl_detect()
-{
-    if (webgl_detect.is != undefined)
-        return webgl_detect.is;
+function webgl_detect() {
+    if (webgl_detect.is != undefined) return webgl_detect.is;
 
     var context;
 
     if (!!window.WebGLRenderingContext) {
-        var canvas = document.createElement("canvas")
-          ,
-        names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"]
-          ,
-        context = false;
+        var canvas = document.createElement("canvas"),
+            names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"],
+            context = false;
 
         for (var i = 0; i < 4; i++) {
             try {
@@ -2539,116 +2074,81 @@ function webgl_detect()
     return false;
 }
 
-
-
-
 /***************************************************************************************
-*  loading Queue - loads a series of files from server
-***************************************************************************************/
+ *  loading Queue - loads a series of files from server
+ ***************************************************************************************/
 
-/** for loading a series of files from server synchronously 
+/** for loading a series of files from server synchronously
  * @class */
-var loadingQueue =
-{
+var loadingQueue = {
     queue: [],
-	/** @function */
-    execQueue: function(queue, onready)
-    {
-        if (queue != undefined)
-        {
+    /** @function */
+    execQueue: function (queue, onready) {
+        if (queue != undefined) {
             loadingQueue.queue = queue.reverse();
             loadingQueue.fobjs = [];
         }
 
-        if (loadingQueue.queue.length == 0)
-        {
-            if (onready)
-                onready(loadingQueue.fobjs);
+        if (loadingQueue.queue.length == 0) {
+            if (onready) onready(loadingQueue.fobjs);
             return;
         }
 
         var item = loadingQueue.queue.pop();
         var targetViewer;
-        if (item.intent.viewportID != undefined)
-        {
-            if (item.intent.viewportID>50)
-            {
-                var options = {showElements:true};
-                if (item.intent.viewportProperties)
-                    options = $.extend(options,item.intent.viewportProperties)
-                targetViewer = KPanelView(KViewer,"",options); //,{addClass:"floatingViewporthidetitle"});                
-            }
-            else
-                targetViewer = KViewer.viewports[item.intent.viewportID];
-
-
+        if (item.intent.viewportID != undefined) {
+            if (item.intent.viewportID > 50) {
+                var options = { showElements: true };
+                if (item.intent.viewportProperties) options = $.extend(options, item.intent.viewportProperties);
+                targetViewer = KPanelView(KViewer, "", options); //,{addClass:"floatingViewporthidetitle"});
+            } else targetViewer = KViewer.viewports[item.intent.viewportID];
         }
 
+        if (item.intent.clim == "") item.intent.clim = undefined;
 
-
-        if (item.intent.clim == "")
-            item.intent.clim = undefined;
-
-
-        if (targetViewer == undefined)
-        {
-            item.callback = function(fobj) {
+        if (targetViewer == undefined) {
+            item.callback = function (fobj) {
                 loadingQueue.fobjs.push(fobj);
                 this.obj = fobj;
                 loadingQueue.execQueue(undefined, onready);
-            }            
+            };
             KViewer.dataManager.loadData(item);
-        }
-        else
-        {
-            if (targetViewer.getCurrentViewer() != undefined && targetViewer.getCurrentViewer().viewerType == 'Manager')
+        } else {
+            if (targetViewer.getCurrentViewer() != undefined && targetViewer.getCurrentViewer().viewerType == "Manager")
                 loadingQueue.execQueue(undefined, onready);
             else
-                targetViewer.openFile(item, function() {
+                targetViewer.openFile(item, function () {
                     loadingQueue.execQueue(undefined, onready);
                 });
         }
-    }
+    },
 };
 
-
 /***************************************************************************************
-*  Full screen related functions
-***************************************************************************************/
+ *  Full screen related functions
+ ***************************************************************************************/
 
-function isFullScreen()
-{
-    return (document.fullScreenElement && document.fullScreenElement !== null )
-    || document.mozFullScreen
-    || document.webkitIsFullScreen;
+function isFullScreen() {
+    return (
+        (document.fullScreenElement && document.fullScreenElement !== null) ||
+        document.mozFullScreen ||
+        document.webkitIsFullScreen
+    );
 }
 
-function requestFullScreen(element)
-{
-    if (element.requestFullscreen)
-        element.requestFullscreen();
-    else if (element.msRequestFullscreen)
-        element.msRequestFullscreen();
-    else if (element.mozRequestFullScreen)
-        element.mozRequestFullScreen();
-    else if (element.webkitRequestFullscreen)
-        element.webkitRequestFullscreen();
+function requestFullScreen(element) {
+    if (element.requestFullscreen) element.requestFullscreen();
+    else if (element.msRequestFullscreen) element.msRequestFullscreen();
+    else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
+    else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
 }
 
-function exitFullScreen()
-{
-    if (document.exitFullscreen)
-        document.exitFullscreen();
-    else if (document.msExitFullscreen)
-        document.msExitFullscreen();
-    else if (document.mozCancelFullScreen)
-        document.mozCancelFullScreen();
-    else if (document.webkitExitFullscreen)
-        document.webkitExitFullscreen();
+function exitFullScreen() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.msExitFullscreen) document.msExitFullscreen();
+    else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
 }
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2656,110 +2156,88 @@ function exitFullScreen()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-function invertObject(obj)
-{
-
+function invertObject(obj) {
     var inv = {};
     var keys = Object.keys(obj);
-    for (var k = 0; k < keys.length; k++)
-    {
+    for (var k = 0; k < keys.length; k++) {
         inv[obj[keys[k]]] = keys[k];
     }
 
     return inv;
-
-
 }
 
-
-function patientTableScrollLock($thediv)
-{
-
+function patientTableScrollLock($thediv) {
     // turn off horizontal autoscroll behaviour
     var scleft = $thediv.scrollLeft();
-    var scrollock = function(e) {
+    var scrollock = function (e) {
         $thediv.scrollLeft(scleft);
-    }
-    var clear = function() {
-        $thediv.off('scroll', scrollock);
-        $(document.body).off('mouseup', clear);
-    }
-    ;
-    $thediv.on('scroll', scrollock);
+    };
+    var clear = function () {
+        $thediv.off("scroll", scrollock);
+        $(document.body).off("mouseup", clear);
+    };
+    $thediv.on("scroll", scrollock);
     $(document.body).on("mouseup", clear);
-
 }
 
+function permMat(nii) {
+    var P = math.matrix([
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 1],
+    ]);
+    for (var i = 0; i < 3; i++) P._data[i][nii.permutationOrder[i]] = nii.arrayReadDirection[i] / nii.voxSize[i];
 
-
-function permMat(nii)
-{
-    var P = math.matrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]]);
-    for (var i = 0; i < 3; i++)
-        P._data[i][nii.permutationOrder[i]] = nii.arrayReadDirection[i] / nii.voxSize[i];
-    
     return P;
 }
 
 permutationMat = permMat;
 
+function permMat_noscale(nii) {
+    var P = math.matrix([
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 1],
+    ]);
+    for (var i = 0; i < 3; i++) P._data[i][nii.permutationOrder[i]] = nii.arrayReadDirection[i];
 
-function permMat_noscale(nii)
-{
-    var P = math.matrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]]);
-    for (var i = 0; i < 3; i++)
-        P._data[i][nii.permutationOrder[i]] = nii.arrayReadDirection[i];
-    
     return P;
 }
 
-function sameGeometry(nii1,nii2)
-{
-    var i = isIdentity(math.multiply(nii1.edges,math.inv(nii2.edges)));
-    var s = nii1.sizes[0] == nii2.sizes[0] & nii1.sizes[1] == nii2.sizes[1] & nii1.sizes[2] == nii2.sizes[2];
-    return i & s; 
+function sameGeometry(nii1, nii2) {
+    var i = isIdentity(math.multiply(nii1.edges, math.inv(nii2.edges)));
+    var s = (nii1.sizes[0] == nii2.sizes[0]) & (nii1.sizes[1] == nii2.sizes[1]) & (nii1.sizes[2] == nii2.sizes[2]);
+    return i & s;
 }
 
+function isIdentity(R) {
+    if (R == undefined) return true;
 
-function isIdentity(R)
-{
-    if (R == undefined)
-        return true;
-    
-    if (R._data != undefined)
-        R = R._data
+    if (R._data != undefined) R = R._data;
 
     var eps = 0.001;
     var identity = true;
-    for (var k = 0; k < R.length;k++)
-    {
-        if (Math.abs(R[k][k] - 1) > eps)
-        {
+    for (var k = 0; k < R.length; k++) {
+        if (Math.abs(R[k][k] - 1) > eps) {
             identity = false;
             break;
         }
-        for (var j = k+1; j < R.length;j++)
-            {
-                if (Math.abs(R[j][k]) > eps | Math.abs(R[k][j]) > eps)
-                {
-                    identity = false;
-                    break;
-                }
+        for (var j = k + 1; j < R.length; j++) {
+            if ((Math.abs(R[j][k]) > eps) | (Math.abs(R[k][j]) > eps)) {
+                identity = false;
+                break;
             }
-        if (!identity)
-            break;
+        }
+        if (!identity) break;
     }
 
     return identity;
 }
 
-
-function transMat(t)
-{
-    if (t._data != undefined)
-        t = t._data;
+function transMat(t) {
+    if (t._data != undefined) t = t._data;
     var T = math.matrix(math.diag([1, 1, 1, 1]))._data;
     T[0][3] = t[0];
     T[1][3] = t[1];
@@ -2767,357 +2245,289 @@ function transMat(t)
     return T;
 }
 
-function applyInvPerm(p,s)
-{
-    for (var k = 0; k < p.length;k++)
-        if (s == p[k])
-        {
-            return k;            
+function applyInvPerm(p, s) {
+    for (var k = 0; k < p.length; k++)
+        if (s == p[k]) {
+            return k;
         }
 }
 
-
-function invert(arr, len)
-{
+function invert(arr, len) {
     var r = new Array();
-    for (var k = 0; k < len; k++)
-    {
+    for (var k = 0; k < len; k++) {
         r[k] = k;
     }
     return $(r).not(arr).get();
 }
 
-
-
 function componentToHex(c) {
-    if (typeof c == "string")
-        c = parseInt(c);
+    if (typeof c == "string") c = parseInt(c);
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
 }
-function RGB2HTML(r, g, b,a) {
-    if (a == undefined)
-        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-    else
-        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b) + componentToHex(a);
+function RGB2HTML(r, g, b, a) {
+    if (a == undefined) return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    else return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b) + componentToHex(a);
 }
-
-
 
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})*$/i.exec(hex);
     if (result == null)
         return {
-        r: 0,
-        g: 0,
-        b: 0,
-        a: 1
-    } ;
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 1,
+        };
     var alpha = 255;
-    if (result[4] != undefined)
-        alpha = parseInt(result[4], 16);
+    if (result[4] != undefined) alpha = parseInt(result[4], 16);
 
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-        a: alpha
-    } : null ;
+    return result
+        ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+              a: alpha,
+          }
+        : null;
 }
 
-function KColorSelector(colorlist, colencode, onchange, obj, params)
-{
+function KColorSelector(colorlist, colencode, onchange, obj, params) {
     var colors = colorlist;
 
-    function robustcolencode(colidx)
-    {
-        if (colidx == undefined)
-            return colencode([0,0,0])
-        if (colidx.length == 3 | colidx.length == 4)
-            return colencode(colidx)
-        if (colidx.color != undefined)
-            return colencode(colidx.color)
-        else
-        {
-            if (colors[colidx] != undefined)
-                return colencode(colors[colidx]);
-            else
-                return colencode(colors[0]);
+    function robustcolencode(colidx) {
+        if (colidx == undefined) return colencode([0, 0, 0]);
+        if ((colidx.length == 3) | (colidx.length == 4)) return colencode(colidx);
+        if (colidx.color != undefined) return colencode(colidx.color);
+        else {
+            if (colors[colidx] != undefined) return colencode(colors[colidx]);
+            else return colencode(colors[0]);
         }
     }
 
-    var $colselector = $("<div  class='KViewPort_tool KViewPort_tool_cmap fibers' style='" + robustcolencode(obj.color) + ";'>  <i class='fa fa-empty fa-1x'>&nbsp&nbsp&nbsp&nbsp</i></div>");
-    var color_response = function(str, ev) 
-    {
-        if (str!=undefined) 
-        {
+    var $colselector = $(
+        "<div  class='KViewPort_tool KViewPort_tool_cmap fibers' style='" +
+            robustcolencode(obj.color) +
+            ";'>  <i class='fa fa-empty fa-1x'>&nbsp&nbsp&nbsp&nbsp</i></div>"
+    );
+    var color_response = function (str, ev) {
+        if (str != undefined) {
             obj.color = parseInt(str);
-            $colselector.attr('style', colencode(colors[obj.color]));
+            $colselector.attr("style", colencode(colors[obj.color]));
             var col = colors[obj.color];
-            onchange(col,obj.color);
+            onchange(col, obj.color);
         }
-    }
+    };
     $colselector.color_response = color_response;
 
-    $colselector.updateColor = function()
-    {
-        if (typeof obj.color == "number")
-            $colselector.attr('style', colencode(colors[obj.color]));            
-        else if (obj.color.color != undefined)
-            $colselector.attr('style', colencode(obj.color.color));
-        else
-            $colselector.attr('style', colencode(obj.color));
-    }
+    $colselector.updateColor = function () {
+        if (typeof obj.color == "number") $colselector.attr("style", colencode(colors[obj.color]));
+        else if (obj.color.color != undefined) $colselector.attr("style", colencode(obj.color.color));
+        else $colselector.attr("style", colencode(obj.color));
+    };
 
     var color_contextmenu = new KContextMenu(
-    function() {
-        {
-            var $menu = $("<div class='menu_context color_selector'></div>");
-            for (var k = 0; k < colors.length; k++)
+        function () {
             {
-                var c = colors[k];
-                $menu.append($("<div style=' " + colencode(c) + "' onchoice='" + k + "' ><div> </div>  </div>"));
-            }
-            if (params == undefined)
-                params = {}
-            
-            if (params.manual)
-            {
-                var $col = $("<input id='colorselec23' type='color'>").
-                on('input', function(ev) {
-                    var $input = $(ev.target);
-                    onchange(new KColor($input.val()));
-                     $colselector.updateColor();
-                });
-                $menu.append($("<li  onchoice='preventSelection'> </li>").append($col));
-            }
-            if (obj.flow_param != undefined | params.flow_param)
-            {
-                var $flow = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='1'>").val(obj.flow_param).
-                on('change', function(ev) {
-                    var $input = $(ev.target);
-                    obj.flow_param = $input.val();
-                    onchange("flow");
-                });
-                $menu.append($("<li  onchoice='preventSelection'> Flow: </li>").append($flow));
-            }
-            if (obj.alpha != undefined | params.alpha)
-            {
-                var $alpha = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='1'>").val(obj.alpha).
-                on('change', function(ev) {
-                    var $input = $(ev.target);
-                    obj.alpha = $input.val();
-                    onchange();
-                });
-                $menu.append($("<li  onchoice='preventSelection'> Alpha: </li>").append($alpha));
-            }
-            if (obj.gamma != undefined)
-            {
-                var $gamma = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='2'>").val(obj.gamma).
-                on('change', function(ev) {
-                    var $input = $(ev.target);
-                    obj.gamma = $input.val();
-                    onchange();
-                });
-                $menu.append($("<li  onchoice='preventSelection'> Gamma: </li>").append($gamma));
-            }
-            if (obj.exposure != undefined)
-            {
-                var $exposure = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='4'>").val(obj.exposure).
-                on('change', function(ev) {
-                    var $input = $(ev.target);
-                    obj.exposure = parseFloat($input.val());
-                    onchange();
-                });
-                $menu.append($("<li  onchoice='preventSelection'> Exposure: </li>").append($exposure));
-            }
+                var $menu = $("<div class='menu_context color_selector'></div>");
+                for (var k = 0; k < colors.length; k++) {
+                    var c = colors[k];
+                    $menu.append($("<div style=' " + colencode(c) + "' onchoice='" + k + "' ><div> </div>  </div>"));
+                }
+                if (params == undefined) params = {};
 
-            return $menu;
-        }
-    }
-    ,color_response,false,true);
+                if (params.manual) {
+                    var $col = $("<input id='colorselec23' type='color'>").on("input", function (ev) {
+                        var $input = $(ev.target);
+                        onchange(new KColor($input.val()));
+                        $colselector.updateColor();
+                    });
+                    $menu.append($("<li  onchoice='preventSelection'> </li>").append($col));
+                }
+                if ((obj.flow_param != undefined) | params.flow_param) {
+                    var $flow = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='1'>")
+                        .val(obj.flow_param)
+                        .on("change", function (ev) {
+                            var $input = $(ev.target);
+                            obj.flow_param = $input.val();
+                            onchange("flow");
+                        });
+                    $menu.append($("<li  onchoice='preventSelection'> Flow: </li>").append($flow));
+                }
+                if ((obj.alpha != undefined) | params.alpha) {
+                    var $alpha = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='1'>")
+                        .val(obj.alpha)
+                        .on("change", function (ev) {
+                            var $input = $(ev.target);
+                            obj.alpha = $input.val();
+                            onchange();
+                        });
+                    $menu.append($("<li  onchoice='preventSelection'> Alpha: </li>").append($alpha));
+                }
+                if (obj.gamma != undefined) {
+                    var $gamma = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='2'>")
+                        .val(obj.gamma)
+                        .on("change", function (ev) {
+                            var $input = $(ev.target);
+                            obj.gamma = $input.val();
+                            onchange();
+                        });
+                    $menu.append($("<li  onchoice='preventSelection'> Gamma: </li>").append($gamma));
+                }
+                if (obj.exposure != undefined) {
+                    var $exposure = $("<input onchoice='preventSelection' type='number' step='0.05' min='0' max='4'>")
+                        .val(obj.exposure)
+                        .on("change", function (ev) {
+                            var $input = $(ev.target);
+                            obj.exposure = parseFloat($input.val());
+                            onchange();
+                        });
+                    $menu.append($("<li  onchoice='preventSelection'> Exposure: </li>").append($exposure));
+                }
+
+                return $menu;
+            }
+        },
+        color_response,
+        false,
+        true
+    );
     $colselector.click(color_contextmenu);
     $colselector.themenu = color_contextmenu;
 
     return $colselector;
 }
 
-
-function KColor(c)
-{
-    if (Array.isArray(c))
-        this.color = c.slice(0);
-    else if (typeof c == 'string')
-    {
-        if (c[0] == '#')
-        {
+function KColor(c) {
+    if (Array.isArray(c)) this.color = c.slice(0);
+    else if (typeof c == "string") {
+        if (c[0] == "#") {
             var tmp = hexToRgb(c);
-            if (tmp.a != undefined)
-                this.color = [tmp.r,tmp.g,tmp.b,tmp.a];
-            else
-                this.color = [tmp.r,tmp.g,tmp.b];
+            if (tmp.a != undefined) this.color = [tmp.r, tmp.g, tmp.b, tmp.a];
+            else this.color = [tmp.r, tmp.g, tmp.b];
+        } else if (c.search("rgba") > -1) {
+            this.color = c.substring(5, c.length - 1).split(",");
         }
-        else if (c.search('rgba') > -1)
-        {
-            this.color = c.substring(5,c.length-1).split(",");
-        }
-    }
-    else // and some more, which are not yet implemented
-        this.color = c.slice(0);
+    } // and some more, which are not yet implemented
+    else this.color = c.slice(0);
 }
 
-KColor.prototype.getAlpha = function()
-{
-    if (this.color[3] != undefined)
-        return this.color[3]/255;
-    else
-        return 1;
-}
+KColor.prototype.getAlpha = function () {
+    if (this.color[3] != undefined) return this.color[3] / 255;
+    else return 1;
+};
 
-
-KColor.prototype.getRGBarr = function()
-{
+KColor.prototype.getRGBarr = function () {
     return this.color;
-}
-KColor.prototype.getHEX = function ()
-{
+};
+KColor.prototype.getHEX = function () {
     if (this.color[3] != undefined && this.color[3] != 255)
-        return RGB2HTML(this.color[0],this.color[1],this.color[2],this.color[3]);
-    else
-        return RGB2HTML(this.color[0],this.color[1],this.color[2]);
-}
-KColor.prototype.getCSS = function()
-{
-    if (this.color.length == 4)
-    {
-        if (this.color[3] != undefined)
-            return 'rgba(' + this.color.toString() + ')'
-        else
-            return 'rgb(' + this.color.slice(0,3).toString() + ')'
-    }
-    else
-        return 'rgb(' + this.color.toString() + ')'
-}
-KColor.prototype.getOpacity = function()
-{
-    if (this.color.length == 4)
-        return this.color[3]/255;
-    else
-        return 1;
-}
-KColor.prototype.getBabylon = function()
-{
-    return new BABYLON.Color3(this.color[0]/255,this.color[1]/255,this.color[2]/255);
-}
-KColor.prototype.darken = function(a)
-{
-
-        this.color[0] *= a;
-        this.color[1] *= a;
-        this.color[2] *= a;
-        return this;
-}
-KColor.prototype.getjson = function(a)
-{
+        return RGB2HTML(this.color[0], this.color[1], this.color[2], this.color[3]);
+    else return RGB2HTML(this.color[0], this.color[1], this.color[2]);
+};
+KColor.prototype.getCSS = function () {
+    if (this.color.length == 4) {
+        if (this.color[3] != undefined) return "rgba(" + this.color.toString() + ")";
+        else return "rgb(" + this.color.slice(0, 3).toString() + ")";
+    } else return "rgb(" + this.color.toString() + ")";
+};
+KColor.prototype.getOpacity = function () {
+    if (this.color.length == 4) return this.color[3] / 255;
+    else return 1;
+};
+KColor.prototype.getBabylon = function () {
+    return new BABYLON.Color3(this.color[0] / 255, this.color[1] / 255, this.color[2] / 255);
+};
+KColor.prototype.darken = function (a) {
+    this.color[0] *= a;
+    this.color[1] *= a;
+    this.color[2] *= a;
+    return this;
+};
+KColor.prototype.getjson = function (a) {
     var idx = KColor.findColorIndex(this);
-    if (idx == -1)
-        return this.color
-    else
-        return idx;
-}
+    if (idx == -1) return this.color;
+    else return idx;
+};
 
-KColor.findColorIndex = function(color)
-{
+KColor.findColorIndex = function (color) {
     var retcolor = -1;
-    for(var k=0; k< KViewer.roiTool.colors.length; k++)
-    {
+    for (var k = 0; k < KViewer.roiTool.colors.length; k++) {
         var cc = KViewer.roiTool.colors[k];
         var found = true;
-        for(var j=0; j< cc.length; j++)
-            if(cc[j] != color[j])
-                found = false;
+        for (var j = 0; j < cc.length; j++) if (cc[j] != color[j]) found = false;
 
-        if(found)	
-        {
+        if (found) {
             retcolor = k;
             break;
-        }    			
+        }
     }
     return retcolor;
-}
+};
 
- 
-KColor.list =[[255,0,0],[0,255,0],[0,0,255],[255,0,255],[0,255,255],[255,255,0],[255,128,0],[255,0,128],[128,255,128],[0,128,255],[128,128,128],[185,170,155]];
+KColor.list = [
+    [255, 0, 0],
+    [0, 255, 0],
+    [0, 0, 255],
+    [255, 0, 255],
+    [0, 255, 255],
+    [255, 255, 0],
+    [255, 128, 0],
+    [255, 0, 128],
+    [128, 255, 128],
+    [0, 128, 255],
+    [128, 128, 128],
+    [185, 170, 155],
+];
 
-function KColorSelectorSimple($selectordiv, onchange, obj)
-{
+function KColorSelectorSimple($selectordiv, onchange, obj) {
     var clist = KColor.list;
     var colors = [];
-    for (var k = 0; k < clist.length; k++)
-        colors[k] = new KColor(clist[k]);
+    for (var k = 0; k < clist.length; k++) colors[k] = new KColor(clist[k]);
 
     // return the color list only on request
-    if ($selectordiv === 'getcolors')
-        return colors;
+    if ($selectordiv === "getcolors") return colors;
 
-    if(obj.color instanceof KColor)
-        $selectordiv.css('background', obj.color.getCSS());
-    else if(Array.isArray(obj.color))
-        $selectordiv.css('background', (new KColor(obj.color)).getCSS());
-    else
-        $selectordiv.css('background', (new KColor(KColor.list[obj.color])).getCSS() );
-      
-    
+    if (obj.color instanceof KColor) $selectordiv.css("background", obj.color.getCSS());
+    else if (Array.isArray(obj.color)) $selectordiv.css("background", new KColor(obj.color).getCSS());
+    else $selectordiv.css("background", new KColor(KColor.list[obj.color]).getCSS());
 
-    var color_response = function(k)
-    {
-        if (k == undefined)
-            return;
+    var color_response = function (k) {
+        if (k == undefined) return;
         var color = colors[parseInt(k)];
-        
-        $selectordiv.css('background', color.getCSS() );
+
+        $selectordiv.css("background", color.getCSS());
         //$selectordiv.css('background', (new KColor(color)).getCSS());
-        
-        onchange(color)
-    }
+
+        onchange(color);
+    };
     $selectordiv.color_response = color_response;
 
-    var color_contextmenu = new KContextMenu(
-    function() {
+    var color_contextmenu = new KContextMenu(function () {
         {
             var $menu = $("<div class='menu_context color_selector'></div>");
-            for (var k = 0; k < colors.length; k++)
-            {
-                $menu.append($("<div style='background:" + colors[k].getCSS() + "' onchoice='" + k + "' ><div></div>  </div>"));
+            for (var k = 0; k < colors.length; k++) {
+                $menu.append(
+                    $("<div style='background:" + colors[k].getCSS() + "' onchoice='" + k + "' ><div></div>  </div>")
+                );
             }
             return $menu;
         }
-    }
-    ,color_response);
+    }, color_response);
 
     $selectordiv.click(color_contextmenu);
 
     return $selectordiv;
 }
 
-
-
-
-
-
-
-
 /***************************************************************************************
-*  logout
-****************************************************************************************/
+ *  logout
+ ****************************************************************************************/
 
-function logout_and_check_unsaved()
-{
+function logout_and_check_unsaved() {
     var unsaved = unsavedChanges();
-    if (unsaved != "")
-    {
-        alertify.confirm("Are you sure that you want to logout? There are unsaved " + unsaved + "!", function(e)
-        { 
+    if (unsaved != "") {
+        alertify.confirm("Are you sure that you want to logout? There are unsaved " + unsaved + "!", function (e) {
             if (e) logout();
         });
         return;
@@ -3125,227 +2535,180 @@ function logout_and_check_unsaved()
     logout();
 }
 
-function logout()
-{
+function logout() {
     clearTimeout(updatePatientTimerID);
     // beforeunload is called automatically -> save state;
     var url = myownurl();
-    if (url[url.length - 1] == '#')
-        url = url.substring(0, url.length - 1);
+    if (url[url.length - 1] == "#") url = url.substring(0, url.length - 1);
     window.location.link_was_clicked = true;
 
-    if(projectInfo != undefined && projectInfo.name != undefined)
-        window.location.href = url + "?logout&project="+projectInfo.name;
-    else
-        window.location.href = url + "?logout";
-
+    if (projectInfo != undefined && projectInfo.name != undefined)
+        window.location.href = url + "?logout&project=" + projectInfo.name;
+    else window.location.href = url + "?logout";
 }
 
-function login()
-{
+function login() {
     logout();
 }
 
-
 /***************************************************************************************
-*  dicom upload
-***************************************************************************************/
+ *  dicom upload
+ ***************************************************************************************/
 
-var dicomupload = function(e) {
-    for (var k = 0; k < this.files.length; k++)
-    {
+var dicomupload = function (e) {
+    for (var k = 0; k < this.files.length; k++) {
         var file = this.files[k];
-        var parts = file.name.split('.');
+        var parts = file.name.split(".");
         var ext = parts[parts.length - 1];
         var recognized = false;
         switch (ext.toLowerCase()) {
-        case 'gz':
-        case 'tgz':
-        case 'zip':
-        case 'tar':
-            recognized = true;
+            case "gz":
+            case "tgz":
+            case "zip":
+            case "tar":
+                recognized = true;
         }
 
         if (!recognized)
-            $.notify("file type not accepted: " + file.name + ". Accepted types are gz,tgz,zip,tar! ", "error")
-        else
-        {
+            $.notify("file type not accepted: " + file.name + ". Accepted types are gz,tgz,zip,tar! ", "error");
+        else {
             var xhr = new XMLHttpRequest();
             var formData = new FormData();
             formData.append("thefile", file);
-            var notiid = "x" + Math.floor((Math.random() * 1000000000000));
+            var notiid = "x" + Math.floor(Math.random() * 1000000000000);
             $.notify(file.name + " upload started", {
                 autoHide: false,
-                className: "info " + notiid
-            })
+                className: "info " + notiid,
+            });
 
-            xhr.upload.addEventListener('progress', function(name, id) {
-                return function(e) {
-                    //console.log("progress" + Math.ceil(e.loaded/e.total * 100 )+ '%');
-                    $("." + id).text(name + " upload in progress " + +Math.ceil(e.loaded / e.total * 100) + '%');
-                }
-            }(file.name, notiid), false);
+            xhr.upload.addEventListener(
+                "progress",
+                (function (name, id) {
+                    return function (e) {
+                        //console.log("progress" + Math.ceil(e.loaded/e.total * 100 )+ '%');
+                        $("." + id).text(name + " upload in progress " + +Math.ceil((e.loaded / e.total) * 100) + "%");
+                    };
+                })(file.name, notiid),
+                false
+            );
 
-
-            xhr.open('post', myownurl() + '?asuser=' + userinfo.username + "&project=" + projectInfo.name);
+            xhr.open("post", myownurl() + "?asuser=" + userinfo.username + "&project=" + projectInfo.name);
             xhr.send(formData);
-            xhr.onload = function(name, id) {
-                return function(e)
-                {
+            xhr.onload = (function (name, id) {
+                return function (e) {
                     $("." + id).remove();
                     try {
                         var response = JSON.parse(this.response);
-                        if (response.success != 1)
-                            $.notify("error during upload: " + response.msg, "error");
-                        else
-                            $.notify(name + " successfully uploaded, import started!", "success");
-                    }
-                    catch (err)
-                    {
+                        if (response.success != 1) $.notify("error during upload: " + response.msg, "error");
+                        else $.notify(name + " successfully uploaded, import started!", "success");
+                    } catch (err) {
                         $.notify("error during upload, file above 1GB limit?!", "error");
-
                     }
-
-                }
-            }(file.name, notiid);
+                };
+            })(file.name, notiid);
         }
-
     }
-    this.value = null ;
+    this.value = null;
     // otherwise onchange is only triggered if file really changes
-}
+};
 
-
-
-function popupView(fobj,params)
-{
-
-        var panelview = KPanelView(KViewer,"",{addClass:"floatingViewporthidetitle"});
-     /*   panelview.sigid = signalhandler.attach("close",function() {
+function popupView(fobj, params) {
+    var panelview = KPanelView(KViewer, "", { addClass: "floatingViewporthidetitle" });
+    /*   panelview.sigid = signalhandler.attach("close",function() {
             panelview.kill()
             signalhandler.detach("close",panelview.sigid);
         });*/
-        panelview.setContent(fobj,params)
-
+    panelview.setContent(fobj, params);
 }
 
-
-
-var miscupload  = function(e) {
-
-    if (!KViewer.cacheManager.enabled)
-        KViewer.cacheManager.toggle()
+var miscupload = function (e) {
+    if (!KViewer.cacheManager.enabled) KViewer.cacheManager.toggle();
 
     var progress = KViewer.cacheManager.progressSpinner;
-	createLoadParamsFileDrop({dataTransfer:this}, function (loadparams)
-	{
-		for (var k = 0; k < loadparams.length;k++)
-		{
-			loadparams[k].progressSpinner = progress;		 
-			if (userinfo.username == guestuser | $.isNumeric(loadparams[k].fileID) | loadparams[k].buffer != undefined)
-				KViewer.dataManager.loadData(loadparams[k]);
-			else      
-				KViewer.dataManager.loadProxy(loadparams[k],false);
-		}
+    createLoadParamsFileDrop(
+        { dataTransfer: this },
+        function (loadparams) {
+            for (var k = 0; k < loadparams.length; k++) {
+                loadparams[k].progressSpinner = progress;
+                if (
+                    (userinfo.username == guestuser) |
+                    $.isNumeric(loadparams[k].fileID) |
+                    (loadparams[k].buffer != undefined)
+                )
+                    KViewer.dataManager.loadData(loadparams[k]);
+                else KViewer.dataManager.loadProxy(loadparams[k], false);
+            }
 
-		KViewer.cacheManager.update();
-
-	},progress);
-
-
-}
-;
-
-
-
+            KViewer.cacheManager.update();
+        },
+        progress
+    );
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// Signal Handler
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-function SignalHandler()
-{
-    var that = new Object()
+function SignalHandler() {
+    var that = new Object();
     var signal = new Object();
     var sigmap = new Object();
 
     that.signal = signal;
     that.rid = 0;
-    function send(sigs, event, preferredID)
-    {
+    function send(sigs, event, preferredID) {
         sigs = sigs.split(" ");
-        
-        for (var k = 0; k < sigs.length; k++)
-        {
-            var s = signal[sigs[k]];
-            if (s != undefined)
-            {
-                if (preferredID != undefined)
-                {
-                    for (var i = 0; i < s.length; i++)
-                        if (s[i].id == preferredID)
-                        {
-                           var ev = $.extend({preferred:true},event);
-                           s[i].handler(ev);
-                           break;
-                        }
-                    for (var i = 0; i < s.length; i++)
-                        if (s[i].id != preferredID)
-                        {
-                           var ev = $.extend({preferred:false},event);
-                           s[i].handler(ev);
-                        }
 
-                }
-                else
-                {
-                    var s_ = s.map((x)=>x); 
-                    for (var i = 0; i < s_.length; i++)
-                        s_[i].handler(event);
+        for (var k = 0; k < sigs.length; k++) {
+            var s = signal[sigs[k]];
+            if (s != undefined) {
+                if (preferredID != undefined) {
+                    for (var i = 0; i < s.length; i++)
+                        if (s[i].id == preferredID) {
+                            var ev = $.extend({ preferred: true }, event);
+                            s[i].handler(ev);
+                            break;
+                        }
+                    for (var i = 0; i < s.length; i++)
+                        if (s[i].id != preferredID) {
+                            var ev = $.extend({ preferred: false }, event);
+                            s[i].handler(ev);
+                        }
+                } else {
+                    var s_ = s.map((x) => x);
+                    for (var i = 0; i < s_.length; i++) s_[i].handler(event);
                 }
             }
         }
-
     }
-    function attach(sig, handler)
-    {
-        if (signal[sig] == undefined)
-            signal[sig] = new Array();
+    function attach(sig, handler) {
+        if (signal[sig] == undefined) signal[sig] = new Array();
         signal[sig].push({
             id: that.rid,
-            handler: handler
+            handler: handler,
         });
         that.rid++;
         return that.rid - 1;
     }
 
-    function detach(sig, id)
-    {
+    function detach(sig, id) {
         var s = signal[sig];
         for (var i = 0; i < s.length; i++)
-            if (s[i].id == id | id == "all")
-            {
+            if ((s[i].id == id) | (id == "all")) {
                 s.splice(i, 1);
                 break;
             }
     }
 
-    function detachByIdList(idlist)
-    {
-        for (var k = 0; k < idlist.length; k++)
-        {
+    function detachByIdList(idlist) {
+        for (var k = 0; k < idlist.length; k++) {
             // stupid, must try and run over all signals if only id is known...
-            for (var tsig in signal)
-            {
-                detach(tsig, idlist[k])
+            for (var tsig in signal) {
+                detach(tsig, idlist[k]);
             }
         }
     }
-
 
     that.send = send;
     that.attach = attach;
@@ -3355,52 +2718,37 @@ function SignalHandler()
     return that;
 }
 
-
-function buildDragImg(ev)
-{
+function buildDragImg(ev) {
     var dragtxt = "";
 
-    if (ev.toolDragDrop)
-        dragtxt = ev.toolDragDrop;
-    else
-    {
-        for (var k = 0; k < tempObjectInfo.length; k++)
-        {
-            if (tempObjectInfo[k].type == 'file' | tempObjectInfo[k].type == 'subfolder')
+    if (ev.toolDragDrop) dragtxt = ev.toolDragDrop;
+    else {
+        for (var k = 0; k < tempObjectInfo.length; k++) {
+            if ((tempObjectInfo[k].type == "file") | (tempObjectInfo[k].type == "subfolder"))
                 dragtxt += tempObjectInfo[k].filename + "<br>";
-            else if (tempObjectInfo[k].type == 'patient')
-                dragtxt += tempObjectInfo[k].piz + "<br>";
-            else if (tempObjectInfo[k].type == 'study')
-                dragtxt += tempObjectInfo[k].filename + "<br>";
-            else if (tempObjectInfo[k].type == 'markertemplate')
-                return false;
-            else if (tempObjectInfo[k].type == 'tagpaneltag')
-                return false;
+            else if (tempObjectInfo[k].type == "patient") dragtxt += tempObjectInfo[k].piz + "<br>";
+            else if (tempObjectInfo[k].type == "study") dragtxt += tempObjectInfo[k].filename + "<br>";
+            else if (tempObjectInfo[k].type == "markertemplate") return false;
+            else if (tempObjectInfo[k].type == "tagpaneltag") return false;
         }
-        if (dragtxt == "")
-            dragtxt = "?????";
-        else
-            dragtxt = dragtxt.substring(0, dragtxt.length - 4);
+        if (dragtxt == "") dragtxt = "?????";
+        else dragtxt = dragtxt.substring(0, dragtxt.length - 4);
     }
 
-    if (ev.originalEvent)
-        ev = ev.originalEvent;
-    
+    if (ev.originalEvent) ev = ev.originalEvent;
+
     var crt = $("<div id='dragimg' >" + dragtxt + " </div>").get(0);
     document.body.appendChild(crt);
-    if (ev.dataTransfer != undefined)
-    {
+    if (ev.dataTransfer != undefined) {
         ev.dataTransfer.setDragImage(crt, 0, 0);
-        setTimeout(function() {
-            $("#dragimg").remove() },10 )
+        setTimeout(function () {
+            $("#dragimg").remove();
+        }, 10);
     }
-  //  $("#dragimg").hide();
-
+    //  $("#dragimg").hide();
 }
 
-
-function buildDragBox(ev, $source, $dragger)
-{
+function buildDragBox(ev, $source, $dragger) {
     var $frame = $("<div class='dragbox'></div>");
     $frame.width($source.width());
     $frame.height($source.height());
@@ -3408,293 +2756,212 @@ function buildDragBox(ev, $source, $dragger)
     var startoffs = $source.offset();
     var startpos = [ev.originalEvent.clientX, ev.originalEvent.clientY];
 
-    function mmove(ev2)
-    {
+    function mmove(ev2) {
         $frame.offset({
             left: startoffs.left + (ev2.originalEvent.clientX - startpos[0]),
-            top: startoffs.top + (ev2.originalEvent.clientY - startpos[1])
+            top: startoffs.top + (ev2.originalEvent.clientY - startpos[1]),
         });
     }
 
     $dragger.on("drag", mmove);
-    $dragger.on("dragend", function(ev)
-    {
+    $dragger.on("dragend", function (ev) {
         $frame.remove();
-        $dragger.off('drag');
-    })
+        $dragger.off("drag");
+    });
 
     $frame.appendTo(document.body);
 }
 
-
-function dragstarter(info)
-{
-    return function(ev)
-    {
+function dragstarter(info) {
+    return function (ev) {
         tempObjectInfo = {
-            type: '',
-            sid: '',
-            piz: '',
-            subfolder: '',
-            tag: '',
-            mime: '',
-            filename: '',
-            fileID: ''
+            type: "",
+            sid: "",
+            piz: "",
+            subfolder: "",
+            tag: "",
+            mime: "",
+            filename: "",
+            fileID: "",
         };
         var the_info;
-        if (typeof (info) == 'function')
-            the_info = info();
-        else
-            the_info = info;
+        if (typeof info == "function") the_info = info();
+        else the_info = info;
         tempObjectInfo = [$.extend(tempObjectInfo, the_info)];
-        if (ev.originalEvent != undefined)
-            ev = ev.originalEvent;
+        if (ev.originalEvent != undefined) ev = ev.originalEvent;
 
-        if (ev.dataTransfer != undefined)
-            ev.dataTransfer.setData("fromviewport", "yea");
+        if (ev.dataTransfer != undefined) ev.dataTransfer.setData("fromviewport", "yea");
         tempObjectInfo.shiftKey = ev.shiftKey;
 
         buildDragImg(ev);
-    }
-    ;
+    };
 }
 
-
-
 function detectmob() {
-    if (navigator.userAgent.match(/Android/i)
-    || navigator.userAgent.match(/webOS/i)
-    || navigator.userAgent.match(/iPhone/i)
-    || navigator.userAgent.match(/iPad/i)
-    || navigator.userAgent.match(/iPod/i)
-    || navigator.userAgent.match(/BlackBerry/i)
-    || navigator.userAgent.match(/Windows Phone/i)
+    if (
+        navigator.userAgent.match(/Android/i) ||
+        navigator.userAgent.match(/webOS/i) ||
+        navigator.userAgent.match(/iPhone/i) ||
+        navigator.userAgent.match(/iPad/i) ||
+        navigator.userAgent.match(/iPod/i) ||
+        navigator.userAgent.match(/BlackBerry/i) ||
+        navigator.userAgent.match(/Windows Phone/i)
     ) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
-
-function allocateLocalstorage(done)
-{
-
+function allocateLocalstorage(done) {
     var sz = UserSettingsDialog.getLocalStorageSize();
-    if (sz == 0 | sz == undefined)
-        sz = 1;
+    if ((sz == 0) | (sz == undefined)) sz = 1;
     // Specify desired capacity in bytes
     var desiredCapacity = 1024 * 1024 * sz;
 
     try {
-        if (desiredCapacity > 0)
-        {
-
+        if (desiredCapacity > 0) {
             storage = new LargeLocalStorage({
                 size: desiredCapacity,
-                name: 'myDb'
+                name: "myDb",
             });
 
             // Await initialization of the storage area
-            storage.initialized.then(function(grantedCapacity) {
-                // Some browsers don't indicate how much space was granted in which case
-                // grantedCapacity will be 1.
-                if (grantedCapacity.getCapacity() == -1)
-                {
+            storage.initialized
+                .then(function (grantedCapacity) {
+                    // Some browsers don't indicate how much space was granted in which case
+                    // grantedCapacity will be 1.
+                    if (grantedCapacity.getCapacity() == -1) {
+                        console.log("no local storage available!!");
+                        storage = undefined;
+                    }
+
+                    if (done != undefined) done();
+                })
+                .catch(function () {
                     console.log("no local storage available!!");
                     storage = undefined;
-                }
+                    if (done != undefined) done();
+                });
 
-                if (done != undefined)
-                    done();
-            }).catch(function()
-            {
-                console.log("no local storage available!!");
-                storage = undefined;
-                if (done != undefined)
-                    done();
-            });
-
-            storage.rmOld = function(cb, sz)
-            {
-                function findOldest(objs)
-                {
+            storage.rmOld = function (cb, sz) {
+                function findOldest(objs) {
                     var time = Object.keys(objs);
                     time.sort();
                     var sum = 0;
                     var todel = [];
-                    for (var k = 0; k < time.length; k++)
-                    {
+                    for (var k = 0; k < time.length; k++) {
                         sum += objs[time[k]].filesize;
                         todel.push(objs[time[k]].docid);
-                        if (sum > sz)
-                            break;
+                        if (sum > sz) break;
                     }
 
-                    var fun = function() {
-                        storage.rm(todel[0]).then(function() {
-                            if (todel.length > 0)
-                            {
+                    var fun = function () {
+                        storage.rm(todel[0]).then(function () {
+                            if (todel.length > 0) {
                                 todel.splice(0, 1);
                                 fun();
-                            }
-                            else
-                            {
+                            } else {
                                 cb();
                             }
-                        })
-                    }
-                    ;
+                        });
+                    };
                     fun();
-
-
                 }
 
-                storage.ls().then(function(docKeys) {
+                storage.ls().then(function (docKeys) {
                     var objs = {};
-                    var fun = function() {
-                        storage.getContents(docKeys[0]).then(
-                        function(content)
-                        {
-                            if (docKeys.length > 0)
-                            {
-                                if (content != "")
-                                {
+                    var fun = function () {
+                        storage.getContents(docKeys[0]).then(function (content) {
+                            if (docKeys.length > 0) {
+                                if (content != "") {
                                     var finfo = JSON.parse(content);
                                     finfo.docid = docKeys[0];
-                                    if (finfo.num_access == undefined)
-                                        finfo.num_access = 0;
-                                    var key = (finfo.num_access+"_").padStart(10,"0") + (""+finfo.timeOfInsertion).padStart(20,"0")
+                                    if (finfo.num_access == undefined) finfo.num_access = 0;
+                                    var key =
+                                        (finfo.num_access + "_").padStart(10, "0") +
+                                        ("" + finfo.timeOfInsertion).padStart(20, "0");
                                     objs[key] = finfo;
                                 }
                                 docKeys.splice(0, 1);
                                 fun();
-                            }
-                            else
-                            {
+                            } else {
                                 findOldest(objs);
                             }
-                        })
-                    }
-                    ;
+                        });
+                    };
                     fun();
-                })
-            }
-
-
-
-
-        }
-        else
-        {
+                });
+            };
+        } else {
             storage = undefined;
-            if (done != undefined)
-                done();
+            if (done != undefined) done();
         }
-    }
-    catch (e)
-    {
+    } catch (e) {
         storage = undefined;
-        if (done != undefined)
-            done();
-
+        if (done != undefined) done();
     }
 }
-
 
 function toArray(list) {
     return Array.prototype.slice.call(list || [], 0);
 }
 
-
-function readBufferFromFile(reader, ev)
-{
+function readBufferFromFile(reader, ev) {
     // the file is already loaded (e.g converted from dicoms)
     // workaround: continue the pipeline and give the file reader the corresponding buffer
 
-
-    if (ev.constructor && ev.constructor.name == 'Blob') // if you give a blob
-    {
+    if (ev.constructor && ev.constructor.name == "Blob") {
+        // if you give a blob
         reader.readAsArrayBuffer(ev);
-    }
-    else if (ev.file === undefined && ev.buffer != undefined) // this bypasses loading for already loaded buffers
-    {
+    } else if (ev.file === undefined && ev.buffer != undefined) {
+        // this bypasses loading for already loaded buffers
         reader.customBuffer = ev.buffer;
-        if (reader.onload)
-            reader.onload(ev);
-        if (reader.onloadend)
-            reader.onloadend(ev);
-    }
-    else if (ev.file === undefined && ev.buffer == undefined)
-    {
-
-         reader.onload(ev);
+        if (reader.onload) reader.onload(ev);
+        if (reader.onloadend) reader.onloadend(ev);
+    } else if (ev.file === undefined && ev.buffer == undefined) {
+        reader.onload(ev);
     }
     // firefox behaves very differently here. Observed [object FileEntry], [object FilySystemFileEntry], [object File]
     // maybe ev.file.isFile is more universal
     //else if (ev.file.toString() == "[object FileEntry]")
-    else if (ev.file.isFile)
-    {
-        ev.file.file(function(f) {
+    else if (ev.file.isFile) {
+        ev.file.file(function (f) {
             ev.file = f;
             reader.readAsArrayBuffer(ev.file);
         });
-    }
-    else if (ev.file.local)
-    {
+    } else if (ev.file.local) {
         //if (reader.onprogress)  // unfortunately no onprogress in fs.readFiles
         //    reader.onprogress({total:1,loaded:0.5});
-        
-        fs.readFile(ev.file.name,function(err,data){
-            if (data == undefined)
-            {
+
+        fs.readFile(ev.file.name, function (err, data) {
+            if (data == undefined) {
                 reader.onerror();
-            }
-            else
-            {
+            } else {
                 reader.customBuffer = data;
 
-                if (reader.onload)
-                    reader.onload(ev);
-                if (reader.onloadend)
-                    reader.onloadend(ev);
+                if (reader.onload) reader.onload(ev);
+                if (reader.onloadend) reader.onloadend(ev);
             }
         });
-        
-    }
-    else if (ev.file.compressionMethod != undefined)
-    {
-        ev.file.getData(new zip.BlobWriter(), function(blob)
-        {
-            // text contains the entry data as a String
-            var old = reader.onload;
-            reader.onload = function(e) {
-                ev.progressSpinner();
-                if (old)
-                    old(e)
+    } else if (ev.file.compressionMethod != undefined) {
+        ev.file.getData(
+            new zip.BlobWriter(),
+            function (blob) {
+                // text contains the entry data as a String
+                var old = reader.onload;
+                reader.onload = function (e) {
+                    ev.progressSpinner();
+                    if (old) old(e);
+                };
+                reader.readAsArrayBuffer(blob);
+            },
+            function (current, total) {
+                ev.progressSpinner("unzipping " + math.round((current / total) * 100) + "%");
             }
-            ;
-            reader.readAsArrayBuffer(blob);
-
-        }, function(current, total)
-        {
-            ev.progressSpinner("unzipping " + math.round(current / total * 100) + "%");
-        });
-    }
-    else
-        reader.readAsArrayBuffer(ev.file);
-
+        );
+    } else reader.readAsArrayBuffer(ev.file);
 }
-
-
-
-
-
-
-
-
-
 
 // ======================================================================================
 // ======================================================================================
@@ -3702,202 +2969,171 @@ function readBufferFromFile(reader, ev)
 // ======================================================================================
 // ======================================================================================
 
-
-
-function extendWithUniquePSID(finfo)
-{
-
+function extendWithUniquePSID(finfo) {
     // if no psid ist set ...
-    if (finfo.patients_id == "undefined" | finfo.studies_id == "undefined" | finfo.patients_id == undefined | finfo.studies_id == undefined)
-    {
-
+    if (
+        (finfo.patients_id == "undefined") |
+        (finfo.studies_id == "undefined") |
+        (finfo.patients_id == undefined) |
+        (finfo.studies_id == undefined)
+    ) {
         var cPSID = patientTableMirror.getCurrentUniquePSID();
-        if (cPSID.studies_id == undefined && userinfo.username != guestuser)
-        {
+        if (cPSID.studies_id == undefined && userinfo.username != guestuser) {
             $.notify("Error: You have to select/expand a unique study for upload!", "error");
             return false;
-        }
-        else
-        {
+        } else {
             finfo = $.extend(finfo, cPSID);
         }
     }
     return finfo;
 }
 
+function saveDialog(typ, callback, defaultname, finfo_ext, params) {
+    if (params == undefined) params = { askonOverwrite: true };
 
+    var finfo = patientTableMirror.getCurrentUniquePSID();
+    if (finfo == false && finfo_ext == undefined)
+        alertify.error(
+            "Please select a unique patient/study for saving by expanding a node in the patienttable or selection a row."
+        );
+    else {
+        if (finfo == false) {
+            finfo = {};
+            finfo.patients_id = finfo_ext.patients_id;
+            finfo.studies_id = finfo_ext.studies_id;
+        }
 
-function saveDialog(typ,callback,defaultname,finfo_ext,params)
-{
-      if (params == undefined) 
-          params = { askonOverwrite:true };
-    
-      var finfo = patientTableMirror.getCurrentUniquePSID()
-      if (finfo == false && finfo_ext == undefined)
-          alertify.error('Please select a unique patient/study for saving by expanding a node in the patienttable or selection a row.')
-      else
-      {
+        var strr = "";
+        if (finfo.patients_id != undefined) {
+            if (finfo.patients_id == "ANALYSIS") strr = " in analysis folder " + finfo.studies_id;
+            else strr = " in subject " + finfo.patients_id;
+        }
 
-          if (finfo == false)
-          {
-               finfo = {};
-               finfo.patients_id = finfo_ext.patients_id;
-               finfo.studies_id = finfo_ext.studies_id;
-          }
-          
-          var strr = "";
-          if (finfo.patients_id != undefined)
-          {
-              if (finfo.patients_id == "ANALYSIS")
-                  strr = " in analysis folder " + finfo.studies_id
-              else
-                  strr = " in subject " + finfo.patients_id
-          }
-     	  
-          if (defaultname == undefined && finfo_ext != undefined && finfo_ext.Filename != undefined)
-          {
-              if (finfo_ext.SubFolder != "")
-                defaultname = finfo_ext.SubFolder+ "/" +  finfo_ext.Filename 
-              else
-                defaultname = finfo_ext.Filename 
-          }
-              
+        if (defaultname == undefined && finfo_ext != undefined && finfo_ext.Filename != undefined) {
+            if (finfo_ext.SubFolder != "") defaultname = finfo_ext.SubFolder + "/" + finfo_ext.Filename;
+            else defaultname = finfo_ext.Filename;
+        }
 
-      	  var potential_studies = undefined;
-      	  var study_names = undefined
-          var studies = undefined;
-          var found_study = -1;
-          potential_studies = finfo.potential_studies;
-          study_names = finfo.study_names;
-          studies = [];
-          if (potential_studies == undefined)
-          {
-            potential_studies = [ finfo.patients_id + finfo.studies_id ];
-            study_names = [""]
-          }
-          for (var k = 0; k < potential_studies.length;k++)             
-             studies.push(potential_studies[k] + " " + study_names[k])
-          if (finfo_ext != undefined)
-             for (var k = 0; k < potential_studies.length;k++)             
-                if (potential_studies[k] == finfo_ext.patients_id + finfo_ext.studies_id)
-                {
+        var potential_studies = undefined;
+        var study_names = undefined;
+        var studies = undefined;
+        var found_study = -1;
+        potential_studies = finfo.potential_studies;
+        study_names = finfo.study_names;
+        studies = [];
+        if (potential_studies == undefined) {
+            potential_studies = [finfo.patients_id + finfo.studies_id];
+            study_names = [""];
+        }
+        for (var k = 0; k < potential_studies.length; k++) studies.push(potential_studies[k] + " " + study_names[k]);
+        if (finfo_ext != undefined)
+            for (var k = 0; k < potential_studies.length; k++)
+                if (potential_studies[k] == finfo_ext.patients_id + finfo_ext.studies_id) {
                     found_study = k;
                     break;
                 }
 
-
-          var note = ""
-          if (found_study == -1)
-          {
-              if (finfo_ext != undefined &&  finfo_ext.patients_id != undefined)
-                  note = "<br> <b> <font color=red> Warning! </font> Item originally stems from " + finfo_ext.patients_id + finfo_ext.studies_id + ", but is not selected as save location. </b>"  
-              found_study = 0;
-          }
-          
-          promptForName()
-
-          function promptForName()
-          {
-               var msgtxt = 'Name of ' + typ + ' to be saved'+strr+':'+note
-              
-    		   alertify.prompt({msg:msgtxt,
-    		                   opt:studies, 
-    		                   val:[...Array(studies.length).keys()],
-    		                   optMsg:"Study to save"},				  
-                  function(e,val)
-    			  { 
-    			    if (e) { 
-    				 if (val.option != undefined)
-    				 {
-    				    if (val.str == "")
-                        {
-                            alertify.error("please enter a valid name")
-                            return
-                        }
-                        var psid = potential_studies[val.index];
-                        var psid_ = psid.split("#");
-                        var finfo_ = {piz:psid_[0],
-                                     patients_id: psid_[0],
-                                     study:"#"+psid_[1],
-                                     studies_id:"#"+psid_[1]
-                                     }
-    					testOverwrite(val.str,finfo_); 
-    				 }
-    				 else
-    				 {         
-    				    if (val == "")           
-    				    {
-                            alertify.error("please enter a valid name")
-                            return;
-    				    }
-    					testOverwrite(val,finfo) 
-    			 	 }
-    			  } },
-                  [defaultname,found_study]);  
-          }
-      }
-
-
-    function testOverwrite(val,finfo)
-    {
-            
-        if (params.askonOverwrite)
-        {
-            var df = {};
-            var name = spliceSubFolder(val,df)
-            if ($('#patientTable').find("tr[data-piz='" + finfo.patients_id + "'][data-sid='" + finfo.studies_id + "'][data-subfolder='" + df.SubFolder + "'][data-filename='" + df.Filename + "']").length > 0)
-            {
-                alertify.confirm('The file `' + df.SubFolder + '/' + df.Filename + '` already exists for in study '+finfo.patients_id + finfo.studies_id + '. Overwrite?', function(e, str)
-                {
-                    if (e)
-                       callback(val,finfo)
-                    else
-                       promptForName()
-                      
-                });
-            }
-            else
-                callback(val,finfo)
+        var note = "";
+        if (found_study == -1) {
+            if (finfo_ext != undefined && finfo_ext.patients_id != undefined)
+                note =
+                    "<br> <b> <font color=red> Warning! </font> Item originally stems from " +
+                    finfo_ext.patients_id +
+                    finfo_ext.studies_id +
+                    ", but is not selected as save location. </b>";
+            found_study = 0;
         }
-        else 
-             callback(val,finfo)
+
+        promptForName();
+
+        function promptForName() {
+            var msgtxt = "Name of " + typ + " to be saved" + strr + ":" + note;
+
+            alertify.prompt(
+                { msg: msgtxt, opt: studies, val: [...Array(studies.length).keys()], optMsg: "Study to save" },
+                function (e, val) {
+                    if (e) {
+                        if (val.option != undefined) {
+                            if (val.str == "") {
+                                alertify.error("please enter a valid name");
+                                return;
+                            }
+                            var psid = potential_studies[val.index];
+                            var psid_ = psid.split("#");
+                            var finfo_ = {
+                                piz: psid_[0],
+                                patients_id: psid_[0],
+                                study: "#" + psid_[1],
+                                studies_id: "#" + psid_[1],
+                            };
+                            testOverwrite(val.str, finfo_);
+                        } else {
+                            if (val == "") {
+                                alertify.error("please enter a valid name");
+                                return;
+                            }
+                            testOverwrite(val, finfo);
+                        }
+                    }
+                },
+                [defaultname, found_study]
+            );
+        }
     }
 
-
-
-
-    
+    function testOverwrite(val, finfo) {
+        if (params.askonOverwrite) {
+            var df = {};
+            var name = spliceSubFolder(val, df);
+            if (
+                $("#patientTable").find(
+                    "tr[data-piz='" +
+                        finfo.patients_id +
+                        "'][data-sid='" +
+                        finfo.studies_id +
+                        "'][data-subfolder='" +
+                        df.SubFolder +
+                        "'][data-filename='" +
+                        df.Filename +
+                        "']"
+                ).length > 0
+            ) {
+                alertify.confirm(
+                    "The file `" +
+                        df.SubFolder +
+                        "/" +
+                        df.Filename +
+                        "` already exists for in study " +
+                        finfo.patients_id +
+                        finfo.studies_id +
+                        ". Overwrite?",
+                    function (e, str) {
+                        if (e) callback(val, finfo);
+                        else promptForName();
+                    }
+                );
+            } else callback(val, finfo);
+        } else callback(val, finfo);
+    }
 }
 
-
-function spliceSubFolder(name,finfo)
-{
+function spliceSubFolder(name, finfo) {
     var sp = name.split("/");
-    var name = sp[sp.length-1];
-    if (sp.length > 1)
-    {
-        var subfolder = sp.splice(0,sp.length-1).join("/");
+    var name = sp[sp.length - 1];
+    if (sp.length > 1) {
+        var subfolder = sp.splice(0, sp.length - 1).join("/");
         finfo.SubFolder = subfolder;
-    }
-    else 
-        finfo.SubFolder = "";
+    } else finfo.SubFolder = "";
     finfo.Filename = name;
-    return name;     
+    return name;
 }
-
-
 
 uploadJSON.quiet = false;
-function uploadJSON(name, content, finfoextension, onsuccess)
-{
-
-
-    if (typeof projectInfo != "undefined" && projectInfo != undefined && projectInfo.rights.readonly == "on")
-    {
-        alertify.error("project is readonly for user " + userinfo.username)
+function uploadJSON(name, content, finfoextension, onsuccess) {
+    if (typeof projectInfo != "undefined" && projectInfo != undefined && projectInfo.rights.readonly == "on") {
+        alertify.error("project is readonly for user " + userinfo.username);
         return;
     }
-
 
     var out = new Object();
     out.name = name;
@@ -3906,23 +3142,15 @@ function uploadJSON(name, content, finfoextension, onsuccess)
     out = $.extend(out, finfoextension);
 
     var tag = "";
-    if (out.tag)
-        tag = out.tag;
-    else 
-        out.tag = "";
-    if (tag[0] != '/')
-        tag = "/" + tag;
-    if (tag[tag.length - 1] != '/')
-        tag = tag + "/";
+    if (out.tag) tag = out.tag;
+    else out.tag = "";
+    if (tag[0] != "/") tag = "/" + tag;
+    if (tag[tag.length - 1] != "/") tag = tag + "/";
 
-
-    function appendExtension(stag, ext)
-    {
-        if (tag.search("/" + stag + "/") != -1)
-        {
-            if (out.name.search("\\." + ext) == -1)
-            {
-                out.name = out.name.replace('.json', '');
+    function appendExtension(stag, ext) {
+        if (tag.search("/" + stag + "/") != -1) {
+            if (out.name.search("\\." + ext) == -1) {
+                out.name = out.name.replace(".json", "");
                 out.name = out.name + "." + ext + ".json";
             }
         }
@@ -3933,38 +3161,27 @@ function uploadJSON(name, content, finfoextension, onsuccess)
     appendExtension("RO", "transform");
     appendExtension("TCKSEL", "tck");
 
-
-    if (!electron)
-    {
+    if (!electron) {
         out = extendWithUniquePSID(out);
-            
-        if (out.piz == undefined || out.study == undefined)
-        {
 
-            if (out == false)
-                return;
+        if (out.piz == undefined || out.study == undefined) {
+            if (out == false) return;
 
             out.piz = out.patients_id;
             out.study = out.studies_id;
         }
 
-        if (out.study == undefined && userinfo.username != guestuser)
-        {
-            alertify.error("please select a unique study to upload!")
+        if (out.study == undefined && userinfo.username != guestuser) {
+            alertify.error("please select a unique study to upload!");
             return;
         }
     }
 
+    out.content = content;
+    if (out.SubFolder != undefined) out.subfolder = out.SubFolder;
+    if (out.subfolder == undefined) out.subfolder = "";
 
-    out.content = content
-    if (out.SubFolder != undefined)
-        out.subfolder = out.SubFolder;
-    if (out.subfolder == undefined) 
-        out.subfolder = "";
-
-    
-
-/*    
+    /*    
     if (uploadJSON.askonOverwrite && $('#patientTable').find("tr[data-piz='" + out.piz + "'][data-sid='" + out.study + "'][data-subfolder='" + out.subfolder + "'][data-filename='" + out.name + "']").length > 0)
     {
         alertify.prompt('The file `' + out.subfolder + '/' + out.name + '` already exists for this study. Overwrite?', function(e, str)
@@ -3978,55 +3195,43 @@ function uploadJSON(name, content, finfoextension, onsuccess)
     else
         saveit();
 */
-    
+
     saveit();
 
-    function saveit()
-    {
-
-        if (!electron)
-            updateTag(out,[],userinfo.username)
+    function saveit() {
+        if (!electron) updateTag(out, [], userinfo.username);
 
         var json = JSON.stringify(out);
 
-        var public_save_allowed = (static_info && static_info.public_projects);
-        
-        if ( (userinfo.username == guestuser || electron) && !public_save_allowed)
-        {
-            var blob = new Blob([json],{
-                type: "octet/stream"
-            });
-            saveBlob(blob, {filename:out.name} );
-            if (onsuccess)
-                onsuccess();
+        var public_save_allowed = static_info && static_info.public_projects;
 
-        }
-        else
-            ajaxRequest('command=save_json&json=' + encodeURIComponent(json), function(e)
-            {
-                if (!uploadJSON.quiet)
-                {
-                    var subfolder = out.SubFolder==undefined?out.subfolder:out.SubFolder;
+        if ((userinfo.username == guestuser || electron) && !public_save_allowed) {
+            var blob = new Blob([json], {
+                type: "octet/stream",
+            });
+            saveBlob(blob, { filename: out.name });
+            if (onsuccess) onsuccess();
+        } else
+            ajaxRequest("command=save_json&json=" + encodeURIComponent(json), function (e) {
+                if (!uploadJSON.quiet) {
+                    var subfolder = out.SubFolder == undefined ? out.subfolder : out.SubFolder;
                     $.notify(out.piz + out.study + " " + subfolder + "/" + out.name + " saved.", "success");
                 }
-                if (e.fileID == undefined)
-                {
-                    patientTableMirror.mirrorState();     
-                    if (onsuccess)           
-                        onsuccess(undefined,out)
+                if (e.fileID == undefined) {
+                    patientTableMirror.mirrorState();
+                    if (onsuccess) onsuccess(undefined, out);
                     return;
                 }
                 var fobj = KViewer.dataManager.getFile(e.fileID);
-                if (fobj == undefined)
-                {
+                if (fobj == undefined) {
                     fobj = {
-                        contentType: 'json',
+                        contentType: "json",
                         fileID: e.fileID,
                         filename: out.name,
                         fileinfo: out,
                         content: {
-                            content: out.content
-                        }
+                            content: out.content,
+                        },
                     };
                     if (out.tag != undefined && out.tag.search("TCKSEL") == -1)
                         KViewer.dataManager.setFile(e.fileID, fobj);
@@ -4034,14 +3239,10 @@ function uploadJSON(name, content, finfoextension, onsuccess)
 
                 patientTableMirror.mirrorState();
                 signalhandler.send("updateInfoBar");
-                if (onsuccess)
-                    onsuccess(fobj,out);
+                if (onsuccess) onsuccess(fobj, out);
             });
     }
-
-
 }
-
 
 function str2ab(str) {
     var buf = new ArrayBuffer(str.length);
@@ -4053,245 +3254,184 @@ function str2ab(str) {
     return buf;
 }
 
-function updateTag(fileinfo,tags,user)
-{
-    if (user == undefined | user == "")
-        return;
-
+function updateTag(fileinfo, tags, user) {
+    if ((user == undefined) | (user == "")) return;
 
     var current_tags = {};
-    var old_user ;
+    var old_user;
 
-    var tagfield; 
-    if (fileinfo.Tag !== undefined)
-        tagfield = 'Tag';
-    if (fileinfo.tag !== undefined)
-        tagfield = 'tag';
+    var tagfield;
+    if (fileinfo.Tag !== undefined) tagfield = "Tag";
+    if (fileinfo.tag !== undefined) tagfield = "tag";
 
-    if (tagfield == undefined)
-    {
-        console.warn("no tagfield to update")
+    if (tagfield == undefined) {
+        console.warn("no tagfield to update");
         return;
     }
-    
-    if (fileinfo[tagfield] == undefined)
-        fileinfo[tagfield] = "";
 
-    var tags_ = fileinfo[tagfield].split("/")
-    for (var k = 0; k < tags_.length;k++)
-        if (tags_[k] != "")
-        {
-            var t = tags_[k].replace(/\//g,"")
-            if (t.substring(0,1) == "$")
-                old_user = t.substring(1);
-            else
-                current_tags[t] = 1;
+    if (fileinfo[tagfield] == undefined) fileinfo[tagfield] = "";
+
+    var tags_ = fileinfo[tagfield].split("/");
+    for (var k = 0; k < tags_.length; k++)
+        if (tags_[k] != "") {
+            var t = tags_[k].replace(/\//g, "");
+            if (t.substring(0, 1) == "$") old_user = t.substring(1);
+            else current_tags[t] = 1;
         }
 
-    for (var k = 0; k < tags.length;k++)
-    {
+    for (var k = 0; k < tags.length; k++) {
         current_tags[tags[k]] = 1;
     }
 
-
     var thetag = "/" + Object.keys(current_tags).join("/") + "/";
-    if (user != undefined && user != "")
-        thetag = thetag + "$" + user + "/"
-    else if (old_user != undefined)
-        thetag = thetag + "$" + old_user + "/"
-    
-    thetag = thetag.replace(/\/\//g,"/");
+    if (user != undefined && user != "") thetag = thetag + "$" + user + "/";
+    else if (old_user != undefined) thetag = thetag + "$" + old_user + "/";
+
+    thetag = thetag.replace(/\/\//g, "/");
 
     fileinfo[tagfield] = thetag;
-
 }
 
-function uploadBinary(fobj, finfoextension, onsaved, progress, zip, usenativePID)
-{
-
+function uploadBinary(fobj, finfoextension, onsaved, progress, zip, usenativePID) {
     // create a fileinfo to add to db
     var finfo = $.extend(true, fobj.fileinfo, finfoextension);
     delete finfo.ID;
 
-
-    if (usenativePID)
-    {
-        if (finfo.patients_id == undefined || finfo.studies_id == undefined)
-        {
+    if (usenativePID) {
+        if (finfo.patients_id == undefined || finfo.studies_id == undefined) {
             alertify.error("No PID/SID assigned to " + fobj.filename + ", cannot upload! Drop item on a unique study.");
             return;
         }
         finfo.usenativePID = true;
-    }
-    else
-    {
+    } else {
         var backup_pid = finfo.patients_id;
         var backup_sid = finfo.studies_id;
         delete finfo.patients_id;
         delete finfo.studies_id;
         delete finfo.FilePath;
-        
-        if (extendWithUniquePSID(finfo) == false)
-        {
+
+        if (extendWithUniquePSID(finfo) == false) {
             finfo.patients_id = backup_pid;
             finfo.studies_id = backup_sid;
             return;
         }
     }
 
-
     finfo.Filename = fobj.filename;
-    if (fobj.contentType == 'nii')
-    {
-        if (fobj.content.filetype == "nrrd")
-        {
-
+    if (fobj.contentType == "nii") {
+        if (fobj.content.filetype == "nrrd") {
+        } else if (fobj.content.filetype == "mgh") {
+        } else if (fobj.content.filetype == "mgz") {
+        } else if (fobj.filename.search("\\.nii") == -1) {
+            if ((fobj.notzipped == undefined) | !fobj.notzipped) finfo.Filename = fobj.filename + ".nii.gz";
+            else finfo.Filename = fobj.filename + ".nii";
         }
-        else if (fobj.content.filetype == "mgh")
-        {
-
-        }
-        else if (fobj.content.filetype == "mgz")
-        {
-
-        }
-        else 
-        if (fobj.filename.search("\\.nii") == -1)
-        {
-            if (fobj.notzipped == undefined | !fobj.notzipped)
-                finfo.Filename = fobj.filename + ".nii.gz";
-            else
-                finfo.Filename = fobj.filename + ".nii";
-        }      
     }
 
+    if (zip == undefined) zip = true;
 
-    if (zip == undefined)
-        zip = true;
+    var exts = ["json", "txt", "jpeg", "jpg", "png", "bmp", "tif", "tiff", "txt", "bvec", "bval", "bmat", "mgh"];
+    for (var j = 0; j < exts.length; j++) zip = zip & (finfo.Filename.search("\\." + exts[j]) == -1);
 
-    var exts = ['json', 'txt', 'jpeg', 'jpg', 'png', 'bmp', 'tif','tiff', 'txt', 'bvec', 'bval','bmat', 'mgh'];
-    for (var j = 0; j < exts.length; j++)
-        zip = zip & finfo.Filename.search("\\." + exts[j]) == -1;
-
-    var alreadyZipped = finfo.Filename.search("\\.gz") != -1 || finfo.Filename.search("\\.mgz") != -1
+    var alreadyZipped = finfo.Filename.search("\\.gz") != -1 || finfo.Filename.search("\\.mgz") != -1;
 
     if (!(fobj.fileinfo && fobj.fileinfo.identifier != undefined))
         // if this upload originates from local changes, keep the zip state
         zip = alreadyZipped;
 
+    if (zip & !alreadyZipped) finfo.Filename += ".gz";
 
-
-    if (zip & !alreadyZipped)
-        finfo.Filename += ".gz";
-
-
-    if (!zip & alreadyZipped)
-        finfo.Filename = finfo.Filename.replace('.gz', '');
+    if (!zip & alreadyZipped) finfo.Filename = finfo.Filename.replace(".gz", "");
 
     if (finfo.FilePath)
         finfo.FilePath = finfo.FilePath.substring(0, finfo.FilePath.lastIndexOf("/")) + "/" + finfo.Filename;
-    else
-        finfo.FilePath = "";
+    else finfo.FilePath = "";
     //build filepath on php side
 
-    if (progress)
-        progress('uploading ' + fobj.filename);
-
+    if (progress) progress("uploading " + fobj.filename);
 
     finfo.Filename = finfo.Filename.trim();
 
-    if (finfo.SubFolder == undefined)
-        finfo.SubFolder = "";
+    if (finfo.SubFolder == undefined) finfo.SubFolder = "";
 
     if (0)
-        setTimeout(function() {
+        setTimeout(function () {
             executeUpload({
                 fobj: fobj,
                 zip: zip,
                 alreadyZipped: alreadyZipped,
                 finfo: finfo,
                 progress: progress,
-                onsaved: onsaved
+                onsaved: onsaved,
             });
         }, 10);
-    else
-    {
+    else {
         var obj = {
             fileID: fobj.fileID,
             userinfo: userinfo,
-            projectInfo: {name:projectInfo.name},
+            projectInfo: { name: projectInfo.name },
             myownurl: myownurl(),
             zip: zip,
             alreadyZipped: alreadyZipped,
-            finfo: finfo
+            finfo: finfo,
         };
 
-        if (fobj.fileID.substring(0, 5) != 'proxy')
-        {
+        if (fobj.fileID.substring(0, 5) != "proxy") {
             obj.buffer = fobj.content.buffer;
-            if (fobj.content.buffer != undefined)
-                obj.buffer = fobj.content.buffer;
-            else            
-            {
-                if (typeof fobj.content == "object")
-                   obj.buffer = str2ab(JSON.stringify(fobj.content));
-                else
-                   obj.buffer = str2ab(fobj.content);
+            if (fobj.content.buffer != undefined) obj.buffer = fobj.content.buffer;
+            else {
+                if (typeof fobj.content == "object") obj.buffer = str2ab(JSON.stringify(fobj.content));
+                else obj.buffer = str2ab(fobj.content);
             }
 
             obj.deflate = zip;
             obj.inflate = false;
             executeUploadWorker(obj, progress, onsaved);
-        }
-        else
-        {
+        } else {
+            if (fobj.proxyev.file.toString() == "[object FileEntry]") fobj.proxyev.file.file(fetchfile);
+            else if (fobj.proxyev.file.compressionMethod != undefined) {
+                // this comes from a zip Archive
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    obj.buffer = reader.result;
+                    executeUploadWorker(obj, progress, onsaved);
+                };
+                readBufferFromFile(reader, fobj.proxyev);
+            } else fetchfile(fobj.proxyev.file);
 
-            if (fobj.proxyev.file.toString() == '[object FileEntry]')
-                fobj.proxyev.file.file(fetchfile)
-            else if (fobj.proxyev.file.compressionMethod != undefined) // this comes from a zip Archive
-            {
-                 var reader = new FileReader();
-        		 reader.onload = function(e) { 
-                     obj.buffer = reader.result;
-                     executeUploadWorker(obj, progress, onsaved);                     
-		         };
-        		 readBufferFromFile(reader,fobj.proxyev);                
-            }
-            else 
-                fetchfile(fobj.proxyev.file)
-
-            
-            function fetchfile(file){ 
-
+            function fetchfile(file) {
                 var xhr = new XMLHttpRequest();
-        		var formData = new FormData();
-        
-        
-        		// send the post
-        		formData.append("theROI",  file);
-        		formData.append("theROIinfo", JSON.stringify(fobj.fileinfo));
-        
-        		xhr.upload.addEventListener('progress', function(finfo) { return function(e){
-          			progress('uploading ' + finfo.Filename + " " + Math.ceil(e.loaded/e.total * 100 )+ '%',
-                            function (e){
-                                xhr.abort();
-                                progress();
-                            });
-                    
-        		} }(fobj.fileinfo), false);
-        
-        		xhr.open('post', myownurl() + "?asuser=" + userinfo.username + "&project="+ projectInfo.name);
-        		xhr.send(formData);
-        		xhr.onload = function(finfo) { return function(e)
-        			{
-                       if (progress)
-                         progress();
-                       onsaved(fobj.fileID,e)
-   
-        		}  }(fobj.fileinfo);
+                var formData = new FormData();
 
+                // send the post
+                formData.append("theROI", file);
+                formData.append("theROIinfo", JSON.stringify(fobj.fileinfo));
 
-                }
+                xhr.upload.addEventListener(
+                    "progress",
+                    (function (finfo) {
+                        return function (e) {
+                            progress(
+                                "uploading " + finfo.Filename + " " + Math.ceil((e.loaded / e.total) * 100) + "%",
+                                function (e) {
+                                    xhr.abort();
+                                    progress();
+                                }
+                            );
+                        };
+                    })(fobj.fileinfo),
+                    false
+                );
+
+                xhr.open("post", myownurl() + "?asuser=" + userinfo.username + "&project=" + projectInfo.name);
+                xhr.send(formData);
+                xhr.onload = (function (finfo) {
+                    return function (e) {
+                        if (progress) progress();
+                        onsaved(fobj.fileID, e);
+                    };
+                })(fobj.fileinfo);
+            }
 
             /*
             var reader = new FileReader();
@@ -4303,450 +3443,358 @@ function uploadBinary(fobj, finfoextension, onsaved, progress, zip, usenativePID
             }
             readBufferFromFile(reader, fobj.proxyev)
             */
-
-      
         }
 
         return true;
     }
-
-
 }
 
-function executeUploadWorker(obj, progress, onsaved)
-{
+function executeUploadWorker(obj, progress, onsaved) {
+    var scriptname = "KuploadWorker.js" + "?" + static_info.softwareversion;
+    if (typeof url_pref != "undefined") scriptname = url_pref + scriptname;
 
-
-    var scriptname = 'KuploadWorker.js' + '?' +  static_info.softwareversion;;
-    if (typeof url_pref != "undefined")
-       scriptname = url_pref + scriptname;
-    
     var worker = new Worker(scriptname);
 
-    worker.addEventListener('message', function(e) {
-        e = e.data;
-        if (e.msg == 'done')
-        {
-            progress();
+    worker.addEventListener(
+        "message",
+        function (e) {
+            e = e.data;
+            if (e.msg == "done") {
+                progress();
 
-            try
-            {
-                var response = JSON.parse(e.response);
-            }
-            catch (err)
-            {
-                alertify.alert("ERROR: The returned data was not in JSON format\n\n " + err + "\n" + "<textarea style='width:400px;height:500px'>" + e.response + "</textarea>");
-                return false;
-            }
+                try {
+                    var response = JSON.parse(e.response);
+                } catch (err) {
+                    alertify.alert(
+                        "ERROR: The returned data was not in JSON format\n\n " +
+                            err +
+                            "\n" +
+                            "<textarea style='width:400px;height:500px'>" +
+                            e.response +
+                            "</textarea>"
+                    );
+                    return false;
+                }
 
-            if (response.success != 1)
-                alertify.error("error during upload: " + response.msg, "error");
-            else
-                onsaved(obj.fileID, response);
-        }
-        else if (e.msg == 'warning')
-        {
-            progress();
-            alertify.error("error during upload: " + e.err);
-        }
-        else
-            progress(e.msg);
-    }, false);
+                if (response.success != 1) alertify.error("error during upload: " + response.msg, "error");
+                else onsaved(obj.fileID, response);
+            } else if (e.msg == "warning") {
+                progress();
+                alertify.error("error during upload: " + e.err);
+            } else progress(e.msg);
+        },
+        false
+    );
 
     // we need to clean the obj for cloning
     var savegl;
-    if (obj.finfo.surfreference)
-    {
+    if (obj.finfo.surfreference) {
         savegl = obj.surfreference;
         obj.finfo.surfreference = undefined;
     }
     var saveupdate;
-    if (obj.userinfo.update)
-    {
+    if (obj.userinfo.update) {
         saveupdate = obj.userinfo.update;
         obj.userinfo.update = undefined;
     }
-
 
     worker.postMessage(obj);
     // Send data to our worker.
 
     // reestablish cleaned props
-    if (savegl)
-        obj.finfo.surfreference = savegl;
-    if (saveupdate)
-        obj.userinfo.update = saveupdate;
+    if (savegl) obj.finfo.surfreference = savegl;
+    if (saveupdate) obj.userinfo.update = saveupdate;
 }
 
-function saveNiftilocal(fobj)
-{
+function saveNiftilocal(fobj) {
     var zipped = false;
 
-
-    if (fobj.contentType == 'nii')
-    {
-        if (fobj.filename.search("\\.nii") == -1)
-            fobj.filename = fobj.filename + ".nii";
+    if (fobj.contentType == "nii") {
+        if (fobj.filename.search("\\.nii") == -1) fobj.filename = fobj.filename + ".nii";
     }
 
-    
-
-    if (fobj.fileinfo.filename != undefined && fobj.fileinfo.filename.search("\\.gz") != -1)
-        zipped = true;
-
+    if (fobj.fileinfo.filename != undefined && fobj.fileinfo.filename.search("\\.gz") != -1) zipped = true;
 
     // pack the file as blob
     var x = new Uint8Array(fobj.content.buffer);
-    if (zipped)
-    {
+    if (zipped) {
         x = pako.gzip(x);
-        if (fobj.filename.search("\\.gz") == -1)
-            fobj.filename += ".gz";
-    }
-    else
-    {
+        if (fobj.filename.search("\\.gz") == -1) fobj.filename += ".gz";
+    } else {
         fobj.filename = fobj.filename.replace(".gz", "");
     }
-    var blob = new Blob([x],{
-        type: 'application/octet-binary'
+    var blob = new Blob([x], {
+        type: "application/octet-binary",
     });
 
-    
     saveBlob(blob, fobj);
     KViewer.cacheManager.update();
-
 }
 
+function saveBlob_electron(blob, fobj) {
+    if (fobj.fileinfo == undefined) fobj.fileinfo = {};
 
+    if (fobj.fileinfo.SubFolder == undefined) fobj.fileinfo.SubFolder = defaultOpenPath;
 
-
-function saveBlob_electron(blob, fobj)
-{
-        if (fobj.fileinfo == undefined)
-            fobj.fileinfo = {};
-        
-
-        if (fobj.fileinfo.SubFolder == undefined)
-            fobj.fileinfo.SubFolder = defaultOpenPath;
-
-        var res = dialog.showSaveDialog({ title: 'save file',
-							properties: [],
-							defaultPath: fobj.fileinfo.SubFolder + "/" + fobj.filename
-						})
-        if (res != undefined)
-        {
-            if (res.then)
-                res.then(saveit)
-            else
-                saveit(res);
-        }
-
-		function saveit(savename)
-						{
-                          if (savename.filePath)
-                             savename =savename.filePath;
-
-						  if (savename == undefined)
-						      return;
-
-						  savename = savename.replace(/\\/g,"/");
-						  if (path.extname(savename) == "")
-						      savename = savename + path.extname(fobj.filename);
-
-
-                          var fileReader = new FileReader()
-
-                          fileReader.onload = function(event) {
-
-                            var buffer = Buffer.from(event.target.result);
-                            try {
-                                if (fobj.contentType != "nii")
-                                {
-                                    var obj = JSON.parse(Buffer.from(event.target.result).toString('utf8'));
-                                    if (obj.tag.search("\/workstate\/") > -1)
-                                    {
-                                        var content = obj.content;
-                                        var wspath = path.dirname(savename);
-                                        for (var k = 0; k < content.viewports.length;k++)
-                                            content.viewports[k].fileID  = path.relative(wspath, content.viewports[k].fileID);
-                                        buffer = JSON.stringify(obj);
-
-                                    }
-                                }
-
-                            } catch(err) {}
-
-
-
-						     fs.writeFile( savename, buffer,undefined,function(err)
-						     { 
-                                    alertify.success('successfully saved ' + savename);
-                                    defaultOpenPath = fobj.fileinfo.SubFolder;
-						     });
-                          };
-                          fileReader.readAsArrayBuffer(blob);
-						}
-     
-}
-
-
-
-
-
-
-function saveBlob(blob, fobj)
-{
-    if (electron)
-    {
-        saveBlob_electron(blob,fobj);
+    var res = dialog.showSaveDialog({
+        title: "save file",
+        properties: [],
+        defaultPath: fobj.fileinfo.SubFolder + "/" + fobj.filename,
+    });
+    if (res != undefined) {
+        if (res.then) res.then(saveit);
+        else saveit(res);
     }
-    else
-    {
+
+    function saveit(savename) {
+        if (savename.filePath) savename = savename.filePath;
+
+        if (savename == undefined) return;
+
+        savename = savename.replace(/\\/g, "/");
+        if (path.extname(savename) == "") savename = savename + path.extname(fobj.filename);
+
+        var fileReader = new FileReader();
+
+        fileReader.onload = function (event) {
+            var buffer = Buffer.from(event.target.result);
+            try {
+                if (fobj.contentType != "nii") {
+                    var obj = JSON.parse(Buffer.from(event.target.result).toString("utf8"));
+                    if (obj.tag.search("/workstate/") > -1) {
+                        var content = obj.content;
+                        var wspath = path.dirname(savename);
+                        for (var k = 0; k < content.viewports.length; k++)
+                            content.viewports[k].fileID = path.relative(wspath, content.viewports[k].fileID);
+                        buffer = JSON.stringify(obj);
+                    }
+                }
+            } catch (err) {}
+
+            fs.writeFile(savename, buffer, undefined, function (err) {
+                alertify.success("successfully saved " + savename);
+                defaultOpenPath = fobj.fileinfo.SubFolder;
+            });
+        };
+        fileReader.readAsArrayBuffer(blob);
+    }
+}
+
+function saveBlob(blob, fobj) {
+    if (electron) {
+        saveBlob_electron(blob, fobj);
+    } else {
         var filename = fobj.filename;
         // initiate download
         var url = window.URL.createObjectURL(blob);
-        var link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        var event = document.createEvent('MouseEvents');
-        event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null );
+        var link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        var event = document.createEvent("MouseEvents");
+        event.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
         link.dispatchEvent(event);
     }
 }
 
-
-function saveScreenShot(blob, finfo, type, download)
-{
+function saveScreenShot(blob, finfo, type, download) {
     var defname = this.defaultname;
 
-    alertify.prompt("Please enter a name", function(e, name) {
-        if (e)
-        {
-            this.defaultname = name;
-            // create a nice file name with increasing numbers, so we have at least some unique id
-            var filename = name == "" ? "screenshot" : name;
-            var list = $('#patientTable').find("tbody").find(".fileRow[data-subfolder=screenshots]");
-            seriesnumber = 1;
-            if (list.length > 0)
-            {
-                list.each(function(k, e) {
-                    var a = $(e).attr('data-filename').match(/(\d+)\..*/);
-                    list[k] = a === null ? null : a[1];
-                });
-                seriesnumber = Math.max.apply(null , list) + 1;
+    alertify.prompt(
+        "Please enter a name",
+        function (e, name) {
+            if (e) {
+                this.defaultname = name;
+                // create a nice file name with increasing numbers, so we have at least some unique id
+                var filename = name == "" ? "screenshot" : name;
+                var list = $("#patientTable").find("tbody").find(".fileRow[data-subfolder=screenshots]");
+                seriesnumber = 1;
+                if (list.length > 0) {
+                    list.each(function (k, e) {
+                        var a = $(e)
+                            .attr("data-filename")
+                            .match(/(\d+)\..*/);
+                        list[k] = a === null ? null : a[1];
+                    });
+                    seriesnumber = Math.max.apply(null, list) + 1;
+                }
+                // pad with 3 zeros
+                seriesnumber = "0000" + seriesnumber;
+                seriesnumber = seriesnumber.substr(seriesnumber.length - 3);
+                if (type == undefined) type = ".png";
+                filename += "_" + seriesnumber + type;
+
+                var fobj = {
+                    fileID: "proxy",
+                    buffer: 0,
+                    filename: filename,
+                    fileinfo: {
+                        patients_id: finfo.patients_id,
+                        studies_id: finfo.studies_id,
+                        SubFolder: "screenshots",
+                    },
+                    proxyev: blob,
+                };
+
+                if (userinfo.username == guestuser || download) {
+                    saveBlob(fobj.proxyev, fobj);
+                } else
+                    uploadBinary(
+                        fobj,
+                        {},
+                        function (e) {
+                            KViewer.progressSpinner();
+                            patientTableMirror.mirrorState();
+                            // updates study contents and keeps tree state
+                        },
+                        KViewer.progressSpinner,
+                        false
+                    );
             }
-            // pad with 3 zeros
-            seriesnumber = ("0000" + seriesnumber);
-            seriesnumber = seriesnumber.substr(seriesnumber.length - 3);
-            if (type == undefined)
-                type = '.png';
-            filename += ("_" + seriesnumber + type);
-
-            var fobj = {
-                fileID: 'proxy',
-                buffer: 0,
-                filename: filename,
-                fileinfo: {
-                    patients_id: finfo.patients_id,
-                    studies_id: finfo.studies_id,
-                    SubFolder: 'screenshots'
-                },
-                proxyev: blob
-            };
-
-            if (userinfo.username == guestuser || download)
-            {
-                saveBlob(fobj.proxyev, fobj);
-            }
-            else
-                uploadBinary(fobj, {}, function(e) {
-                    KViewer.progressSpinner();
-                    patientTableMirror.mirrorState();
-                    // updates study contents and keeps tree state
-                }, KViewer.progressSpinner, false)
-        }
-    },defname);
-
+        },
+        defname
+    );
 }
 
-
-  
-
-
 KPanel.currentPanels = {};
-function KPanel($target, id, title)
-{
-    var panel = {visible:true};
+function KPanel($target, id, title) {
+    var panel = { visible: true };
 
     KPanel.currentPanels[id] = panel;
 
-    $('div[id="'+id+'"]').remove();
+    $('div[id="' + id + '"]').remove();
     var $container = $("<div id='" + id + "' class='panel_floatable roiTool_panel panel' ></div>");
-    
+
     $container.appendTo($target);
 
-    panel.$container = $container
-    panel.show = function()
-    {
+    panel.$container = $container;
+    panel.show = function () {
         panel.visible = true;
         $container.show();
+    };
 
-    }
-
-    panel.setTitle = function(tit)
-    {
+    panel.setTitle = function (tit) {
         $caption.text(tit);
         $container.show();
+    };
 
-    }
-
-
-    panel.close =function()
-    {
-        if (panel.visible)
-        {
+    panel.close = function () {
+        if (panel.visible) {
             panel.hide();
-            if (panel.customClose)
-                panel.customClose(panel);
+            if (panel.customClose) panel.customClose(panel);
         }
-    }
+    };
 
-    panel.hide = function()
-    {
+    panel.hide = function () {
         panel.visible = false;
         $container.hide();
-    }
+    };
 
-    panel.toggle = function()
-    {
-        if (!panel.visible)
-            panel.show();
-        else
-            panel.hide();
-    }
+    panel.toggle = function () {
+        if (!panel.visible) panel.show();
+        else panel.hide();
+    };
 
-    panel.minimize = function()
-    {
-
-        if ($mini.hasClass("fa-window-minimize"))
-        {
-            $mini.addClass("fa-window-maximize")   
-            $mini.removeClass("fa-window-minimize")   
+    panel.minimize = function () {
+        if ($mini.hasClass("fa-window-minimize")) {
+            $mini.addClass("fa-window-maximize");
+            $mini.removeClass("fa-window-minimize");
             panel.minimize.last_height = $container.height();
-            if (!$container.hasClass("panel_floatable_simple_resize"))            
-                $container.css('overflow','hidden');
+            if (!$container.hasClass("panel_floatable_simple_resize")) $container.css("overflow", "hidden");
             $container.height(25);
-            $container.children().last().hide()
-        }
-        else
-        {
-            $container.children().last().show()
-            $mini.removeClass("fa-window-maximize")   
-            $mini.addClass("fa-window-minimize")   
-            if (!$container.hasClass("panel_floatable_simple_resize"))            
-                $container.css('overflow','');
+            $container.children().last().hide();
+        } else {
+            $container.children().last().show();
+            $mini.removeClass("fa-window-maximize");
+            $mini.addClass("fa-window-minimize");
+            if (!$container.hasClass("panel_floatable_simple_resize")) $container.css("overflow", "");
             $container.height(panel.minimize.last_height);
         }
+    };
 
-    }
-
-    panel.$spinner = $("<div class='KViewPort_spinner' ><i class='fa fa-spinner fa-spin'></i> <span >Loading</span></div>").appendTo(panel.$container);
+    panel.$spinner = $(
+        "<div class='KViewPort_spinner' ><i class='fa fa-spinner fa-spin'></i> <span >Loading</span></div>"
+    ).appendTo(panel.$container);
     /** spinner callback for this tool (see {@link module:MiscFunctions~theSpinner}) */
     panel.progressSpinner = theSpinner(panel.$spinner);
-    panel.hideSpinner = function() {  panel.$spinner.hide(); }
+    panel.hideSpinner = function () {
+        panel.$spinner.hide();
+    };
 
-   
     // ----------- the top Row
 
     var $topRow = $("<div class='panel_toprow roiTool_panel_flex persistent '></div>").appendTo($container);
     panel.$topRow = $topRow;
     $mover = $("<i class='KViewPort_tool fa fa-hand-paper-o '></i>");
     var $caption = $("<span>" + title + "</span>");
-    var $mini = $("<i class='KViewPort_tool panel_toprow fa mini fa-window-minimize'></i>").click(
-      function() { panel.minimize() } );
-    var $close = $("<i class='KViewPort_tool panel_toprow fa fa-close'></i>").click(
-      function() { if (panel.closeOnHide)
-                        panel.close()
-                   else
-                        panel.hide() } );
+    var $mini = $("<i class='KViewPort_tool panel_toprow fa mini fa-window-minimize'></i>").click(function () {
+        panel.minimize();
+    });
+    var $close = $("<i class='KViewPort_tool panel_toprow fa fa-close'></i>").click(function () {
+        if (panel.closeOnHide) panel.close();
+        else panel.hide();
+    });
     $topRow.append($caption).append($("<i class='flexspacer'></i>")).append($mini).append($close);
 
-
-    $container.css('left',100);
-    $topRow.on('pointerdown',function(ev) {
-        var starDiffX = -ev.clientX + parseInt($container.css('left'));
-        var starDiffY = ev.clientY - parseInt($container.css('top'));
-        $(document.body).on('pointermove',function(ev)
-        {
+    $container.css("left", 100);
+    $topRow.on("pointerdown", function (ev) {
+        var starDiffX = -ev.clientX + parseInt($container.css("left"));
+        var starDiffY = ev.clientY - parseInt($container.css("top"));
+        $(document.body).on("pointermove", function (ev) {
             var dx = starDiffX + ev.clientX;
             //if (dx > 0)
             {
-              //  dx = dx < 10 ? 0 : dx;
-                $container.css('left', dx);
+                //  dx = dx < 10 ? 0 : dx;
+                $container.css("left", dx);
             }
             var dy = -starDiffY + ev.clientY;
-            if (dy > 0)
-                $container.css('top', dy);
+            if (dy > 0) $container.css("top", dy);
         });
-        $(document.body).on('pointerup mouseleave', function(ev) {
-            $(this).off('pointermove');
+        $(document.body).on("pointerup mouseleave", function (ev) {
+            $(this).off("pointermove");
         });
-
     });
 
     return panel;
-
-
 }
 
-
 var ironSight = {
+    visible: false,
 
-    visible:false,
+    isVisible: function () {
+        return ironSight.panel && ironSight.panel.visible;
+    },
 
-    isVisible:function() {
-            return (ironSight.panel && ironSight.panel.visible) ;
-        },
-
-    toggle: function()
-    {
-        if (ironSight.panel)
-        {
+    toggle: function () {
+        if (ironSight.panel) {
             ironSight.visible = !ironSight.visible;
             ironSight.panel.toggle();
-        }
-        else
-        {
+        } else {
             ironSight.createPanel();
             ironSight.visible = true;
         }
     },
 
-
-
-
-    save: function()
-    {
-
-        alertify.prompt("Enter a name:", function(e,name)
-        {
-            if (e)
-            {
-                 var s = {
-                   elec_La: ironSight.input.elec_La.getVal(),
-                   elec_Ra: ironSight.input.elec_Ra.getVal(),
-                   elec_Lp: ironSight.input.elec_Lp.getVal(),
-                   elec_Rp: ironSight.input.elec_Rp.getVal(),
-                   ear_R:ironSight.input.ear_R.getVal(),
-                   ear_L:ironSight.input.ear_L.getVal() };
-                uploadJSON(name,s,{subfolder:'ironsight',tag:'ironsight'},function(){});					
-            }
-        } ,"ironsight_state");
-
+    save: function () {
+        alertify.prompt(
+            "Enter a name:",
+            function (e, name) {
+                if (e) {
+                    var s = {
+                        elec_La: ironSight.input.elec_La.getVal(),
+                        elec_Ra: ironSight.input.elec_Ra.getVal(),
+                        elec_Lp: ironSight.input.elec_Lp.getVal(),
+                        elec_Rp: ironSight.input.elec_Rp.getVal(),
+                        ear_R: ironSight.input.ear_R.getVal(),
+                        ear_L: ironSight.input.ear_L.getVal(),
+                    };
+                    uploadJSON(name, s, { subfolder: "ironsight", tag: "ironsight" }, function () {});
+                }
+            },
+            "ironsight_state"
+        );
     },
 
-    import: function(s)
-    {
+    import: function (s) {
         ironSight.input.ear_L.setVal(s.ear_L);
         ironSight.input.ear_R.setVal(s.ear_R);
         ironSight.input.elec_La.setVal(s.elec_La);
@@ -4754,18 +3802,16 @@ var ironSight = {
         ironSight.input.elec_Lp.setVal(s.elec_Lp);
         ironSight.input.elec_Rp.setVal(s.elec_Rp);
     },
-   
 
-
-    createPanel: function()
-    {
-
+    createPanel: function () {
         var panel = KPanel($(document.body), "ironSight", "ironSight");
         ironSight.panel = panel;
 
-        panel.$container.width(400)
+        panel.$container.width(400);
         var $fileRow = $("<div class='roiTool_panel_flex_persistent'></div>").appendTo(panel.$container);
-        var $start = $("<div class='ironsight_title'><span>3D x-ray based visualization of directional deep brain stimulation lead orientation. </span></div>")
+        var $start = $(
+            "<div class='ironsight_title'><span>3D x-ray based visualization of directional deep brain stimulation lead orientation. </span></div>"
+        );
 
         $fileRow.append($start).append($("<i class='flexspacer'></i>"));
         ironSight.$progress = $(" <span>  </span>").appendTo($fileRow);
@@ -4773,182 +3819,158 @@ var ironSight = {
         $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
         $('<object  id="brainpicto" type="image/svg+xml" data="ironsight.svg"></object>').appendTo(panel.$container);
 
-
         var current_input;
-        signalhandler.attach("positionChange",function()
-        {
-
-            if (current_input != undefined)
-            {
+        signalhandler.attach("positionChange", function () {
+            if (current_input != undefined) {
                 current_input.trigger_get_click();
             }
         });
 
-     
-        var picto = document.getElementById('brainpicto').contentDocument        
-
-
+        var picto = document.getElementById("brainpicto").contentDocument;
 
         var left_ear = 0;
         var right_ear = 0;
 
-        function sliceToAngle(a)
-        {
-            return (parseFloat(a)-left_ear)/(right_ear-left_ear)*180 -90;
+        function sliceToAngle(a) {
+            return ((parseFloat(a) - left_ear) / (right_ear - left_ear)) * 180 - 90;
         }
 
-        function angleToSlice(a)
-        {
-            return a/delta  + offset;
+        function angleToSlice(a) {
+            return a / delta + offset;
         }
 
-        function takeVal($input,fun)
-        {
-           return function() {
-            var p = 0;
-            var vp = KViewer.viewports[p];
-            var mv = vp.getCurrentViewer()
-            if (mv == undefined || mv.getCurrenVoxel == undefined)
-                {
+        function takeVal($input, fun) {
+            return function () {
+                var p = 0;
+                var vp = KViewer.viewports[p];
+                var mv = vp.getCurrentViewer();
+                if (mv == undefined || mv.getCurrenVoxel == undefined) {
                     //alertify.error('load the MIP into viewport')
                     return;
                 }
-            var v = mv.getCurrenVoxel()._data
-            var val = (v[2]);
-            $input.val(val); 
-            if (fun)
-                fun(val);
-            update();
-             }
+                var v = mv.getCurrenVoxel()._data;
+                var val = v[2];
+                $input.val(val);
+                if (fun) fun(val);
+                update();
+            };
         }
 
-        function setVal($input,fun)
-        {
-           return function() {
-            if ($input.val() == "")
-                return;
-            var p = 0;
-            var vp = KViewer.viewports[p];
-            var mv = vp.getCurrentViewer()
-            if (mv == undefined)
-                {
-                  //  alertify.error('load the MIP into viewport')
+        function setVal($input, fun) {
+            return function () {
+                if ($input.val() == "") return;
+                var p = 0;
+                var vp = KViewer.viewports[p];
+                var mv = vp.getCurrentViewer();
+                if (mv == undefined) {
+                    //  alertify.error('load the MIP into viewport')
                     return;
                 }
-            mv.setSlicePos(2,parseFloat($input.val()));
-            
-             }
+                mv.setSlicePos(2, parseFloat($input.val()));
+            };
         }
 
-        function helpertext(type)
-        {
-            if (type == "leftear")
-            {
-                return "define the angle system by finding the direction where the ear canals overlap while looking from the <b>left</b> side of the head."
+        function helpertext(type) {
+            if (type == "leftear") {
+                return "define the angle system by finding the direction where the ear canals overlap while looking from the <b>left</b> side of the head.";
             }
-            if (type == "rightear")
-            {
-                return "define the angle system by finding the direction where the ear canals overlap while looking from the <b>right</b> side of the head."
+            if (type == "rightear") {
+                return "define the angle system by finding the direction where the ear canals overlap while looking from the <b>right</b> side of the head.";
             }
-            if (type == "eal")
-            {
+            if (type == "eal") {
                 return "find the direction where the ironsight sign is visible for the left elctrode while looking from the left";
             }
-            if (type == "epl")
-            {
+            if (type == "epl") {
                 return "find the direction where the ironsight sign is visible for the left elctrode while looking from the right (depending on coverage this is most of the times not possible)";
-            }
-            else
-                return "helper " + type;
+            } else return "helper " + type;
         }
 
-
-
-        function update()
-        {
-
-            var eal =  $elec_La.update();
-            var ear =  $elec_Ra.update();
+        function update() {
+            var eal = $elec_La.update();
+            var ear = $elec_Ra.update();
             var epl = $elec_Lp.update();
             var epr = $elec_Rp.update();
             return;
-
         }
 
-        function updateAngle()
-        {
+        function updateAngle() {
             var p = 0;
             var vp = KViewer.viewports[p];
-            var mv = vp.getCurrentViewer()
-            if (mv == undefined)
-                {
-                    return;
-                }
-            var v = mv.getCurrenVoxel()._data
+            var mv = vp.getCurrentViewer();
+            if (mv == undefined) {
+                return;
+            }
+            var v = mv.getCurrenVoxel()._data;
             var val = sliceToAngle(v[2]).toFixed(1);
-            $(panel.$angle0[1]).text(val );
+            $(panel.$angle0[1]).text(val);
         }
 
         var widinput = 50;
         var widspan = 200;
 
-        function setSVGtext(id,txt)
-        {
-            var x = document.getElementById('brainpicto').contentDocument
-            if (x == undefined)
-                return
-            x = x.getElementById(id)
-            if (x == undefined)
-                return
+        function setSVGtext(id, txt) {
+            var x = document.getElementById("brainpicto").contentDocument;
+            if (x == undefined) return;
+            x = x.getElementById(id);
+            if (x == undefined) return;
             x = x.children[0];
             x.textContent = txt;
-            
-
         }
 
-        function setArrowDir(id,angle)        
-        {
-            if (isNaN(angle))
-                return;
+        function setArrowDir(id, angle) {
+            if (isNaN(angle)) return;
 
-            var x = document.getElementById('brainpicto').contentDocument
-        
-            x = x.getElementById(id)
-            $(x).css('opacity',1)
+            var x = document.getElementById("brainpicto").contentDocument;
+
+            x = x.getElementById(id);
+            $(x).css("opacity", 1);
             var dir = x.getAttribute("d").split(" ");
             var r = 30;
-            x.setAttribute("d","m " + dir[1] + " " + Math.cos(angle/180*Math.PI)*r + "," + Math.sin(angle/180*Math.PI)*r);
-
+            x.setAttribute(
+                "d",
+                "m " +
+                    dir[1] +
+                    " " +
+                    Math.cos((angle / 180) * Math.PI) * r +
+                    "," +
+                    Math.sin((angle / 180) * Math.PI) * r
+            );
         }
 
+        function setAMarker(angle) {
+            if (isNaN(angle)) return;
 
-        function setAMarker(angle)        
-        {
-            if (isNaN(angle))
-                return;
+            var x = document.getElementById("brainpicto").contentDocument;
 
-            var x = document.getElementById('brainpicto').contentDocument
-        
-            x = x.getElementById("AMARKER")
-            if (x==null)
-                return;
-            $(x).css('opacity',1)
+            x = x.getElementById("AMARKER");
+            if (x == null) return;
+            $(x).css("opacity", 1);
             var dir = x.getAttribute("d").split(" ");
             var r = 125;
-            x.setAttribute("d","m " + dir[1] + " " + Math.cos(angle/180*Math.PI)*r + "," + Math.sin(angle/180*Math.PI)*r);
-
+            x.setAttribute(
+                "d",
+                "m " +
+                    dir[1] +
+                    " " +
+                    Math.cos((angle / 180) * Math.PI) * r +
+                    "," +
+                    Math.sin((angle / 180) * Math.PI) * r
+            );
         }
 
-
-        function input_field(txt,onchange,type)
-        {
-
-
+        function input_field(txt, onchange, type) {
             var $div0 = $("<div class='inputrow roiTool_panel_flex'></div>").appendTo(panel.$container);
-            var $input = $(" <span  style='width:"+widspan+"px;' > "+txt+" </span><input  style='width:"+widinput+"px;' type = 'number'/> ").appendTo($div0);
+            var $input = $(
+                " <span  style='width:" +
+                    widspan +
+                    "px;' > " +
+                    txt +
+                    " </span><input  style='width:" +
+                    widinput +
+                    "px;' type = 'number'/> "
+            ).appendTo($div0);
 
-            $div0.click(function(e)
-            {   
+            $div0.click(function (e) {
                 e.preventDefault();
                 panel.$container.find(".current_input").removeClass("current_input");
                 panel.$container.find(".ironsight_done").hide();
@@ -4958,216 +3980,187 @@ var ironSight = {
                 $div0.trigger_set_click();
                 $div0.update();
                 $helper.find("span").html(helpertext(type));
+            });
 
-            }
-            );
+            $div0.update = function () {
+                var angle = sliceToAngle($($input[1]).val());
 
-            $div0.update = function()
-            {
-               var angle = sliceToAngle($($input[1]).val());
+                if (type == "eal") {
+                    angle = angle + 90;
+                    setSVGtext("texteal", angle.toFixed(0) + "°");
+                    setArrowDir("patheal", angle);
+                }
+                if (type == "ear") {
+                    angle = angle - 90;
+                    setSVGtext("textear", angle.toFixed(0) + "°");
+                    setArrowDir("pathear", angle);
+                }
 
-               if (type == 'eal')
-               {
-                  angle = angle+90;
-                  setSVGtext("texteal",angle.toFixed(0) + "°");
-                  setArrowDir("patheal",angle);
-               }
-               if (type == 'ear')
-               {
-                  angle = angle-90;
-                  setSVGtext("textear",angle.toFixed(0) + "°");
-                  setArrowDir("pathear",angle);
-               }
+                if (type == "epl") {
+                    angle = angle - 90;
+                    setSVGtext("textepl", angle.toFixed(0) + "°");
+                    setArrowDir("pathepl", angle);
+                }
+                if (type == "epr") {
+                    angle = angle + 90;
+                    setArrowDir("pathepr", angle);
+                    setSVGtext("textepr", angle.toFixed(0) + "°");
+                }
 
-               if (type == 'epl')
-               {
-                  angle = angle-90;
-                  setSVGtext("textepl",angle.toFixed(0) + "°");
-                  setArrowDir("pathepl",angle);
-               }
-               if (type == 'epr')
-               {
-                  angle = angle+90;
-                  setArrowDir("pathepr",angle);
-                  setSVGtext("textepr",angle.toFixed(0) + "°");
-               }
+                var str = angle.toFixed() + "°";
+                $angle.text(str);
 
+                return angle + "/ slice=" + $($input[1]).val();
+            };
 
-               var str = angle.toFixed() + "°";
-               $angle.text(str);     
+            $div0.onchange = function () {
+                if (onchange) onchange($($input[1]).val());
 
-               return angle + "/ slice=" + $($input[1]).val();
-            }
+                $div0.update();
 
-            $div0.onchange = function() {
+                update();
+            };
 
-               if (onchange)
-                onchange($($input[1]).val())
+            $div0.getVal = function () {
+                return { slice: $($input[1]).val(), angle: $angle.text() };
+            };
 
-               $div0.update();
+            $div0.setVal = function (s) {
+                if (s == undefined) {
+                    $($input[1]).val("");
+                    $div0.onchange();
+                    update();
+                } else {
+                    $($input[1]).val(s.slice);
+                    $div0.onchange(s.slice);
+                    update();
+                }
+            };
 
-               update()
+            var fetchfun = takeVal($($input[1]), function (v) {
+                if (onchange) onchange(v);
 
-            }
-               
-            $div0.getVal = function()
-            {
-                return {slice: $($input[1]).val(), angle:$angle.text()};
-            }
+                setAMarker(sliceToAngle(v));
+                $div0.update();
+            });
+            var setfun = setVal($($input[1]));
 
-            $div0.setVal = function(s)
-            {
-                 if (s == undefined)
-                 {
-                     $($input[1]).val("");
-                     $div0.onchange();
-                     update();
-
-                 }
-                 else
-                 {
-                     $($input[1]).val(s.slice);
-                     $div0.onchange((s.slice));
-                     update();
-                 }
-            }
-
-            var fetchfun =takeVal($($input[1]),function(v) {
-                             if (onchange) 
-                                onchange(v); 
-
-                             setAMarker(sliceToAngle(v));
-                             $div0.update() 
-
-                             });
-            var setfun = setVal($($input[1]))
-
-            var $getclick = $("<a style='margin-left:10px;' class='KViewPort_tool'><i class='fa fa-circle'> get</i></a>").
-            click(fetchfun).appendTo($div0).hide();
-            var $setclick = $("<a style='margin-left:10px;' class='KViewPort_tool'><i class='fa fa-circle'> set </i></a>").
-            click(setVal($($input[1]))).appendTo($div0).hide();
+            var $getclick = $(
+                "<a style='margin-left:10px;' class='KViewPort_tool'><i class='fa fa-circle'> get</i></a>"
+            )
+                .click(fetchfun)
+                .appendTo($div0)
+                .hide();
+            var $setclick = $(
+                "<a style='margin-left:10px;' class='KViewPort_tool'><i class='fa fa-circle'> set </i></a>"
+            )
+                .click(setVal($($input[1])))
+                .appendTo($div0)
+                .hide();
 
             var $angle = $("<span style='color:lightgray;margin-left:10px;'>NaN°</span>").appendTo($div0);
 
             $div0.trigger_get_click = fetchfun;
             $div0.trigger_set_click = setfun;
 
-            var $done = $("<a class='KViewPort_tool ironsight_done' style='margin-left:10px;' ><i class='fa fa-check'> done </i></a>").
-            click(function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var n = $div0.nextAll(".inputrow").first()
-                n.trigger("click");
-            }).appendTo($div0);
+            var $done = $(
+                "<a class='KViewPort_tool ironsight_done' style='margin-left:10px;' ><i class='fa fa-check'> done </i></a>"
+            )
+                .click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var n = $div0.nextAll(".inputrow").first();
+                    n.trigger("click");
+                })
+                .appendTo($div0);
 
-
-
-            $($input[1]).on('change', $div0.onchange );
+            $($input[1]).on("change", $div0.onchange);
 
             return $div0;
         }
 
         $("<div class='roiTool_panel_caption'>Ear canal overlap</div>").appendTo(panel.$container);
 
-
-       var $ear_L = input_field("from left",function(v) {
-                        left_ear = parseFloat(v);
-                        setSVGtext("textupperEar",  "-90° = slice "+ left_ear.toFixed(0));
-
-                        },"leftear")
-       var $ear_R = input_field("from right",function(v) {
-
-                        right_ear = parseFloat(v);
-                        setSVGtext("textlowerEar",  "90° = slice "+ right_ear.toFixed(0));
-
-                },"rightear")
-
-        $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
-
-       $("<div><span> Left electrode </span></div>").appendTo(panel.$container);
-       var $elec_La = input_field("from left",undefined,"eal")
-       var $elec_Lp = input_field("from right",undefined,"epl")
-
+        var $ear_L = input_field(
+            "from left",
+            function (v) {
+                left_ear = parseFloat(v);
+                setSVGtext("textupperEar", "-90° = slice " + left_ear.toFixed(0));
+            },
+            "leftear"
+        );
+        var $ear_R = input_field(
+            "from right",
+            function (v) {
+                right_ear = parseFloat(v);
+                setSVGtext("textlowerEar", "90° = slice " + right_ear.toFixed(0));
+            },
+            "rightear"
+        );
 
         $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
-       $("<div><span> Right electrode </span></div>").appendTo(panel.$container);
-       var $elec_Ra = input_field("from right",undefined,"ear")
-       var $elec_Rp = input_field("from left",undefined,"epr")
 
-       $elec_La.addClass("ironSight_ea")
-       $elec_Ra.addClass("ironSight_ea")
-       $elec_Lp.addClass("ironSight_ep")
-       $elec_Rp.addClass("ironSight_ep")
+        $("<div><span> Left electrode </span></div>").appendTo(panel.$container);
+        var $elec_La = input_field("from left", undefined, "eal");
+        var $elec_Lp = input_field("from right", undefined, "epl");
 
-       $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
-       var $helper = $("<div><span> helptext</span></div>").appendTo(panel.$container);
-       $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
+        $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
+        $("<div><span> Right electrode </span></div>").appendTo(panel.$container);
+        var $elec_Ra = input_field("from right", undefined, "ear");
+        var $elec_Rp = input_field("from left", undefined, "epr");
 
+        $elec_La.addClass("ironSight_ea");
+        $elec_Ra.addClass("ironSight_ea");
+        $elec_Lp.addClass("ironSight_ep");
+        $elec_Rp.addClass("ironSight_ep");
 
-	   var $tools = $("<div class='modernbuttongroup'></div>").appendTo(panel.$container);
-	   var $save = $("<div class='modernbutton small green'><i class='fa fa-save'></i>Save</div>").appendTo($tools).click( function() {
-            ironSight.save();
-	        } );
-	   var $reset = $("<div class='modernbutton small green'><i class='fa fa-close'></i>Reset</div>").appendTo($tools).click( function() {
-        ironSight.input.ear_L.setVal();
-        ironSight.input.ear_R.setVal();
-        ironSight.input.elec_La.setVal();
-        ironSight.input.elec_Ra.setVal();
-        ironSight.input.elec_Lp.setVal();
-        ironSight.input.elec_Rp.setVal();
-	        } );
+        $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
+        var $helper = $("<div><span> helptext</span></div>").appendTo(panel.$container);
+        $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
 
+        var $tools = $("<div class='modernbuttongroup'></div>").appendTo(panel.$container);
+        var $save = $("<div class='modernbutton small green'><i class='fa fa-save'></i>Save</div>")
+            .appendTo($tools)
+            .click(function () {
+                ironSight.save();
+            });
+        var $reset = $("<div class='modernbutton small green'><i class='fa fa-close'></i>Reset</div>")
+            .appendTo($tools)
+            .click(function () {
+                ironSight.input.ear_L.setVal();
+                ironSight.input.ear_R.setVal();
+                ironSight.input.elec_La.setVal();
+                ironSight.input.elec_Ra.setVal();
+                ironSight.input.elec_Lp.setVal();
+                ironSight.input.elec_Rp.setVal();
+            });
 
+        $ear_L.trigger("click");
 
-
-
-
-       $ear_L.trigger("click");
-
-       this.input = { 
-       elec_La: $elec_La,
-       elec_Ra: $elec_Ra,
-       elec_Lp: $elec_Lp,
-       elec_Rp: $elec_Rp,
-       ear_R:$ear_R,
-       ear_L:$ear_L
-
-       }
-
-        
-    }
-
-
-}
-
-
-
-
-
-
+        this.input = {
+            elec_La: $elec_La,
+            elec_Ra: $elec_Ra,
+            elec_Lp: $elec_Lp,
+            elec_Rp: $elec_Rp,
+            ear_R: $ear_R,
+            ear_L: $ear_L,
+        };
+    },
+};
 
 var createGif = {
     cnt: 0,
     mode: "",
-    startRecord: function()
-    {
-        if (createGif.$viewportContainer == undefined)
-            createGif.$viewportContainer = KViewer.$viewportContainer;
+    startRecord: function () {
+        if (createGif.$viewportContainer == undefined) createGif.$viewportContainer = KViewer.$viewportContainer;
 
-        if (KViewer.viewports[20].getCurrentViewer() != undefined)
-        {
+        if (KViewer.viewports[20].getCurrentViewer() != undefined) {
             createGif.$viewportContainer = KViewer.viewports[20].$container;
-
         }
 
+        if (createGif.animate) createGif.animate.cnt = undefined;
 
-        if (createGif.animate) 
-            createGif.animate.cnt = undefined;
-
-
-
-        if (createGif.recording)
-        {
+        if (createGif.recording) {
             console.warn("gif recorder stopped");
             createGif.mode = "";
             return;
@@ -5175,80 +4168,62 @@ var createGif = {
         var delay = parseInt(createGif.panel.$delay[1].value);
         var maxframe = parseInt(createGif.panel.$max[1].value);
 
-        if (KViewer.hasControlsOn())
-            KViewer.toggleElementsForScreenShot();
+        if (KViewer.hasControlsOn()) KViewer.toggleElementsForScreenShot();
 
         createGif.panel.$container.find(".roiTool_panel_flex").addClass("inactive");
-        createGif.$start.addClass('KViewPort_tool_enabled');
+        createGif.$start.addClass("KViewPort_tool_enabled");
         createGif.$start.find("i").removeClass("fa-circle").addClass("fa-stop");
         createGif.$start.find("span").text(" Stop ");
         createGif.cnt = 0;
         createGif.mode = "recording";
         var gif = new GIF({
             workers: 5,
-            quality: 3
+            quality: 3,
         });
-        var addframe = function()
-        {
-
-
-            html2canvas(createGif.$viewportContainer).then(function(canvas)
-            {
+        var addframe = function () {
+            html2canvas(createGif.$viewportContainer).then(function (canvas) {
                 gif.addFrame(canvas, {
-                    delay: delay
+                    delay: delay,
                 });
                 createGif.cnt++;
                 createGif.$progress.text(" " + createGif.cnt);
-                if (createGif.mode != "recording" || createGif.cnt > maxframe)
-                {
+                if (createGif.mode != "recording" || createGif.cnt > maxframe) {
                     createGif.$start.find("i").removeClass("fa-stop").addClass("fa-spinner fa-spin");
                     createGif.$start.find("span").text(" rendering ");
-                    if (!KViewer.hasControlsOn())
-                        KViewer.toggleElementsForScreenShot();
-                    gif.on('finished', function(blob) {
-                        saveScreenShot(blob, {}, '.gif', true);
+                    if (!KViewer.hasControlsOn()) KViewer.toggleElementsForScreenShot();
+                    gif.on("finished", function (blob) {
+                        saveScreenShot(blob, {}, ".gif", true);
                         createGif.mode = "";
                         createGif.$start.find("i").removeClass("fa-spinner fa-spin").addClass("fa-circle");
                         createGif.$start.find("span").text(" Record ");
                         createGif.panel.$container.find(".roiTool_panel_flex").removeClass("inactive");
-                        createGif.$start.removeClass('KViewPort_tool_enabled');
+                        createGif.$start.removeClass("KViewPort_tool_enabled");
                         createGif.$progress.text("");
-                       
-                        for (var k = 0; k < gif.freeWorkers.length;k++)
-                            gif.freeWorkers[k].terminate()
 
+                        for (var k = 0; k < gif.freeWorkers.length; k++) gif.freeWorkers[k].terminate();
                     });
 
                     gif.render();
-
-                }
-                else
-                {
-                    if (createGif.animate)
-                        createGif.animate();
+                } else {
+                    if (createGif.animate) createGif.animate();
                     setTimeout(addframe, 0);
                 }
-
             });
-        }
+        };
         addframe();
     },
 
-
-    createPanel: function()
-    {
-
+    createPanel: function () {
         var panel = KPanel($(document.body), "GIFrecorder", "GIFrecorder");
         createGif.panel = panel;
 
         var $fileRow = $("<div class='roiTool_panel_flex_persistent'></div>").appendTo(panel.$container);
-        var $start = $("<a class='KViewPort_tool'><i class='fa fa-circle'></i><span> Record </span></a>").appendTooltip("startstoprecord").click(
-        function() {
-            if (createGif.mode == "")
-                createGif.startRecord();
-            else if (createGif.mode == 'recording')
-                createGif.mode = "rendering";
-        });
+        var $start = $("<a class='KViewPort_tool'><i class='fa fa-circle'></i><span> Record </span></a>")
+            .appendTooltip("startstoprecord")
+            .click(function () {
+                if (createGif.mode == "") createGif.startRecord();
+                else if (createGif.mode == "recording") createGif.mode = "rendering";
+            });
         createGif.$start = $start;
 
         $fileRow.append($start).append($("<i class='flexspacer'></i>"));
@@ -5257,14 +4232,15 @@ var createGif = {
         $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
 
         var $delayRow = $("<div class='roiTool_panel_flex'></div>").appendTo(panel.$container);
-        panel.$delay = $(" <span> delay:  </span><input style='width:50px;' type = 'number' min='0' max='100' value='20'/> ").appendTo($delayRow);
+        panel.$delay = $(
+            " <span> delay:  </span><input style='width:50px;' type = 'number' min='0' max='100' value='20'/> "
+        ).appendTo($delayRow);
         var $maxFrames = $("<div class='roiTool_panel_flex'></div>").appendTo(panel.$container);
-        panel.$max = $(" <span> max #:  </span><input style='width:50px;' type = 'number' min='0' max='1000' value='360'/> ").appendTo($maxFrames);
-
-    }
-
-
-}
+        panel.$max = $(
+            " <span> max #:  </span><input style='width:50px;' type = 'number' min='0' max='1000' value='360'/> "
+        ).appendTo($maxFrames);
+    },
+};
 /*
 createGif.animate = function()
 {
@@ -5290,102 +4266,77 @@ if (0)
 
 */
 
-function executeUnpackWorker(abuf, progress, onready)
-{
-
-    var worker = startWorker('KunpackWorker.js');
+function executeUnpackWorker(abuf, progress, onready) {
+    var worker = startWorker("KunpackWorker.js");
 
     worker.postMessage = worker.webkitPostMessage || worker.postMessage;
 
-    worker.addEventListener('message', function(e) {
-        e = e.data;
-        if (e.msg == 'done')
-        {
-            if (progress != undefined)
-                progress();
-           // logProcess("unzip done");
-            onready(e);
-        }
-        else if (e.msg == 'error')
-        {
-            if (progress != undefined)
-            {
-                progress("unzip error:" + e.error.message);
-                logProcess("unzip error:" + e.error.message);
-                setTimeout(progress,2000);
-            }
-            else
-            {
-                console.error("unzip error:" + e.error.message)
-                logProcess("unzip error:" + e.error.message);
-                progress();
-            }
-            onready(e);
-        }
-        else
-            if (progress != undefined)
-            {
+    worker.addEventListener(
+        "message",
+        function (e) {
+            e = e.data;
+            if (e.msg == "done") {
+                if (progress != undefined) progress();
+                // logProcess("unzip done");
+                onready(e);
+            } else if (e.msg == "error") {
+                if (progress != undefined) {
+                    progress("unzip error:" + e.error.message);
+                    logProcess("unzip error:" + e.error.message);
+                    setTimeout(progress, 2000);
+                } else {
+                    console.error("unzip error:" + e.error.message);
+                    logProcess("unzip error:" + e.error.message);
+                    progress();
+                }
+                onready(e);
+            } else if (progress != undefined) {
                 progress(e.msg);
                 logProcess(e.msg);
             }
-    }, false);
+        },
+        false
+    );
 
-   // logProcess("unzip started");
+    // logProcess("unzip started");
     worker.postMessage(abuf.buffer, [abuf.buffer]);
     // Send data to our worker.
-
 }
 
-
-
-
-function autoExpandOneColumn(selector, columnid,minwidth)
-{
+function autoExpandOneColumn(selector, columnid, minwidth) {
     var $table = $(selector);
-    var cols = $table.find("thead tr:first").children(':visible');
+    var cols = $table.find("thead tr:first").children(":visible");
 
     var twid = 0;
-    for (var k = 0; k < cols.length; k++)
-    {
+    for (var k = 0; k < cols.length; k++) {
         var col = cols[k];
-        twid += $(col).width()+1;
+        twid += $(col).width() + 1;
     }
-    var targetwid = $table.parent().width()
+    var targetwid = $table.parent().width();
 
     var diff = targetwid - twid;
     var c = $(cols[columnid]);
-    var newwid = c.width() + diff - 11
-    if (minwidth != undefined)
-    {
-        if (newwid < minwidth)
-            newwid = minwidth;
+    var newwid = c.width() + diff - 11;
+    if (minwidth != undefined) {
+        if (newwid < minwidth) newwid = minwidth;
     }
-    if (1) // diff > 0)
-    {
-        c.attr('data-lastwidth', c.attr('data-lastwidth') || c.width());
+    if (1) {
+        // diff > 0)
+        c.attr("data-lastwidth", c.attr("data-lastwidth") || c.width());
         c.width(newwid);
-    }
-    else
-    {
-        if (newwid > c.attr('data-lastwidth'))
-            c.width(newwid);
-        else
-        {
-            c.width(c.attr('data-lastwidth'));
-            c.removeAttr('data-lastwidth');
+    } else {
+        if (newwid > c.attr("data-lastwidth")) c.width(newwid);
+        else {
+            c.width(c.attr("data-lastwidth"));
+            c.removeAttr("data-lastwidth");
         }
     }
 }
 
-
-
-
-
-function showProgressFrameAboveDiv($div)
-{
-    var cumulativeOffset = function(element) {
-        var top = 0
-          , left = 0;
+function showProgressFrameAboveDiv($div) {
+    var cumulativeOffset = function (element) {
+        var top = 0,
+            left = 0;
         do {
             top += element.offsetTop || 0;
             left += element.offsetLeft || 0;
@@ -5394,65 +4345,48 @@ function showProgressFrameAboveDiv($div)
 
         return {
             top: top,
-            left: left
+            left: left,
         };
-    }
-    ;
-
+    };
     var pos = cumulativeOffset($div[0]);
-    $('#KProgressFrame').remove();
-    $progressframe = $("<div id='KProgressFrame'>" +
-    " <div><i class='fa-5x fa fa-spinner fa-spin'></i></div>  </div>");
-    $progressframe.css('left', pos.left)
-    $progressframe.css('top', pos.top)
-    $progressframe.css('height', $div.height());
-    $progressframe.css('width', $div.width())
+    $("#KProgressFrame").remove();
+    $progressframe = $("<div id='KProgressFrame'>" + " <div><i class='fa-5x fa fa-spinner fa-spin'></i></div>  </div>");
+    $progressframe.css("left", pos.left);
+    $progressframe.css("top", pos.top);
+    $progressframe.css("height", $div.height());
+    $progressframe.css("width", $div.width());
     var $close = $("<div> <i class='fa-close fa fa-3x'> </i> </div>");
-    $progressframe.append($close)
+    $progressframe.append($close);
     $progressframe.appendTo($(document.body));
-    $close.click(function() { 
+    $close.click(function () {
         ptablexhr.abortPHPprocess();
-        $(document.body).removeClass("wait");		         
+        $(document.body).removeClass("wait");
         hideProgressFrame();
-    })
-
+    });
 }
 
-function hideProgressFrame()
-{
-
-    $('#KProgressFrame').remove();
+function hideProgressFrame() {
+    $("#KProgressFrame").remove();
 }
 
-
-
-
-function JSONparse_lazy(str)
-{
+function JSONparse_lazy(str) {
     var tmp;
-    try
-    {
+    try {
         tmp = JSON.parse(str);
         return tmp;
-    }
-    catch (e)
-    {
-        try
-        {
-            eval('tmp = ' + str);
+    } catch (e) {
+        try {
+            eval("tmp = " + str);
             return tmp;
-        }
-        catch (e)
-        {
-            console.log('error during parsing json')
+        } catch (e) {
+            console.log("error during parsing json");
             console.error(e);
             return;
         }
     }
 }
 
-
-/** computes a lazy histogram 
+/** computes a lazy histogram
  * @param {number} min lower bound of histogram
  * @param {number} max higher bound of histogram
  * @param {number} nbins number of bins
@@ -5460,202 +4394,144 @@ function JSONparse_lazy(str)
  * @param {number} length of data array
  * @param {number} number of samples
  */
-function comphisto(min, max, nbins, data, n, numsamples,nonormalization,ignoreZero)
-{
+function comphisto(min, max, nbins, data, n, numsamples, nonormalization, ignoreZero) {
     var EPSILON = 0.01;
 
     var cnt = 0;
     var histogram = {
         min: min,
-        max: max
+        max: max,
     };
 
-    if (ignoreZero == undefined)
-        ignoreZero = true;
+    if (ignoreZero == undefined) ignoreZero = true;
 
-    if (numsamples > n)
-        numsamples = n;
+    if (numsamples > n) numsamples = n;
 
     histogram.accus = new Array();
 
-    for (var i = 0; i < nbins; i++)
-        histogram.accus.push(0);
-    var step = Math.floor(n / numsamples)
-    for (var i = 0; i < n; i += step )
-    {
-        var val = math.floor(nbins * (data[i] - min) / (max - min));
-        if (!isNaN(val) & val >= 0 & val < nbins & (!ignoreZero | data[i] != 0))
-        {
+    for (var i = 0; i < nbins; i++) histogram.accus.push(0);
+    var step = Math.floor(n / numsamples);
+    for (var i = 0; i < n; i += step) {
+        var val = math.floor((nbins * (data[i] - min)) / (max - min));
+        if (!isNaN(val) & (val >= 0) & (val < nbins) & (!ignoreZero | (data[i] != 0))) {
             histogram.accus[val]++;
             cnt++;
         }
     }
-    if (nonormalization)
-    {
-
-    }
-    else
-        for (var i = 0; i < nbins; i++)
-        {
-            histogram.accus[i] = 100 * histogram.accus[i] / (cnt + EPSILON);
+    if (nonormalization) {
+    } else
+        for (var i = 0; i < nbins; i++) {
+            histogram.accus[i] = (100 * histogram.accus[i]) / (cnt + EPSILON);
         }
 
     var maxfreq = 0;
-    for (var k = 0; k < histogram.accus.length;k++)
-    {
-        if (histogram.accus[k] > maxfreq)
-            maxfreq = histogram.accus[k];
+    for (var k = 0; k < histogram.accus.length; k++) {
+        if (histogram.accus[k] > maxfreq) maxfreq = histogram.accus[k];
     }
     histogram.accus.maxfreq = maxfreq;
-
 
     return histogram;
 }
 
-
-function getMinMax(data, n, numsamples)
-{
+function getMinMax(data, n, numsamples) {
     var max = data[0] + Number.EPSILON;
     var min = data[0];
     var isMask = true;
-    for (var i = 0; i < n; i += Math.round(n / numsamples) * 2 + 1)
-    {
-        if (!isNaN(data[i]) & (isFinite(data[i])))
-        {
-            if (data[i] > max | isNaN(max))
-                max = data[i];
-            if (data[i] < min | isNaN(min))
-                min = data[i];
+    for (var i = 0; i < n; i += Math.round(n / numsamples) * 2 + 1) {
+        if (!isNaN(data[i]) & isFinite(data[i])) {
+            if ((data[i] > max) | isNaN(max)) max = data[i];
+            if ((data[i] < min) | isNaN(min)) min = data[i];
         }
-        ;
-        if (data[i] != 0 & data[i] != 1)
-            isMask = false;
+        if ((data[i] != 0) & (data[i] != 1)) isMask = false;
         // treat isMask as special case later
     }
-
 
     return {
         max: max,
         min: min,
-        isMask: isMask
-    }
+        isMask: isMask,
+    };
 }
 
-
-
-
-function KSetContentEditable($element, callback,defaultname,ondblclick,bluronenter)
-{
+function KSetContentEditable($element, callback, defaultname, ondblclick, bluronenter) {
     if (ondblclick)
-        $element.on("dblclick",function(ev)
-        {
+        $element.on("dblclick", function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            $element.attr('contenteditable', 'true')    
+            $element.attr("contenteditable", "true");
             $element.focus();
         });
-    else    
-        $element.attr('contenteditable', 'true')
-    $element.on('blur', function(ev) {
-        callback($element,ev);
-        var tmp = document.createElement("input");
-         document.body.appendChild(tmp);
-         tmp.focus();
-         document.body.removeChild(tmp);
-         if (ondblclick)
-            $element.attr('contenteditable', 'false')
-    })
-    .on('keydown', function(ev) 
-        {
-            if (ev.keyCode == 13) { return false;            } 
-    })
-    .on('keyup', function(ev) 
-    {
-        if((ev.keyCode == 13) && bluronenter)
-        {
-            $(this).trigger('blur'); 
-            return false;
-        }
-//	    if($element.html().replace(/\s*[<br\s*/>]/g, '') == "")  // not sure 
-	    if($element.html().replace(/<br[\/]*>/g, '') == "")
-            $element.html(defaultname);
-        callback($element,ev);
-    });
-
-
+    else $element.attr("contenteditable", "true");
+    $element
+        .on("blur", function (ev) {
+            callback($element, ev);
+            var tmp = document.createElement("input");
+            document.body.appendChild(tmp);
+            tmp.focus();
+            document.body.removeChild(tmp);
+            if (ondblclick) $element.attr("contenteditable", "false");
+        })
+        .on("keydown", function (ev) {
+            if (ev.keyCode == 13) {
+                return false;
+            }
+        })
+        .on("keyup", function (ev) {
+            if (ev.keyCode == 13 && bluronenter) {
+                $(this).trigger("blur");
+                return false;
+            }
+            //	    if($element.html().replace(/\s*[<br\s*/>]/g, '') == "")  // not sure
+            if ($element.html().replace(/<br[\/]*>/g, "") == "") $element.html(defaultname);
+            callback($element, ev);
+        });
 }
 
 /** Format a number into string. Number of digits is adapted to number range
  * @param {number} x - the number
  * @function */
-function niceFormatNumber(x)
-{
-    var absx = math.abs(x)
-    if (absx > 100)
-        return x.toFixed(0);
-    else if (absx > 1)
-        return x.toFixed(1);
-    else
-    {
+function niceFormatNumber(x) {
+    var absx = math.abs(x);
+    if (absx > 100) return x.toFixed(0);
+    else if (absx > 1) return x.toFixed(1);
+    else {
         var ndig = 2 + Math.round(-Math.log(absx) / Math.log(10));
-        if (!(ndig >= 0 && ndig < 20))
-            return x;
-        else
-            return x.toFixed(2 + Math.round(-Math.log(absx) / Math.log(10)));
+        if (!(ndig >= 0 && ndig < 20)) return x;
+        else return x.toFixed(2 + Math.round(-Math.log(absx) / Math.log(10)));
     }
-
 }
-
 
 /** Format a numeric filesize nicely
  * @param {number} sz - the number
  * @function */
-function toFileSize(sz)
-{
-    if (sz == undefined)
-        return "NA";
-    if (sz > 1024 * 1024 * 1024)
-        return (sz / 1024 / 1024 / 1024).toFixed(1) + "G";
-    else if (sz > 1024 * 1024)
-        return (sz / 1024 / 1024).toFixed(1) + "M";
-    else if (sz > 1024)
-        return (sz / 1024).toFixed(1) + "K";
-    else
-        return sz + "B";
+function toFileSize(sz) {
+    if (sz == undefined) return "NA";
+    if (sz > 1024 * 1024 * 1024) return (sz / 1024 / 1024 / 1024).toFixed(1) + "G";
+    else if (sz > 1024 * 1024) return (sz / 1024 / 1024).toFixed(1) + "M";
+    else if (sz > 1024) return (sz / 1024).toFixed(1) + "K";
+    else return sz + "B";
 }
-
-
-
-
 
 /** The progress spinner
  * @param {div} $spinner - the div where the spinner lives
  * @function */
-function theSpinner($spinner)
-{
+function theSpinner($spinner) {
     var $abort = $("<div class='KSpinner_abortloading'> <i class='fa fa-close'> </i> </div>");
     $spinner.append($abort);
     var abortfun = undefined;
 
-
-    var progressfun = function(perc, aborter)
-    {
-        if (aborter)
-        {
-            progressfun.abort_loader = aborter
-            abortfun = aborter
+    var progressfun = function (perc, aborter) {
+        if (aborter) {
+            progressfun.abort_loader = aborter;
+            abortfun = aborter;
             $abort.show();
-        }
-        else
-        {
+        } else {
             progressfun.abort_loader = undefined;
             abortfun = undefined;
             $abort.hide();
         }
 
-
-        if (perc == undefined)
-        {
+        if (perc == undefined) {
             $spinner.css("display", "none");
             abortfun = undefined;
             return;
@@ -5663,13 +4539,13 @@ function theSpinner($spinner)
 
         var txt;
         if ($.isNumeric(perc))
-            txt = "<div class='spinnerbar'> <div class='innerbar' style='width:" + math.round(perc * 100) + "%'> </div> </div> ";
-        else
-            txt = perc;
-        if ($("#KLoadingFrame").css("display") != "block")
-        {
-            if (perc == undefined)
-            {
+            txt =
+                "<div class='spinnerbar'> <div class='innerbar' style='width:" +
+                math.round(perc * 100) +
+                "%'> </div> </div> ";
+        else txt = perc;
+        if ($("#KLoadingFrame").css("display") != "block") {
+            if (perc == undefined) {
                 that.$spinner.css("display", "none");
                 return;
             }
@@ -5677,42 +4553,34 @@ function theSpinner($spinner)
             $spinner.css("top", "60%");
             $spinner.css("left", "50%");
             $spinner.children()[1].innerHTML = txt;
-        }
-        else
-        {
-            //$("#KLoadingFrameText").text( txt );  	
-            $("#KLoadingFrameTypeString").text("Loading Image Resources")
+        } else {
+            //$("#KLoadingFrameText").text( txt );
+            $("#KLoadingFrameTypeString").text("Loading Image Resources");
             $("#KLoadingFrameText")[0].innerHTML = txt;
         }
+    };
 
-    }
-
-
-    $abort.click(function()
-    {
-        if (abortfun != undefined)
-        {
+    $abort.click(function () {
+        if (abortfun != undefined) {
             var theaborter = abortfun;
             progressfun("aborting");
-            setTimeout(function() {
+            setTimeout(function () {
                 theaborter();
                 progressfun();
             }, 0);
         }
-
     });
 
     return progressfun;
-
 }
 
 function dataURItoBlob(dataURI) {
     // convert base64 to raw binary data held in a string
     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    var byteString = atob(dataURI.split(',')[1]);
+    var byteString = atob(dataURI.split(",")[1]);
 
     // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    var mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
 
     // write the bytes of the string to an ArrayBuffer
     var ab = new ArrayBuffer(byteString.length);
@@ -5722,8 +4590,8 @@ function dataURItoBlob(dataURI) {
     }
 
     // write the ArrayBuffer to a blob, and you're done
-    var blob = new Blob([ab],{
-        type: mimeString
+    var blob = new Blob([ab], {
+        type: mimeString,
     });
     return blob;
 
@@ -5733,19 +4601,12 @@ function dataURItoBlob(dataURI) {
     // return bb.getBlob(mimeString);
 }
 
-
-
 /** print nice matrix representations for console log */
-function print_matrix(m)
-{
+function print_matrix(m) {
     m = m._data || m;
-    if (Array.isArray(m))
-    {
-        if (!Array.isArray(m[0]))
-            m = [m];
-    }
-    else
-    {
+    if (Array.isArray(m)) {
+        if (!Array.isArray(m[0])) m = [m];
+    } else {
         m = [[m]];
     }
 
@@ -5753,20 +4614,17 @@ function print_matrix(m)
 
     var rows = m.length;
     var cols = m[0].length;
-    for (var k = 0; k < rows; k++)
-    {
-        for (var r = 0; r < cols; r++)
-        {
-            var x = ("             " + Math.round(m[k][r] * 100) / 100);
+    for (var k = 0; k < rows; k++) {
+        for (var r = 0; r < cols; r++) {
+            var x = "             " + Math.round(m[k][r] * 100) / 100;
             x = x.substr(x.length - 10);
-            s += (" " + x);
+            s += " " + x;
         }
         //if( k < rows-1)
         s += "\n";
     }
     return s;
 }
-
 
 function randperm(maxValue) {
     // first generate number sequence
@@ -5775,7 +4633,7 @@ function randperm(maxValue) {
         permArray[i] = i;
     }
     // draw out of the number sequence
-    for (var i = (maxValue - 1); i >= 0; --i) {
+    for (var i = maxValue - 1; i >= 0; --i) {
         var randPos = Math.floor(i * Math.random());
         var tmpStore = permArray[i];
         permArray[i] = permArray[randPos];
@@ -5790,52 +4648,50 @@ function randperm(maxValue) {
  * @param {callback} progress - called during upload
  * @param {callback} callback - called after upload
  */
-function uploadUnregisteredBinary(fobj, finfo, progress, callback,zipped, params)
-{
+function uploadUnregisteredBinary(fobj, finfo, progress, callback, zipped, params) {
     if (params == undefined) params = {};
 
+    uploadBinary(
+        fobj,
+        finfo,
+        function (id, response) {
+            var newid = response.fileID;
+            var roi = KViewer.dataManager.getFile(id);
 
-    uploadBinary(fobj, finfo,
-    function(id, response)
-    {
-        var newid = response.fileID;
-        var roi = KViewer.dataManager.getFile(id);
+            if (roi != undefined) {
+                var nametoshow = roi.filename;
+                if (roi.fileinfo)
+                    nametoshow =
+                        roi.fileinfo.patients_id +
+                        roi.fileinfo.studies_id +
+                        " " +
+                        roi.fileinfo.SubFolder +
+                        "/" +
+                        roi.fileinfo.Filename;
 
+                roi.modified = false;
+                if (newid != id) {
+                    roi.fileID = newid;
+                    roi.fileinfo = $.extend(roi.fileinfo, finfo);
+                    KViewer.dataManager.setFile(newid, roi);
+                    if (!params.dontremoveoldinstance) KViewer.dataManager.delFile(id, true);
+                    callback(newid, id);
 
-        if (roi != undefined)
-        {
-            var nametoshow = roi.filename
-            if (roi.fileinfo)
-                nametoshow = roi.fileinfo.patients_id + roi.fileinfo.studies_id + " " + roi.fileinfo.SubFolder + "/" + roi.fileinfo.Filename;
-
-            roi.modified = false;
-            if (newid != id)
-            {
-                roi.fileID = newid;
-                roi.fileinfo = $.extend(roi.fileinfo, finfo);
-                KViewer.dataManager.setFile(newid, roi);
-                if (!params.dontremoveoldinstance)
-                    KViewer.dataManager.delFile(id,true);
-                callback(newid, id);
-
-                patientTableMirror.mirrorState();
+                    patientTableMirror.mirrorState();
+                } else callback(id, id);
+                alertify.success("Successfully saved " + nametoshow);
+            } else {
+                alertify.success("successfully saved " + fobj.filename);
             }
-            else
-                callback(id,id)
-            alertify.success('Successfully saved ' + nametoshow);
-        }
-        else  
-        {      
-            alertify.success('successfully saved ' + fobj.filename);
-        }
-        KViewer.cacheManager.update();
-
-    }, progress, zipped, "usenativePID");
+            KViewer.cacheManager.update();
+        },
+        progress,
+        zipped,
+        "usenativePID"
+    );
 }
 
-
-function attachMouseSlider($target, callbacks, options)
-{
+function attachMouseSlider($target, callbacks, options) {
     // a generalized handler for mouse down and move, calculating the relative dx and dy
     /*
         callbacks:
@@ -5847,14 +4703,14 @@ function attachMouseSlider($target, callbacks, options)
             options:
                 showMinMaxRange:  whow the max range
     */
-    
+
     // this will be overwritten when mousedown returns a relative start value
     var showMinMaxRange = false;
 
     var $slider;
     var baseheight = 40;
     var basemargin = 10;
-    
+
     // this defines the reference range
     var refrange = 200;
 
@@ -5862,545 +4718,427 @@ function attachMouseSlider($target, callbacks, options)
     var allowSpeedChange = false;
 
     $target.on("pointerdown", mousedown);
-    function mousedown(ev)
-    {
+    function mousedown(ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        
-        var starDiffX = -ev.clientX; 
+
+        var starDiffX = -ev.clientX;
         var starDiffY = -ev.clientY;
 
         var lastX = starDiffX;
         var lastY = starDiffY;
 
-        if(callbacks.mousedown)
-        {
-            var mousedownvar =  callbacks.mousedown(ev);
-        }
-        else
-        {
+        if (callbacks.mousedown) {
+            var mousedownvar = callbacks.mousedown(ev);
+        } else {
             var mousedownvar = undefined;
         }
 
-        
-        if(1) // always who the slider bar
-        {
-           var $indicator = $("<div class='KMouseSliderIndicator'></div>");
-           
-           var $upper = $("<div class='KMouseSliderIndicator_bg' style='bottom:0px'></div>").appendTo($indicator);
-           var $lower = $("<div class='KMouseSliderIndicator_bg' style='top:0px'></div>").appendTo($indicator);
+        if (1) {
+            // always who the slider bar
+            var $indicator = $("<div class='KMouseSliderIndicator'></div>");
 
-           var $plus   = $("<i style='top:2px;' class='fa fa-plus'>").appendTo($upper);
-           var $minus = $("<i style='bottom:2px;' class='fa fa-minus'>").appendTo($lower);
+            var $upper = $("<div class='KMouseSliderIndicator_bg' style='bottom:0px'></div>").appendTo($indicator);
+            var $lower = $("<div class='KMouseSliderIndicator_bg' style='top:0px'></div>").appendTo($indicator);
 
-           //var $center = $("<div class='KMouseSliderIndicator_center'></div>").appendTo($indicator);
-           var $ball = $("<div class='KMouseSliderIndicator_ball'></div>").appendTo($indicator);
-           var $currentVal = $("<div class='KMouseSliderIndicator_currentval'></div>").appendTo( $ball );
+            var $plus = $("<i style='top:2px;' class='fa fa-plus'>").appendTo($upper);
+            var $minus = $("<i style='bottom:2px;' class='fa fa-minus'>").appendTo($lower);
 
-           var pp = getPixelPosition($target);
-           var center = [ pp[0] + pp[2]/2, pp[1] + pp[3]/2 ];
+            //var $center = $("<div class='KMouseSliderIndicator_center'></div>").appendTo($indicator);
+            var $ball = $("<div class='KMouseSliderIndicator_ball'></div>").appendTo($indicator);
+            var $currentVal = $("<div class='KMouseSliderIndicator_currentval'></div>").appendTo($ball);
 
-           setPixelPosition($indicator, [center[0] + 2 , center[1] - 2, 8, 8]);
-           
+            var pp = getPixelPosition($target);
+            var center = [pp[0] + pp[2] / 2, pp[1] + pp[3] / 2];
 
-           var ww = getPixelPosition($(document.body));
-           if(ww[2] - center[0] > 50)
-               $currentVal.css('left', '150%'); 
-            else
-               $currentVal.css('right','150%'); 
+            setPixelPosition($indicator, [center[0] + 2, center[1] - 2, 8, 8]);
+
+            var ww = getPixelPosition($(document.body));
+            if (ww[2] - center[0] > 50) $currentVal.css("left", "150%");
+            else $currentVal.css("right", "150%");
 
             // initialise
-            if( mousedownvar != undefined && mousedownvar.startval !=undefined )
-                $currentVal.text( mousedownvar.startval.toFixed(0) )
+            if (mousedownvar != undefined && mousedownvar.startval != undefined)
+                $currentVal.text(mousedownvar.startval.toFixed(0));
 
             // right click: slide faster
-            
-            setReferenceRange( ev.button + 1);
 
-            if(options && options.hideCurrentval)
-                $currentVal.hide();
-                
-            $indicator.appendTo( $(document.body ) );
+            setReferenceRange(ev.button + 1);
+
+            if (options && options.hideCurrentval) $currentVal.hide();
+
+            $indicator.appendTo($(document.body));
         }
 
-        function setReferenceRange(speed_new)
-        {
+        function setReferenceRange(speed_new) {
             speed = speed_new;
             baseheight = 40 / speed + 10;
-            refrange   = 200 / speed
-            if( mousedownvar.startval_percent != undefined )
-            {
-                $upper.height( refrange * (1-mousedownvar.startval_percent)    + 10); 
-                $lower.height( refrange * (mousedownvar.startval_percent)+ 10);
+            refrange = 200 / speed;
+            if (mousedownvar.startval_percent != undefined) {
+                $upper.height(refrange * (1 - mousedownvar.startval_percent) + 10);
+                $lower.height(refrange * mousedownvar.startval_percent + 10);
                 showMinMaxRange = true;
-            }
-            else
-            {
-               $upper.height(baseheight);
-               $lower.height(baseheight);
+            } else {
+                $upper.height(baseheight);
+                $lower.height(baseheight);
             }
         }
 
-
         $(document.body).on("pointermove", mousemove);
-        function mousemove(ev)
-        {
+        function mousemove(ev) {
             var dx = starDiffX + ev.clientX;
             var dy = starDiffY + ev.clientY;
 
             var wasinrange = true;
-            
+
             //  allow to change speed
-            if(allowSpeedChange)// math.abs(dy) < 10)
-            {
+            if (allowSpeedChange) {
+                // math.abs(dy) < 10)
                 var scale = 20;
                 var step = 15;
                 // allow step wise
-                var temp = 1 /math.exp( math.round(dx/step)*step/scale );
+                var temp = 1 / math.exp((math.round(dx / step) * step) / scale);
 
-                if(temp > .1 & temp < 10)
-                    setReferenceRange( temp );
-                    
+                if ((temp > 0.1) & (temp < 10)) setReferenceRange(temp);
             }
 
-            if(callbacks.mousemove)
-            {
+            if (callbacks.mousemove) {
                 // give also increment to last move motion
-                var lastdx = speed*(lastX + ev.clientX); lastX = -ev.clientX;
-                var lastdy = speed*(lastY + ev.clientY); lastY = -ev.clientY;
+                var lastdx = speed * (lastX + ev.clientX);
+                lastX = -ev.clientX;
+                var lastdy = speed * (lastY + ev.clientY);
+                lastY = -ev.clientY;
 
-                var ret = callbacks.mousemove(ev, dx/refrange, dy/refrange, mousedownvar, lastdx, lastdy);
-                if(ret != undefined && ret.wasinrange !== undefined && ret.value !=undefined )
-                {
+                var ret = callbacks.mousemove(ev, dx / refrange, dy / refrange, mousedownvar, lastdx, lastdy);
+                if (ret != undefined && ret.wasinrange !== undefined && ret.value != undefined) {
                     wasinrange = ret.wasinrange;
-                    if(wasinrange)
-                        $currentVal.text( ret.value.toFixed(0) )
+                    if (wasinrange) $currentVal.text(ret.value.toFixed(0));
                 }
-
             }
-            
-            if(wasinrange)
-            {
-                if(!showMinMaxRange)
-                {
-                    if(dy*dy > baseheight*baseheight - basemargin*basemargin)
-                    {
-                        if(dy < baseheight -basemargin )
-                        {
+
+            if (wasinrange) {
+                if (!showMinMaxRange) {
+                    if (dy * dy > baseheight * baseheight - basemargin * basemargin) {
+                        if (dy < baseheight - basemargin) {
                             $upper.height(-dy + basemargin);
-                        }
-                        else if(dy > baseheight -basemargin)
-                        {
-                            $lower.height(+dy +basemargin)
+                        } else if (dy > baseheight - basemargin) {
+                            $lower.height(+dy + basemargin);
                         }
                     }
                 }
-                $ball.css('top', dy + 'px');
+                $ball.css("top", dy + "px");
             }
         }
 
-        $(document.body).on('pointerup mouseleave', function(ev)
-        {
+        $(document.body).on("pointerup mouseleave", function (ev) {
             $indicator.remove();
             $currentVal.remove();
-            $(document.body).off('pointermove pointerup mouseleave');
-            if (callbacks.mouseup)
-                callbacks.mouseup(ev);
-            return false
+            $(document.body).off("pointermove pointerup mouseleave");
+            if (callbacks.mouseup) callbacks.mouseup(ev);
+            return false;
         });
-
-
     }
-    return $target
+    return $target;
 }
 
-
 // slider for quick adjustment of input fields (similar to the arrows but faster)
-function KMouseSlider($targetinput, options_in)
-{
+function KMouseSlider($targetinput, options_in) {
+    $targetinput.css("position", "relative");
 
-    $targetinput.css('position', 'relative'); 
-    
-    var options = 
-    {
+    var options = {
         incrementPerPixel: 1,
-        logScaling:0,
-        min:0,
-        max:Infinity,
-        direction: 'ud',
-        updateonmove:1,
+        logScaling: 0,
+        min: 0,
+        max: Infinity,
+        direction: "ud",
+        updateonmove: 1,
         updateonrelease: 0,
-        hideCurrentval:1,
-        callback: undefined
-    }
-    $.extend(true, options, options_in)
+        hideCurrentval: 1,
+        callback: undefined,
+    };
+    $.extend(true, options, options_in);
 
     var $slider = $("<div class='KMouseSliderBtn'><i class='fa fa-unsorted'></i></div>");
-    
-    attachMouseSlider($slider, {
-        mousedown: function(ev, dx, dy, mousedownvar)
-        {
-            //if(options.updateonstart) not implemented, since it would only make sense to pass a special function...
-            var $float_targetinput_val = parseFloat($targetinput.val());
-            
-            $targetinput.parent().find('input').css('pointer-events','none') // to avoid scribble interaction on ipad
-            
-            if (isNaN($float_targetinput_val))
-            {
-                $float_targetinput_val = 0;
-            }
-            return {startval: $float_targetinput_val };
-        },
-        mousemove: function(ev, dx, dy, mousedownvar)
-        {
-           var newval = (mousedownvar.startval + options.incrementPerPixel * -dy *200);
-           if(options.logScaling > 0 && newval < 1 &&  newval > -1) // allow float values between 0 and 1
-                newval = math.round(newval*options.logScaling)/options.logScaling;
-           else
-                newval = math.round(newval)
-                
-           wasinrange = false;
-           if (newval < options.min)
-            newval = options.min;
-           if (newval > options.max)
-            newval = options.max;
-           if(newval >= options.min && newval <= options.max)
-           {
-                $targetinput.val( newval  );
-                if(options.updateonmove)
-                    $targetinput.trigger("change");
-                wasinrange = true;
-           }
-           return {wasinrange:wasinrange, value: newval }
-        },
-        mouseup: function()
-        {
-            $targetinput.parent().find('input').css('pointer-events','all')
-            
-            if(options.updateonrelease)
-                $targetinput.trigger("change");
-        }
-    }
-    ,
-    {
-        hideCurrentval:options.hideCurrentval
-    }
-    )
 
+    attachMouseSlider(
+        $slider,
+        {
+            mousedown: function (ev, dx, dy, mousedownvar) {
+                //if(options.updateonstart) not implemented, since it would only make sense to pass a special function...
+                var $float_targetinput_val = parseFloat($targetinput.val());
+
+                $targetinput.parent().find("input").css("pointer-events", "none"); // to avoid scribble interaction on ipad
+
+                if (isNaN($float_targetinput_val)) {
+                    $float_targetinput_val = 0;
+                }
+                return { startval: $float_targetinput_val };
+            },
+            mousemove: function (ev, dx, dy, mousedownvar) {
+                var newval = mousedownvar.startval + options.incrementPerPixel * -dy * 200;
+                if (options.logScaling > 0 && newval < 1 && newval > -1)
+                    // allow float values between 0 and 1
+                    newval = math.round(newval * options.logScaling) / options.logScaling;
+                else newval = math.round(newval);
+
+                wasinrange = false;
+                if (newval < options.min) newval = options.min;
+                if (newval > options.max) newval = options.max;
+                if (newval >= options.min && newval <= options.max) {
+                    $targetinput.val(newval);
+                    if (options.updateonmove) $targetinput.trigger("change");
+                    wasinrange = true;
+                }
+                return { wasinrange: wasinrange, value: newval };
+            },
+            mouseup: function () {
+                $targetinput.parent().find("input").css("pointer-events", "all");
+
+                if (options.updateonrelease) $targetinput.trigger("change");
+            },
+        },
+        {
+            hideCurrentval: options.hideCurrentval,
+        }
+    );
 
     $slider.insertAfter($targetinput);
 
     return $slider;
-    
 }
 
+function movableWindowMousedownFn(ev, $container, callbackAfterMove, ignoreClass) {
+    if (!$container.hasClass("movableWindows")) $container.addClass("movableWindows");
 
-function movableWindowMousedownFn(ev, $container, callbackAfterMove, ignoreClass)
-{
-    if (!$container.hasClass("movableWindows"))
-        $container.addClass("movableWindows");
-
-    if ($(ev.originalEvent.target).hasClass(ignoreClass))
-        return false;
+    if ($(ev.originalEvent.target).hasClass(ignoreClass)) return false;
 
     var starDiffX = -ev.clientX + $container.offset().left;
-    var starDiffY = -ev.clientY + $container.offset().top
-    $(document.body).on('pointermove',function(ev)
-    {
+    var starDiffY = -ev.clientY + $container.offset().top;
+    $(document.body).on("pointermove", function (ev) {
         var dx = starDiffX + ev.clientX;
         var dy = starDiffY + ev.clientY;
-        if(dy < 32) // min top distance
-            dy = 32; 
+        if (dy < 32)
+            // min top distance
+            dy = 32;
         $container.offset({
             top: dy,
-            left: dx
+            left: dx,
         });
-
     });
-    $(document.body).on('pointerup mouseleave', function(ev)
-    {
+    $(document.body).on("pointerup mouseleave", function (ev) {
         //$(this).off('mousemove'); // "this" is the body ...? so why?
-        $(document.body).off('pointermove pointerup mouseleave');
+        $(document.body).off("pointermove pointerup mouseleave");
         // must remove the mouseup handler again!!
-        if (callbackAfterMove != undefined)
-            callbackAfterMove();
-        return false
-
+        if (callbackAfterMove != undefined) callbackAfterMove();
+        return false;
     });
 
     bringToFront($container);
 }
 
-function maximizerButton($menu, $target)
-{
-   var $max = $("<li  style='float:right'><a> <i class='fa fa-window-restore' ></i></a></li>").appendTooltip("maximize")
-   .on("click", function(ev) 
-   {
-       if($max.oldsize == undefined)
-       {
-           $max.maxstate = true;
-           $max.oldsize = getPixelPosition($target);
-           maximizeWindow($target);
-       }
-       else
-       {
-           setPixelPosition($target, $max.oldsize, 1);
-           delete $max.oldsize;
-       }
-   });
-   $max.appendTo($menu);
+function maximizerButton($menu, $target) {
+    var $max = $("<li  style='float:right'><a> <i class='fa fa-window-restore' ></i></a></li>")
+        .appendTooltip("maximize")
+        .on("click", function (ev) {
+            if ($max.oldsize == undefined) {
+                $max.maxstate = true;
+                $max.oldsize = getPixelPosition($target);
+                maximizeWindow($target);
+            } else {
+                setPixelPosition($target, $max.oldsize, 1);
+                delete $max.oldsize;
+            }
+        });
+    $max.appendTo($menu);
 }
 
-function maximizeWindow($target, animate)
-{
-   if(animate== undefined)
-        animate = 1;
-        
-   var topmargin = 38;
-   var w = $body.width();
-   var h = $body.height();
-   setPixelPosition($target, [ 0, topmargin, w-2, h-topmargin-5 ], animate);
+function maximizeWindow($target, animate) {
+    if (animate == undefined) animate = 1;
+
+    var topmargin = 38;
+    var w = $body.width();
+    var h = $body.height();
+    setPixelPosition($target, [0, topmargin, w - 2, h - topmargin - 5], animate);
 }
 
+function resizeSplitter($attachTo, $resizeTarget) {
+    if ($resizeTarget == undefined) $resizeTarget = $attachTo;
+    var $leftresizer = $("<div class='resizer_vertical'><div><div></div></div></div>")
+        .appendTo($attachTo)
+        .mousedown(resizeSplitterInternal);
+    function resizeSplitterInternal(ev) {
+        ev.preventDefault();
+        var x = ev.clientX;
 
-function resizeSplitter($attachTo, $resizeTarget)
-{
-    if($resizeTarget==undefined)
-        $resizeTarget = $attachTo;
-    var $leftresizer = $("<div class='resizer_vertical'><div><div></div></div></div>").appendTo($attachTo).mousedown(resizeSplitterInternal);
-	function resizeSplitterInternal(ev)
-	{
-		ev.preventDefault();
-    	var x = ev.clientX;
-
-    	var $target  = $resizeTarget;
-		var w = $target.width();
+        var $target = $resizeTarget;
+        var w = $target.width();
         var h = $target.height();
-	    $body.on("mouseup mouseleave",   mymouseup);
-  		$body.on("mousemove", moveUnlagger(mymousemove)) ;
-		function mymousemove(ev)
-		{
-			   var nx =  ev.clientX;
-			   var neww = w-(x - nx)
-			   if (neww > 100)
-			   	$target.width(w- (x - nx));
-		}
+        $body.on("mouseup mouseleave", mymouseup);
+        $body.on("mousemove", moveUnlagger(mymousemove));
+        function mymousemove(ev) {
+            var nx = ev.clientX;
+            var neww = w - (x - nx);
+            if (neww > 100) $target.width(w - (x - nx));
+        }
 
-		function mymouseup(ev)
-		{
-			$body.off("mousemove mouseup mouseleave");
-			ev.preventDefault();
-		}
-	}
-	return $leftresizer;
+        function mymouseup(ev) {
+            $body.off("mousemove mouseup mouseleave");
+            ev.preventDefault();
+        }
+    }
+    return $leftresizer;
 }
-
-
-
-
 
 // helpers, similar to matlab conventions
-function getPixelPosition($target)
-{
+function getPixelPosition($target) {
     var offs = $target.offset();
-    var sizes = [ offs.left, offs.top,$target.width(), $target.height(),];
+    var sizes = [offs.left, offs.top, $target.width(), $target.height()];
     return sizes;
-
 }
 
-function setPixelPosition($target, sizes, animate)
-{
-    if(animate)
-        $target.animate({'left': sizes[0], 'top': sizes[1], width: sizes[2], height:  sizes[3] } , 180 );
-    else
-        $target.css({'left': sizes[0], 'top': sizes[1], width: sizes[2], height:  sizes[3] } );
+function setPixelPosition($target, sizes, animate) {
+    if (animate) $target.animate({ left: sizes[0], top: sizes[1], width: sizes[2], height: sizes[3] }, 180);
+    else $target.css({ left: sizes[0], top: sizes[1], width: sizes[2], height: sizes[3] });
 }
 
-function isMouseEventOverDiv(e, $div)
-{
-    var pp = getPixelPosition( $div);
-    return ( e.clientX > pp[0] && e.clientX < pp[0]+pp[2] && e.client> pp[1] && e.client < pp[1]+pp[3]   )
+function isMouseEventOverDiv(e, $div) {
+    var pp = getPixelPosition($div);
+    return e.clientX > pp[0] && e.clientX < pp[0] + pp[2] && e.client > pp[1] && e.client < pp[1] + pp[3];
 }
-
 
 // pops a div out from a certain point or element
-function popShow($div, $popoutTo)
-{
+function popShow($div, $popoutTo) {
     var targetpos = getPixelPosition($popoutTo);
-    $div.attr('savedposition', getPixelPosition($div).join(','));
+    $div.attr("savedposition", getPixelPosition($div).join(","));
     setPixelPosition($div, targetpos, 1);
     $div.fadeOut(250);
 }
 
 // hides a div by moving it into a certain element or point
-function popHide($div, $popoutFrom)
-{
+function popHide($div, $popoutFrom) {
     var frompos = getPixelPosition($popoutFrom);
-    var targetpos = $div.attr('savedposition');
-    if(targetpos!=undefined)
-        targetpos = targetpos.split(',')
-    else    
-        targetpos =  getPixelPosition($div);// [ 400, 400, 400, 400];
-    
+    var targetpos = $div.attr("savedposition");
+    if (targetpos != undefined) targetpos = targetpos.split(",");
+    else targetpos = getPixelPosition($div); // [ 400, 400, 400, 400];
+
     bringToFront($div);
     $div.fadeIn(250);
     setPixelPosition($div, frompos, 0);
     setPixelPosition($div, targetpos, 1);
 }
 
-
 // brings a container to front and reorders the group
-function bringToFront($div, theclass)
-{
-    if (theclass == undefined)
-        theclass = "movableWindows";
+function bringToFront($div, theclass) {
+    if (theclass == undefined) theclass = "movableWindows";
 
     var elems = $("." + theclass);
 
     var zinds = [];
     var index_highest = parseInt(elems.eq(0).css("z-index"), 10);
-    
-    elems.each(function() 
-    {
-        zinds.push([$(this), parseInt($(this).css("z-index"), 10)]);;
+
+    elems.each(function () {
+        zinds.push([$(this), parseInt($(this).css("z-index"), 10)]);
     });
 
-    zinds.sort(function(a, b) {
-        return a[1] - b[1];});
-        
-    var off =0;
+    zinds.sort(function (a, b) {
+        return a[1] - b[1];
+    });
+
+    var off = 0;
     var basez = 10;
-    for(var k=0;k<zinds.length; k++)
-    {
-        if( zinds[k][0].is($div) )
-        {
+    for (var k = 0; k < zinds.length; k++) {
+        if (zinds[k][0].is($div)) {
             var ind = zinds.length;
             off = 1;
+        } else {
+            var ind = k - off;
         }
-        else
-        {
-            var ind = k -off;
-        }
-        zinds[k][0].css('z-index',  (basez + ind).toString());
+        zinds[k][0].css("z-index", (basez + ind).toString());
     }
-    
-
 }
 
+function getHighestZIndexOfSameClass(theclass) {
+    if (theclass != undefined) var elems = $("." + theclass);
+    else var elems = $("div");
 
-
-
-function getHighestZIndexOfSameClass(theclass)
-{
-    if (theclass != undefined)
-        var elems = $("." + theclass);
-    else
-        var elems = $("div");
-
-    var $div
+    var $div;
     var indlist = [];
     var index_highest = parseInt(elems.eq(0).css("z-index"), 10);
-    elems.each(function() 
-    {
+    elems.each(function () {
         var index_current = parseInt($(this).css("z-index"), 10);
         indlist.push(index_current);
-        if (index_current > index_highest && index_current < 100000) // only go up to 1000 or so, loading frame will have max
-        {
+        if (index_current > index_highest && index_current < 100000) {
+            // only go up to 1000 or so, loading frame will have max
             index_highest = index_current;
             $div = $(this);
         }
     });
-    
 
     return {
         div: $div,
-        index: index_highest
+        index: index_highest,
     };
-
 }
 
-
-
-function squeeze(arr)
-{
+function squeeze(arr) {
     var tmp = [];
-    for (var k = 0 ; k < arr.length;k++)
-        if (arr[k] != undefined)
-            tmp.push(arr[k]);
-    arr.splice(0,arr.length);
-    for (var k = 0; k < tmp.length;k++)
-        arr.push(tmp[k]);
+    for (var k = 0; k < arr.length; k++) if (arr[k] != undefined) tmp.push(arr[k]);
+    arr.splice(0, arr.length);
+    for (var k = 0; k < tmp.length; k++) arr.push(tmp[k]);
     return arr;
 }
 
-
-if (typeof jQuery != "undefined")
-{
+if (typeof jQuery != "undefined") {
     // used to make a input/text editable on sinle click
     // the callback is given with "keyup", optionally, a final callback can be passed
-    function makeEditableOnDoubleClick($elem, callback)
-    {
-        $elem.on('blur', function(ev)
-        {
-            this.contentEditable = false;
-            $(this).removeAttr("contentEditable")
-            var val = $(this).text().trim().replace("\n", "");
-            $(this).text(val);
-            if (val == "")
-            {
-                $(this).text("enter_text");
-                $(this).trigger("keyup");
-                $(this).trigger("dblclick");
-            }
-            if(callback)
-                callback();
-        })
-        .on("dblclick", function(e) {
-            this.contentEditable = true;
-            // must click again, otherwise might be deselected (if some click mechanism involved)
-            //$(this).trigger("click"); 
-            $(this).focus().select();
-            document.execCommand('selectAll', false, null );
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-            ;
-        })
-        .on('keydown', function(e){
-            if(e.keyCode == 13)
-            {
-                $(this).trigger("blur");
+    function makeEditableOnDoubleClick($elem, callback) {
+        $elem
+            .on("blur", function (ev) {
+                this.contentEditable = false;
+                $(this).removeAttr("contentEditable");
+                var val = $(this).text().trim().replace("\n", "");
+                $(this).text(val);
+                if (val == "") {
+                    $(this).text("enter_text");
+                    $(this).trigger("keyup");
+                    $(this).trigger("dblclick");
+                }
+                if (callback) callback();
+            })
+            .on("dblclick", function (e) {
+                this.contentEditable = true;
+                // must click again, otherwise might be deselected (if some click mechanism involved)
+                //$(this).trigger("click");
+                $(this).focus().select();
+                document.execCommand("selectAll", false, null);
+                e.preventDefault();
+                e.stopPropagation();
                 return false;
-            }
-        }
-        )
-
+            })
+            .on("keydown", function (e) {
+                if (e.keyCode == 13) {
+                    $(this).trigger("blur");
+                    return false;
+                }
+            });
     }
-
 }
 
-
-
-
-/** converts utf-16 encoded ArrayBuffer to String 
+/** converts utf-16 encoded ArrayBuffer to String
  * @function */
 function ab2str(buf) {
     var chars = new Uint16Array(buf);
     var s = "";
     var l = chars.length;
-    for (var i = 0; i < l; i++)
-    {
-        if (chars[i] == 0)
-            break;
+    for (var i = 0; i < l; i++) {
+        if (chars[i] == 0) break;
         s += String.fromCharCode(chars[i]);
     }
     return s;
     //return String.fromCharCode.apply(null, new Uint16Array(buf));
 }
 
-
-
-/** converts utf8 encoded ArrayBuffer to String 
+/** converts utf8 encoded ArrayBuffer to String
  * @function */
 
 function utf8ab2str(array) {
@@ -6416,65 +5154,50 @@ function utf8ab2str_(array) {
     i = 0;
     while (i < len) {
         c = array[i++];
-        switch (c >> 4)
-        {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-            // 0xxxxxxx
-            out += String.fromCharCode(c);
-            break;
-        case 12:
-        case 13:
-            // 110x xxxx   10xx xxxx
-            char2 = array[i++];
-            out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-            break;
-        case 14:
-            // 1110 xxxx  10xx xxxx  10xx xxxx
-            char2 = array[i++];
-            char3 = array[i++];
-            out += String.fromCharCode(((c & 0x0F) << 12) |
-            ((char2 & 0x3F) << 6) |
-            ((char3 & 0x3F) << 0));
-            tripplecnt++;
-            break;
+        switch (c >> 4) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                // 0xxxxxxx
+                out += String.fromCharCode(c);
+                break;
+            case 12:
+            case 13:
+                // 110x xxxx   10xx xxxx
+                char2 = array[i++];
+                out += String.fromCharCode(((c & 0x1f) << 6) | (char2 & 0x3f));
+                break;
+            case 14:
+                // 1110 xxxx  10xx xxxx  10xx xxxx
+                char2 = array[i++];
+                char3 = array[i++];
+                out += String.fromCharCode(((c & 0x0f) << 12) | ((char2 & 0x3f) << 6) | ((char3 & 0x3f) << 0));
+                tripplecnt++;
+                break;
         }
     }
-    return {out:out,tripplecnt:tripplecnt};
+    return { out: out, tripplecnt: tripplecnt };
 }
-
 
 function robust_ab2str(array) {
-    var {out, tripplecnt} = utf8ab2str_(array)
-    if (tripplecnt > 0) // if there some strange chinese characters assume this is not utf;
-    {
-        console.warn("some strange chracters found, switching from utf-8 encoding to default")
+    var { out, tripplecnt } = utf8ab2str_(array);
+    if (tripplecnt > 0) {
+        // if there some strange chinese characters assume this is not utf;
+        console.warn("some strange chracters found, switching from utf-8 encoding to default");
         return ab2str(array);
-    }
-    else
-        return out;
+    } else return out;
 }
 
+function _i(...args) {
+    for (var k = 0; k < args.length; k++) if (args[k] != undefined) return args[k];
 
-
-
-
-function _i(...args)
-{
-    for (var k = 0; k < args.length;k++)
-        if (args[k] != undefined)
-            return args[k]
-    
     return undefined;
 }
-
-
 
 /** create a  nifti object and adds it the worspace
  * @param {object} nii - a Object containng edges,voxSize,sizes
@@ -6482,248 +5205,216 @@ function _i(...args)
  * @param {string} type - either uint8,float,uint16
  * @param {integer} tdim - size of the fourth dimension
  */
-function createNifti(nii,name,type,tdim,params)
-{
-     nii.pixdim = [1,nii.voxSize[0],nii.voxSize[1],nii.voxSize[2]];
-     var fobj = cloneNifti({content:nii}, name + ".nii", type, tdim,undefined,params);
-     fobj.fileID = name; 
-     KViewer.dataManager.setFile(fobj.fileID,fobj);
-     KViewer.cacheManager.update();     
-     return fobj.content;
- 
+function createNifti(nii, name, type, tdim, params) {
+    nii.pixdim = [1, nii.voxSize[0], nii.voxSize[1], nii.voxSize[2]];
+    var fobj = cloneNifti({ content: nii }, name + ".nii", type, tdim, undefined, params);
+    fobj.fileID = name;
+    KViewer.dataManager.setFile(fobj.fileID, fobj);
+    KViewer.cacheManager.update();
+    return fobj.content;
 }
 
-
-function changeFOVofNifti(fobj,min,max,fac)
-{
-    
-    
+function changeFOVofNifti(fobj, min, max, fac) {
     var nii = fobj.content;
-    var min = kmath.mdiv(nii.edges,math.matrix(min.concat([1])))._data
-    var max = kmath.mdiv(nii.edges,math.matrix(max.concat([1])))._data
-    var vmin = min.map((x,i) => math.floor(math.min(x,max[i])))
-    var vmax = min.map((x,i) => math.ceil(math.max(x,max[i])))
-    var sz = (vmax.map((x,i) => x-vmin[i]));
-    sz[3] = nii.sizes[3]
+    var min = kmath.mdiv(nii.edges, math.matrix(min.concat([1])))._data;
+    var max = kmath.mdiv(nii.edges, math.matrix(max.concat([1])))._data;
+    var vmin = min.map((x, i) => math.floor(math.min(x, max[i])));
+    var vmax = min.map((x, i) => math.ceil(math.max(x, max[i])));
+    var sz = vmax.map((x, i) => x - vmin[i]);
+    sz[3] = nii.sizes[3];
     vmin[3] = 0;
-    var offs = math.multiply(nii.edges,math.matrix(vmin))
-    var edges = math.matrix(nii.edges)
+    var offs = math.multiply(nii.edges, math.matrix(vmin));
+    var edges = math.matrix(nii.edges);
     edges._data[0][3] += offs._data[0];
     edges._data[1][3] += offs._data[1];
     edges._data[2][3] += offs._data[2];
-    var fileObject = cloneNifti({fileinfo:fobj.fileinfo,
-                                 content:{edges:edges,endian:nii.endian,
-                                          sizes:sz,
-                                          voxSize:nii.voxSize} }
-                                     
-                                     ,"dummy",fobj.content.datatype,'sametdim',fac);
-    copyNNdata(fileObject.content,fobj.content,fac,vmin)
+    var fileObject = cloneNifti(
+        { fileinfo: fobj.fileinfo, content: { edges: edges, endian: nii.endian, sizes: sz, voxSize: nii.voxSize } },
+
+        "dummy",
+        fobj.content.datatype,
+        "sametdim",
+        fac
+    );
+    copyNNdata(fileObject.content, fobj.content, fac, vmin);
     fobj.content = fileObject.content;
-    if (fobj.fileinfo && fobj.fileinfo.surfreference)
-         fobj.fileinfo.surfreference.content.nifti = fobj.content;
+    if (fobj.fileinfo && fobj.fileinfo.surfreference) fobj.fileinfo.surfreference.content.nifti = fobj.content;
 
-    signalhandler.send("updateFilelink",{id:fobj.fileID});
-
-    
+    signalhandler.send("updateFilelink", { id: fobj.fileID });
 }
 
-
-
-function copyNNdata(nii,old_nii,fac, offs)
-{
-
-    var w = nii.sizes[0]
-    var h = nii.sizes[1]
-    var d = nii.sizes[2]
-    var T = nii.sizes[3]
-    var ow = old_nii.sizes[0]
-    var oh = old_nii.sizes[1]
-    var od = old_nii.sizes[2]
+function copyNNdata(nii, old_nii, fac, offs) {
+    var w = nii.sizes[0];
+    var h = nii.sizes[1];
+    var d = nii.sizes[2];
+    var T = nii.sizes[3];
     var ow = old_nii.sizes[0];
-    var owh = old_nii.sizes[0]* old_nii.sizes[1];
-    var owhd = old_nii.sizes[0]* old_nii.sizes[1] * old_nii.sizes[2];
-    for (var t = 0; t < T;t++)
-    for (var x = 0; x < w;x++)
-    {
-      var nx = Math.round(fac[0]*x+offs[0]);
-      if (!(nx>=0 & nx < ow))
-          continue      
-      for (var y = 0; y < h;y++)
-      {      
-        var ny = Math.round(fac[1]*y+offs[1]);        
-        if (!(ny>=0 & ny < oh))
-          continue      
-        for (var z = 0; z < d;z++)
-        {
-          var nz = Math.round(fac[2]*z+offs[2]);        
-          if (!(nz>=0 & nz < od))
-            continue      
-          nii.data[x+w*y+w*h*z+w*h*d*t] = 
-                            old_nii.data[nx+ny*ow+nz*owh+owhd*t] 
-        }    
-      }
-    }
+    var oh = old_nii.sizes[1];
+    var od = old_nii.sizes[2];
+    var ow = old_nii.sizes[0];
+    var owh = old_nii.sizes[0] * old_nii.sizes[1];
+    var owhd = old_nii.sizes[0] * old_nii.sizes[1] * old_nii.sizes[2];
+    for (var t = 0; t < T; t++)
+        for (var x = 0; x < w; x++) {
+            var nx = Math.round(fac[0] * x + offs[0]);
+            if (!((nx >= 0) & (nx < ow))) continue;
+            for (var y = 0; y < h; y++) {
+                var ny = Math.round(fac[1] * y + offs[1]);
+                if (!((ny >= 0) & (ny < oh))) continue;
+                for (var z = 0; z < d; z++) {
+                    var nz = Math.round(fac[2] * z + offs[2]);
+                    if (!((nz >= 0) & (nz < od))) continue;
+                    nii.data[x + w * y + w * h * z + w * h * d * t] = old_nii.data[nx + ny * ow + nz * owh + owhd * t];
+                }
+            }
+        }
 }
 
-function resliceNifti(fobj,fac)
-{
-    var fileObject = cloneNifti(fobj,"dummy",fobj.content.datatype,'sametdim',fac);
-    copyNNdata(fileObject.content,fobj.content,fac,[0,0,0])
+function resliceNifti(fobj, fac) {
+    var fileObject = cloneNifti(fobj, "dummy", fobj.content.datatype, "sametdim", fac);
+    copyNNdata(fileObject.content, fobj.content, fac, [0, 0, 0]);
     fobj.content = fileObject.content;
-    if (fobj.fileinfo && fobj.fileinfo.surfreference)
-         fobj.fileinfo.surfreference.content.nifti = fobj.content;
-    signalhandler.send("updateFilelink",{id:fobj.fileID});
+    if (fobj.fileinfo && fobj.fileinfo.surfreference) fobj.fileinfo.surfreference.content.nifti = fobj.content;
+    signalhandler.send("updateFilelink", { id: fobj.fileID });
 }
 
-function reslice(nii,old_nii,affine,threshold)
-{
-
-    var w = nii.sizes[0]
-    var h = nii.sizes[1]
-    var d = nii.sizes[2]
-    var T = nii.sizes[3]
-    var ow = old_nii.sizes[0]
-    var oh = old_nii.sizes[1]
-    var od = old_nii.sizes[2]
+function reslice(nii, old_nii, affine, threshold) {
+    var w = nii.sizes[0];
+    var h = nii.sizes[1];
+    var d = nii.sizes[2];
+    var T = nii.sizes[3];
     var ow = old_nii.sizes[0];
-    var owh = old_nii.sizes[0]* old_nii.sizes[1];
-    var owhd = old_nii.sizes[0]* old_nii.sizes[1] * old_nii.sizes[2];
+    var oh = old_nii.sizes[1];
+    var od = old_nii.sizes[2];
+    var ow = old_nii.sizes[0];
+    var owh = old_nii.sizes[0] * old_nii.sizes[1];
+    var owhd = old_nii.sizes[0] * old_nii.sizes[1] * old_nii.sizes[2];
 
-    if (affine != undefined)
-        var A = math.multiply(math.multiply(kmath.inv(old_nii.edges), affine), nii.edges)._data;
-    else
-        var A = math.multiply(kmath.inv(old_nii.edges), nii.edges)._data;
+    if (affine != undefined) var A = math.multiply(math.multiply(kmath.inv(old_nii.edges), affine), nii.edges)._data;
+    else var A = math.multiply(kmath.inv(old_nii.edges), nii.edges)._data;
 
-    for (var t = 0; t < T;t++)
-    for (var x = 0; x < w;x++)
-    {
-      for (var y = 0; y < h;y++)
-      {      
-        for (var z = 0; z < d;z++)
-        {
-            var c = trilinInterp(old_nii,x,y,z,A,old_nii.widheidep*t)
-            if (threshold != undefined)
-                c = c>threshold;
-            if (c != NaN & c != undefined)
-                 nii.data[x+w*y+w*h*z+w*h*d*t] =  c;
-        }    
-      }
-    }
+    for (var t = 0; t < T; t++)
+        for (var x = 0; x < w; x++) {
+            for (var y = 0; y < h; y++) {
+                for (var z = 0; z < d; z++) {
+                    var c = trilinInterp(old_nii, x, y, z, A, old_nii.widheidep * t);
+                    if (threshold != undefined) c = c > threshold;
+                    if ((c != NaN) & (c != undefined)) nii.data[x + w * y + w * h * z + w * h * d * t] = c;
+                }
+            }
+        }
 }
 
-function resliceNifti_affine(fobj,affine)
-{
-    var fileObject = cloneNifti(fobj,"dummy",fobj.content.datatype,'sametdim');
+function resliceNifti_affine(fobj, affine) {
+    var fileObject = cloneNifti(fobj, "dummy", fobj.content.datatype, "sametdim");
     var dest = fileObject.content;
-    var src  = fobj.content;
-    dest.edges = math.multiply((affine),dest.edges)
-    
-    reslice(fileObject.content,fobj.content,math.eye(4))
+    var src = fobj.content;
+    dest.edges = math.multiply(affine, dest.edges);
+
+    reslice(fileObject.content, fobj.content, math.eye(4));
     fobj.content = fileObject.content;
-    if (fobj.fileinfo && fobj.fileinfo.surfreference)
-         fobj.fileinfo.surfreference.content.nifti = fobj.content;
-    signalhandler.send("updateFilelink",{id:fobj.fileID});
+    if (fobj.fileinfo && fobj.fileinfo.surfreference) fobj.fileinfo.surfreference.content.nifti = fobj.content;
+    signalhandler.send("updateFilelink", { id: fobj.fileID });
 }
-
-
-
-
 
 /** clones a nifti object
- * @param {object} fobj - a fileObject 
+ * @param {object} fobj - a fileObject
  * @param {string} name - the new name
  * @param {string} type - either uint8,float,uint16
  * @param {integer} tdim - size of the fourth dimension
  * @param {float} fac - undersampling factor
  */
-function cloneNifti(fobj, name, type, tdim,fac,params)
-{
+function cloneNifti(fobj, name, type, tdim, fac, params) {
     var fileObject = {};
 
     var nii = fobj.content;
-    var littleEndian = nii.endian == 'little' || true;
+    var littleEndian = nii.endian == "little" || true;
 
-    if (tdim == undefined)
-        tdim = 1;
-    else if (tdim == "sametdim")
-        tdim = nii.sizes[3];
+    if (tdim == undefined) tdim = 1;
+    else if (tdim == "sametdim") tdim = nii.sizes[3];
 
-    if (fac == undefined)
-        fac = [1,1,1];
+    if (fac == undefined) fac = [1, 1, 1];
 
-    if (!Array.isArray(fac))
-        fac = [fac,fac,fac]
-
-
+    if (!Array.isArray(fac)) fac = [fac, fac, fac];
 
     // set the nifti header
-    var niihdr = [92, 1, 0, 0, 117, 105, 110, 116, 49, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 114, 0, 1, 0, 16, 0, 16, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 16, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 111, 110, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 105, 49, 0, 0, 0, 0, 0];
-    var hdrbuffer = (new Uint8Array(niihdr)).buffer;
+    var niihdr = [
+        92, 1, 0, 0, 117, 105, 110, 116, 49, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 114, 0, 1, 0, 16, 0, 16, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        4, 0, 16, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0,
+        0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 111, 110, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 105, 49, 0, 0, 0, 0,
+        0,
+    ];
+    var hdrbuffer = new Uint8Array(niihdr).buffer;
 
-    if (type == undefined)
-        type = 'uint8';
-
+    if (type == undefined) type = "uint8";
 
     var types = {
-        "int8": {
+        int8: {
             type: 256,
-            bitpix: 8
+            bitpix: 8,
         },
-        "uint8": {
+        uint8: {
             type: 2,
-            bitpix: 8
+            bitpix: 8,
         },
-        "float": {
+        float: {
             type: 16,
-            bitpix: 32
+            bitpix: 32,
         },
-        "int16": {
+        int16: {
             type: 4,
-            bitpix: 16
+            bitpix: 16,
         },
-        "uint16": {
+        uint16: {
             type: 512,
-            bitpix: 16
+            bitpix: 16,
         },
-        "int32": {
+        int32: {
             type: 8,
-            bitpix: 32
+            bitpix: 32,
         },
-        "uint32": {
+        uint32: {
             type: 768,
-            bitpix: 32
-        }
-    }
+            bitpix: 32,
+        },
+    };
     var t = types[type];
 
-    var sizes = [math.floor(nii.sizes[0]/fac[0]),math.floor(nii.sizes[1]/fac[1]),math.floor(nii.sizes[2]/fac[2]) ];
-    sizes = sizes.map((x)=>(x==0)?1:x);
+    var sizes = [
+        math.floor(nii.sizes[0] / fac[0]),
+        math.floor(nii.sizes[1] / fac[1]),
+        math.floor(nii.sizes[2] / fac[2]),
+    ];
+    sizes = sizes.map((x) => (x == 0 ? 1 : x));
 
-    var buffer = new Uint8Array(hdrbuffer.byteLength + t.bitpix / 8 * sizes[0] * sizes[1] * sizes[2] * tdim);
+    var buffer = new Uint8Array(hdrbuffer.byteLength + (t.bitpix / 8) * sizes[0] * sizes[1] * sizes[2] * tdim);
     buffer = buffer.buffer;
 
     var view = new DataView(buffer);
 
     // sizes
-    view.setInt32(0, 348, littleEndian)
-    if (tdim > 1)
-        view.setInt16(40, 4, littleEndian)
-    else
-        view.setInt16(40, 3, littleEndian)
-    view.setInt16(42, sizes[0], littleEndian)
-    view.setInt16(44, sizes[1], littleEndian)
-    view.setInt16(46, sizes[2], littleEndian)
-    view.setInt16(48, tdim, littleEndian)
+    view.setInt32(0, 348, littleEndian);
+    if (tdim > 1) view.setInt16(40, 4, littleEndian);
+    else view.setInt16(40, 3, littleEndian);
+    view.setInt16(42, sizes[0], littleEndian);
+    view.setInt16(44, sizes[1], littleEndian);
+    view.setInt16(46, sizes[2], littleEndian);
+    view.setInt16(48, tdim, littleEndian);
 
     // edges
     // spaceDirections are stored column wise (column index first)
     // multiplication in javascript is row-wise defined, therefore transpose at the end
     var edges;
-    if (nii.spaceDirections == undefined)
-        edges = nii.edges
-    else
-    {
-        edges =  math.eye(4);
+    if (nii.spaceDirections == undefined) edges = nii.edges;
+    else {
+        edges = math.eye(4);
         edges._data[0][0] = nii.spaceDirections[0][0];
         edges._data[0][1] = nii.spaceDirections[0][1];
         edges._data[0][2] = nii.spaceDirections[0][2];
@@ -6739,84 +5430,67 @@ function cloneNifti(fobj, name, type, tdim,fac,params)
         edges = math.transpose(edges);
     }
 
-    view.setFloat32(280 + 0 * 4, edges._data[0][0]*fac[0], littleEndian);
-    view.setFloat32(280 + 1 * 4, edges._data[0][1]*fac[1], littleEndian);
-    view.setFloat32(280 + 2 * 4, edges._data[0][2]*fac[2], littleEndian);
+    view.setFloat32(280 + 0 * 4, edges._data[0][0] * fac[0], littleEndian);
+    view.setFloat32(280 + 1 * 4, edges._data[0][1] * fac[1], littleEndian);
+    view.setFloat32(280 + 2 * 4, edges._data[0][2] * fac[2], littleEndian);
     view.setFloat32(280 + 3 * 4, edges._data[0][3], littleEndian);
 
-    view.setFloat32(280 + 4 * 4, edges._data[1][0]*fac[0], littleEndian);
-    view.setFloat32(280 + 5 * 4, edges._data[1][1]*fac[1], littleEndian);
-    view.setFloat32(280 + 6 * 4, edges._data[1][2]*fac[2], littleEndian);
+    view.setFloat32(280 + 4 * 4, edges._data[1][0] * fac[0], littleEndian);
+    view.setFloat32(280 + 5 * 4, edges._data[1][1] * fac[1], littleEndian);
+    view.setFloat32(280 + 6 * 4, edges._data[1][2] * fac[2], littleEndian);
     view.setFloat32(280 + 7 * 4, edges._data[1][3], littleEndian);
 
-    view.setFloat32(280 + 8 * 4, edges._data[2][0]*fac[0], littleEndian);
-    view.setFloat32(280 + 9 * 4, edges._data[2][1]*fac[1], littleEndian);
-    view.setFloat32(280 + 10* 4, edges._data[2][2]*fac[2], littleEndian);
-    view.setFloat32(280 + 11* 4, edges._data[2][3], littleEndian);
+    view.setFloat32(280 + 8 * 4, edges._data[2][0] * fac[0], littleEndian);
+    view.setFloat32(280 + 9 * 4, edges._data[2][1] * fac[1], littleEndian);
+    view.setFloat32(280 + 10 * 4, edges._data[2][2] * fac[2], littleEndian);
+    view.setFloat32(280 + 11 * 4, edges._data[2][3], littleEndian);
 
-    if (nii.pixdim == undefined)
-    {
+    if (nii.pixdim == undefined) {
         nii.pixdim = [1];
         nii.pixdim = nii.pixdim.concat(nii.voxSize);
     }
 
-    for(var i=0; i<3; i++) 
-        nii.pixdim[1+i] *= fac[i];
+    for (var i = 0; i < 3; i++) nii.pixdim[1 + i] *= fac[i];
 
-    for(var i=0; i<nii.pixdim.length; i++) {
-       if (i > 0 &&  i <= 3)
-        view.setFloat32(76+4*i, nii.pixdim[i], littleEndian)
+    for (var i = 0; i < nii.pixdim.length; i++) {
+        if (i > 0 && i <= 3) view.setFloat32(76 + 4 * i, nii.pixdim[i], littleEndian);
     }
 
-
-    view.setInt16(252, 0, littleEndian)
+    view.setInt16(252, 0, littleEndian);
     //qform
-    view.setInt16(254, 1, littleEndian)
+    view.setInt16(254, 1, littleEndian);
     //sform
-
 
     // ====== apply some other important stuff
     // set the magic number to n+1
-    view.setInt32(344, 1848324352, !littleEndian)
+    view.setInt32(344, 1848324352, !littleEndian);
     // set vox offset to 352
-    view.setFloat32(108, 352, littleEndian)
+    view.setFloat32(108, 352, littleEndian);
 
-
-    view.setFloat32(112, 1, littleEndian)
-    view.setFloat32(116, 0, littleEndian)
-
+    view.setFloat32(112, 1, littleEndian);
+    view.setFloat32(116, 0, littleEndian);
 
     view.setInt32(348, 0, littleEndian);
-
-
 
     view.setInt16(70, t.type, littleEndian);
     view.setInt16(72, t.bitpix, littleEndian);
 
-
-    if (params)
-    {
-        if (params.descrip)
-        {
-            var enc = new TextEncoder(); 
-            var buf = enc.encode(params.descrip)
-            for (var k = 0;k < math.max(buf.length,80);k++)
-                view.setUint8(148+k,buf[k],littleEndian)
+    if (params) {
+        if (params.descrip) {
+            var enc = new TextEncoder();
+            var buf = enc.encode(params.descrip);
+            for (var k = 0; k < math.max(buf.length, 80); k++) view.setUint8(148 + k, buf[k], littleEndian);
         }
     }
-
-
 
     fileObject.buffer = buffer;
 
     // inherit fileinfo stuff
-    var subfolder;    
-    if (name && name.split("/").length > 1)
-    {
+    var subfolder;
+    if (name && name.split("/").length > 1) {
         var split = name.split("/");
-        name = split[split.length-1];
-        if (split.length > 1)
-        {
+        name = split[split.length - 1];
+        if (split.length > 1) {
             split.pop();
             subfolder = split.join("/");
         }
@@ -6824,37 +5498,29 @@ function cloneNifti(fobj, name, type, tdim,fac,params)
     fileObject.filename = name;
     fileObject.editable = true;
     fileObject.fileinfo = {};
-    if (fobj.fileinfo)
-    {
+    if (fobj.fileinfo) {
         fileObject.fileinfo.patients_id = fobj.fileinfo.patients_id;
         fileObject.fileinfo.studies_id = fobj.fileinfo.studies_id;
         fileObject.fileinfo.SubFolder = subfolder;
         fileObject.fileinfo.Filename = name;
     }
 
-
-
- 
     // parse nifti
     fileObject.content = prepareMedicalImageData(parse(fileObject.buffer), fileObject);
     fileObject.contentType = "nii";
-
-
-
 
     return fileObject;
 }
 
 /** resizes a Nifti object (space origin and sizes only. Object must have been already created and prepared)
- * @param {object} fobj - a fileObject 
+ * @param {object} fobj - a fileObject
  * @param {array} spaceorigin - the new corner of the edges
  * @param {array} sizes - the new size of the array
  * @param {bool}  keepconten - keep (copy) the old image, or create a  new empty array
  */
-function resizeNifti(fobj, edges, sizes)
-{
+function resizeNifti(fobj, edges, sizes) {
     var nii = fobj.content;
-    var littleEndian = nii.endian == 'little' || true;
+    var littleEndian = nii.endian == "little" || true;
     var buffer = nii.buffer;
     var view = new DataView(buffer);
 
@@ -6873,35 +5539,60 @@ function resizeNifti(fobj, edges, sizes)
     }
     */
 
-    if(  edges != undefined)
-    {
+    if (edges != undefined) {
         nii.edges = edges;
-        nii.spaceOrigin[0] = edges._data[0][3]; 
+        nii.spaceOrigin[0] = edges._data[0][3];
         nii.spaceOrigin[1] = edges._data[1][3];
         nii.spaceOrigin[2] = edges._data[2][3];
-        
+
         nii.spaceDirections = math.transpose(nii.edges)._data;
 
-        var permutationOrder = [findIndexOfGreatest(nii.spaceDirections[0]), findIndexOfGreatest(nii.spaceDirections[1]), findIndexOfGreatest(nii.spaceDirections[2])];
-        nii.arrayReadDirection = [nii.spaceDirections[0][permutationOrder[0]] < 0 ? -1 : 1, nii.spaceDirections[1][permutationOrder[1]] < 0 ? -1 : 1, nii.spaceDirections[2][permutationOrder[2]] < 0 ? -1 : 1, ];
+        var permutationOrder = [
+            findIndexOfGreatest(nii.spaceDirections[0]),
+            findIndexOfGreatest(nii.spaceDirections[1]),
+            findIndexOfGreatest(nii.spaceDirections[2]),
+        ];
+        nii.arrayReadDirection = [
+            nii.spaceDirections[0][permutationOrder[0]] < 0 ? -1 : 1,
+            nii.spaceDirections[1][permutationOrder[1]] < 0 ? -1 : 1,
+            nii.spaceDirections[2][permutationOrder[2]] < 0 ? -1 : 1,
+        ];
         nii.permutationOrder = permutationOrder;
         var Order = KMedViewer.getPermutationOrder();
         var perm = Order.perm;
         var flips = Order.flips;
 
-        nii.permutationOrder = [perm[nii.permutationOrder[0]], perm[nii.permutationOrder[1]], perm[nii.permutationOrder[2]]];
-        nii.arrayReadDirection = [flips[nii.permutationOrder[0]] * nii.arrayReadDirection[0], flips[nii.permutationOrder[1]] * nii.arrayReadDirection[1], flips[nii.permutationOrder[2]] * nii.arrayReadDirection[2]];
+        nii.permutationOrder = [
+            perm[nii.permutationOrder[0]],
+            perm[nii.permutationOrder[1]],
+            perm[nii.permutationOrder[2]],
+        ];
+        nii.arrayReadDirection = [
+            flips[nii.permutationOrder[0]] * nii.arrayReadDirection[0],
+            flips[nii.permutationOrder[1]] * nii.arrayReadDirection[1],
+            flips[nii.permutationOrder[2]] * nii.arrayReadDirection[2],
+        ];
 
         nii.invPermOrder = [];
         nii.invPermOrder[nii.permutationOrder[0]] = 0;
         nii.invPermOrder[nii.permutationOrder[1]] = 1;
         nii.invPermOrder[nii.permutationOrder[2]] = 2;
 
-        nii.voxSize[0] = math.sqrt(nii.spaceDirections[0][0] * nii.spaceDirections[0][0] + nii.spaceDirections[0][1] * nii.spaceDirections[0][1] + nii.spaceDirections[0][2] * nii.spaceDirections[0][2]);
-        nii.voxSize[1] = math.sqrt(nii.spaceDirections[1][0] * nii.spaceDirections[1][0] + nii.spaceDirections[1][1] * nii.spaceDirections[1][1] + nii.spaceDirections[1][2] * nii.spaceDirections[1][2]);
-        nii.voxSize[2] = math.sqrt(nii.spaceDirections[2][0] * nii.spaceDirections[2][0] + nii.spaceDirections[2][1] * nii.spaceDirections[2][1] + nii.spaceDirections[2][2] * nii.spaceDirections[2][2]);
-
-
+        nii.voxSize[0] = math.sqrt(
+            nii.spaceDirections[0][0] * nii.spaceDirections[0][0] +
+                nii.spaceDirections[0][1] * nii.spaceDirections[0][1] +
+                nii.spaceDirections[0][2] * nii.spaceDirections[0][2]
+        );
+        nii.voxSize[1] = math.sqrt(
+            nii.spaceDirections[1][0] * nii.spaceDirections[1][0] +
+                nii.spaceDirections[1][1] * nii.spaceDirections[1][1] +
+                nii.spaceDirections[1][2] * nii.spaceDirections[1][2]
+        );
+        nii.voxSize[2] = math.sqrt(
+            nii.spaceDirections[2][0] * nii.spaceDirections[2][0] +
+                nii.spaceDirections[2][1] * nii.spaceDirections[2][1] +
+                nii.spaceDirections[2][2] * nii.spaceDirections[2][2]
+        );
 
         // update header
         view.setFloat32(280 + 0 * 4, nii.edges._data[0][0], littleEndian);
@@ -6920,303 +5611,259 @@ function resizeNifti(fobj, edges, sizes)
         view.setFloat32(280 + 11 * 4, nii.edges._data[2][3], littleEndian);
     }
 
-
     // ------------------ sizes
-    if( sizes != undefined)
-    {
-        if(sizes[0] > nii.sizes[0] | sizes[1] > nii.sizes[1] | sizes[2] > nii.sizes[2])
-        {
+    if (sizes != undefined) {
+        if ((sizes[0] > nii.sizes[0]) | (sizes[1] > nii.sizes[1]) | (sizes[2] > nii.sizes[2])) {
             nii.sizes = sizes;
             nii.widheidep = nii.sizes[0] * nii.sizes[1] * nii.sizes[2];
             nii.widhei = nii.sizes[0] * nii.sizes[1];
             nii.wid = nii.sizes[0];
 
-             
             var tdim = sizes[3];
             var hdroffset = nii.hdroffset;
 
-            var bitpix = view.getInt16(72, littleEndian)
-            var tmp = new Uint8Array(hdroffset + bitpix / 8 * sizes[0] * sizes[1] * sizes[2] * tdim);
+            var bitpix = view.getInt16(72, littleEndian);
+            var tmp = new Uint8Array(hdroffset + (bitpix / 8) * sizes[0] * sizes[1] * sizes[2] * tdim);
 
             // copy the header
-            tmp.set(new Uint8Array(nii.buffer, 0, hdroffset) );
-            
+            tmp.set(new Uint8Array(nii.buffer, 0, hdroffset));
+
             nii.buffer = tmp.buffer;
             nii.data = new Uint8Array(nii.buffer, hdroffset);
 
             // update header
-            if (tdim > 1)
-                view.setInt16(40, 4, littleEndian)
-            else
-                view.setInt16(40, 3, littleEndian)
+            if (tdim > 1) view.setInt16(40, 4, littleEndian);
+            else view.setInt16(40, 3, littleEndian);
 
-            view.setInt16(42, nii.sizes[0], littleEndian)
-            view.setInt16(44, nii.sizes[1], littleEndian)
-            view.setInt16(46, nii.sizes[2], littleEndian)
-            view.setInt16(48, tdim, littleEndian)
-
+            view.setInt16(42, nii.sizes[0], littleEndian);
+            view.setInt16(44, nii.sizes[1], littleEndian);
+            view.setInt16(46, nii.sizes[2], littleEndian);
+            view.setInt16(48, tdim, littleEndian);
         }
-
     }
-
-
 }
 
-
-function calcNifti()
-{
-    var files = KViewer.dataManager.getFileList().map(KViewer.dataManager.getFile).filter((x)=>x.contentType=="nii")
+function calcNifti() {
+    var files = KViewer.dataManager
+        .getFileList()
+        .map(KViewer.dataManager.getFile)
+        .filter((x) => x.contentType == "nii");
 
     var str = "<table class='Ktablecolsel'> <head> <tr> <td> name </td> <td> name </td> </tr> </head>";
     str += "<body>";
     var fis = [];
-    for (var k = 0; k < files.length;k++)					
-    {
-        str += "<tr>"
-        str += "<td> image"+(k+1)+"</td>";
-        fis[k] = files[k].fileinfo.SubFolder+"/"+files[k].fileinfo.Filename;
-        str += "<td>"+fis[k]+"</td>"
-        str += "</tr>"
+    for (var k = 0; k < files.length; k++) {
+        str += "<tr>";
+        str += "<td> image" + (k + 1) + "</td>";
+        fis[k] = files[k].fileinfo.SubFolder + "/" + files[k].fileinfo.Filename;
+        str += "<td>" + fis[k] + "</td>";
+        str += "</tr>";
     }
     str += "</body>";
     str += "</table>";
 
-    if (fis.length == 0)
-    {
-        alertify.error("Load some nifits into workspace first!!")
+    if (fis.length == 0) {
+        alertify.error("Load some nifits into workspace first!!");
         return;
     }
 
-    if (calcNifti.lastexpr == undefined)
-    {
-        calcNifti.lastexpr = "result = image1"
-        calcNifti.lastname = "derived/compresult.nii"
+    if (calcNifti.lastexpr == undefined) {
+        calcNifti.lastexpr = "result = image1";
+        calcNifti.lastname = "derived/compresult.nii";
     }
     alertify.prompt(
-    
-     [{msg:"<b>Image calculator</b> <br> The computations are based on the current images in workspace:<br>"+str+"<br> Put here your arithmentric expression (any js code is allowed):"},
-      {msg:"Name of output nifti",optMsg:"reference matrix",opt:fis}]
-                    
-    ,function(e,ret)
-    {
-        if (e)
-        {
-            var runningid =  (calcNifti.runid++)
-            var master = files[ret.index]
-            var name = ret.str[1];
-            var fileObject = cloneNifti(master,name,master.content.datatype,'sametdim');
-            fileObject.fileID = "COMPIMG" + name + runningid; 
-            //fileObject.fileinfo = {SubFolder:"derived",Filename:name}
-            fileObject.modified = true;
-            var nii = fileObject.content;
-            var w = nii.sizes[0]
-            var h = nii.sizes[1]
-            var d = nii.sizes[2]
-            var T = nii.sizes[3]
-
-            var get = [];
-            var ims = [];
-            for (var k = 0;k < files.length;k++)
+        [
             {
-                if (!sameGeometry(files[k].content,master.content))
-                {
-                    var A = math.multiply(math.inv(files[k].content.edges),master.content.edges);
-                    get[k] = function(data,A) { return function (x,y,z)
-                    {    
-                        var xs = A[0][0] * x + A[0][1] * y + A[0][2] * z + A[0][3];
-                        var ys = A[1][0] * x + A[1][1] * y + A[1][2] * z + A[1][3];
-                        var zs = A[2][0] * x + A[2][1] * y + A[2][2] * z + A[2][3];
-                        return data[xs+w*ys+w*h*zs+w*h*d*t]
-                    } }(files[k].content.data,A._data)
-                    
+                msg:
+                    "<b>Image calculator</b> <br> The computations are based on the current images in workspace:<br>" +
+                    str +
+                    "<br> Put here your arithmentric expression (any js code is allowed):",
+            },
+            { msg: "Name of output nifti", optMsg: "reference matrix", opt: fis },
+        ],
+
+        function (e, ret) {
+            if (e) {
+                var runningid = calcNifti.runid++;
+                var master = files[ret.index];
+                var name = ret.str[1];
+                var fileObject = cloneNifti(master, name, master.content.datatype, "sametdim");
+                fileObject.fileID = "COMPIMG" + name + runningid;
+                //fileObject.fileinfo = {SubFolder:"derived",Filename:name}
+                fileObject.modified = true;
+                var nii = fileObject.content;
+                var w = nii.sizes[0];
+                var h = nii.sizes[1];
+                var d = nii.sizes[2];
+                var T = nii.sizes[3];
+
+                var get = [];
+                var ims = [];
+                for (var k = 0; k < files.length; k++) {
+                    if (!sameGeometry(files[k].content, master.content)) {
+                        var A = math.multiply(math.inv(files[k].content.edges), master.content.edges);
+                        get[k] = (function (data, A) {
+                            return function (x, y, z) {
+                                var xs = A[0][0] * x + A[0][1] * y + A[0][2] * z + A[0][3];
+                                var ys = A[1][0] * x + A[1][1] * y + A[1][2] * z + A[1][3];
+                                var zs = A[2][0] * x + A[2][1] * y + A[2][2] * z + A[2][3];
+                                return data[xs + w * ys + w * h * zs + w * h * d * t];
+                            };
+                        })(files[k].content.data, A._data);
+                    } else {
+                        get[k] = (function (data) {
+                            return function (x, y, z) {
+                                return data[x + w * y + w * h * z + w * h * d * t];
+                            };
+                        })(files[k].content.data);
+                    }
                 }
-                else
-                {
-                    get[k] = function(data) { return function (x,y,z)
-                    {                    
-                        return data[x+w*y+w*h*z+w*h*d*t]
-                    } }(files[k].content.data)
+
+                var t = 0;
+                var code = ret.str[0];
+                calcNifti.lastexpr = code;
+                var precode = "";
+                for (var k = 0; k < files.length; k++) {
+                    var im = "image" + (k + 1);
+                    if (code.search(im) > -1) precode += "var " + im + "=get[" + k + "](x,y,z);";
                 }
-                
+                code = precode + code;
+
+                var chunksize = math.round(nii.sizes[2] / 50) + 1;
+                $(document.body).addClass("wait");
+
+                new Array(nii.sizes[2]).chunk(
+                    function (dummy, z) {
+                        var x, y;
+
+                        eval("function run() { " + code + "; return result; }");
+                        for (y = 0; y < nii.sizes[1]; y++)
+                            for (x = 0; x < nii.sizes[0]; x++) nii.data[x + w * y + w * h * z + w * h * d * t] = run();
+                    },
+                    chunksize,
+                    20,
+                    undefined,
+                    function () {
+                        fileObject.content = prepareMedicalImageData(parse(fileObject.buffer), fileObject, {});
+                        KViewer.dataManager.setFile(fileObject.fileID, fileObject);
+                        KViewer.cacheManager.update();
+                        KViewer.iterateMedViewers(function (v) {
+                            if (v.currentFileID == master.fileID)
+                                v.setContent(fileObject, { intent: { overlay: true } });
+                        });
+                        $(document.body).removeClass("wait");
+                    }
+                );
             }
-            
-            var t = 0
-            var code = ret.str[0];
-            calcNifti.lastexpr = code;
-            var precode = "";
-            for (var k = 0; k < files.length;k++)
-            {
-                var im = "image"+(k+1);
-                if (code.search(im) > -1)
-                    precode += "var "+im+"=get["+(k)+"](x,y,z);";
-
-            }
-            code = precode + code;
-
-            var chunksize = math.round(nii.sizes[2]/50)+1;
-            $(document.body).addClass('wait');
-
-            new Array(nii.sizes[2]).chunk(function(dummy,z)
-            {
-                var x,y;
-
-                eval("function run() { "+code+"; return result; }")
-                for (y = 0; y < nii.sizes[1];y++)
-                for (x = 0; x < nii.sizes[0];x++)
-                   nii.data[x+w*y+w*h*z+w*h*d*t] = run();
-                   
-            },chunksize,20,undefined,function() {
-                fileObject.content = prepareMedicalImageData(parse(fileObject.buffer), fileObject, {});
-                KViewer.dataManager.setFile(fileObject.fileID,fileObject)
-                KViewer.cacheManager.update();
-                KViewer.iterateMedViewers(function(v)
-                {
-                    if (v.currentFileID == master.fileID)
-                        v.setContent(fileObject,{intent:{overlay:true}});                                       
-                });                      
- 		        $(document.body).removeClass('wait');
-				 
-			});
-
-
-        
-        }
-    }, [calcNifti.lastexpr,calcNifti.lastname]);
-
+        },
+        [calcNifti.lastexpr, calcNifti.lastname]
+    );
 }
 calcNifti.runid = 0;
 
-
-/** used to unlag mouse move events in firefox 
+/** used to unlag mouse move events in firefox
  * @function */
-function moveUnlagger(fun, cloneEvent)
-{
+function moveUnlagger(fun, cloneEvent) {
     var lastMove = false;
-    if (!(/Firefox/i.test(navigator.userAgent)))
-        return fun;
-    else
-    {
-        var movefun = function(ev, s)
-        {
-            if (!lastMove)
-            {
-                if (cloneEvent)
-                {
+    if (!/Firefox/i.test(navigator.userAgent)) return fun;
+    else {
+        var movefun = function (ev, s) {
+            if (!lastMove) {
+                if (cloneEvent) {
                     var event = $.extend({}, ev);
-                    setTimeout(function() {
-                        fun(event, s)
+                    setTimeout(function () {
+                        fun(event, s);
                     }, 0);
-                }
-                else
-                    setTimeout(function() {
-                        fun(ev, s)
+                } else
+                    setTimeout(function () {
+                        fun(ev, s);
                     }, 0);
             }
             lastMove = true;
-            setTimeout(function() {
+            setTimeout(function () {
                 lastMove = false;
             }, 10);
             ev.preventDefault();
             // return false;
-
-        }
+        };
         return movefun;
     }
 }
 
-
-function getloadParamsFromDrop(ev,intent, progress)
-{
-
-
-
-  var params_arr  = [];
-  if(ev.dataTransfer != undefined && ev.dataTransfer.files.length > 0)
-  {
-	for (var l = 0;l <ev.dataTransfer.files.length;l++)
-	   params_arr.push(createParamsLocalFile( ev.dataTransfer.files[l],intent, progress ) );
-	return params_arr;
-  }
-  
-  // dataTransfer might be reordered during drag ... not really good but must live with it
-  if (ev.dataTransfer != undefined &&  (ev.dataTransfer.types[0] == 'form' | ev.dataTransfer.types[1] == 'form' ))
-  {
-      var params = {};
-      params.URLType  = 'form';
-      if (ev.dataTransfer.types[0] == 'form')
-         params.fileID = ev.dataTransfer.types[1];
-      else
-         params.fileID = ev.dataTransfer.types[0];
-      params_arr.push(params);
-     return params_arr;
-  }
-
-  if (tempObjectInfo != undefined)
-  {
-	    function objinfo2loadParams(objinfo)
-	    {
-			  var params = {};
-			  params.URLType  = 'serverfile';
-			  params.fileID    = objinfo.fileID; 
-			  params.close = objinfo.close;
-			  var ev_intent = {};
-			  if (objinfo.intent != undefined)
-			  {
-				if (typeof objinfo.intent == "string")
-					eval('ev_intent={'+objinfo.intent +'};');
-				else
-				    ev_intent = objinfo.intent;
-			  }
-			  params.intent = $.extend(true,ev_intent,intent);
-			  return params;    	
-	    }
-
-		for (var l=0;l <tempObjectInfo.length;l++)
-		{
-		  var params = {};
-		  if (tempObjectInfo[l].type == 'file')
-		  {
-			  params_arr.push(objinfo2loadParams(tempObjectInfo[l]));
-		  }
-		  else if (tempObjectInfo[l].type == 'subfolder')
-		  {
-		  	var elem = $("tr[rowid_parent='" + tempObjectInfo[l].piz + riddelim + tempObjectInfo[l].sid + riddelim + tempObjectInfo[l].subfolder + "'][data-type='file']:first");		  	
-		  	if (elem.length>0)
-		  		 params_arr.push(objinfo2loadParams(packObjectInfo(elem[0])));
-		  } 
-		  else if (tempObjectInfo[l].type == 'study')
-		  {
-			return {patient_study_drop: tempObjectInfo[l].piz + riddelim + tempObjectInfo[l].sid };
-		  }
-		  else if (tempObjectInfo[l].type == 'patient')
-		  {
-		  	  return {patient_study_drop: tempObjectInfo[l].piz };
-		  }
-		  else if (tempObjectInfo[l].type == 'markertemplate')
-		  {
-		  	  return  tempObjectInfo[l] ;
-		  }
-		  else if (tempObjectInfo[l].type == 'tagpaneltag')
-		  {
-		  	  return  tempObjectInfo[l] ;
-		  }
-
-		}
+function getloadParamsFromDrop(ev, intent, progress) {
+    var params_arr = [];
+    if (ev.dataTransfer != undefined && ev.dataTransfer.files.length > 0) {
+        for (var l = 0; l < ev.dataTransfer.files.length; l++)
+            params_arr.push(createParamsLocalFile(ev.dataTransfer.files[l], intent, progress));
         return params_arr;
-  }
-  
-  return params_arr;
-  
+    }
+
+    // dataTransfer might be reordered during drag ... not really good but must live with it
+    if (ev.dataTransfer != undefined && (ev.dataTransfer.types[0] == "form") | (ev.dataTransfer.types[1] == "form")) {
+        var params = {};
+        params.URLType = "form";
+        if (ev.dataTransfer.types[0] == "form") params.fileID = ev.dataTransfer.types[1];
+        else params.fileID = ev.dataTransfer.types[0];
+        params_arr.push(params);
+        return params_arr;
+    }
+
+    if (tempObjectInfo != undefined) {
+        function objinfo2loadParams(objinfo) {
+            var params = {};
+            params.URLType = "serverfile";
+            params.fileID = objinfo.fileID;
+            params.close = objinfo.close;
+            var ev_intent = {};
+            if (objinfo.intent != undefined) {
+                if (typeof objinfo.intent == "string") eval("ev_intent={" + objinfo.intent + "};");
+                else ev_intent = objinfo.intent;
+            }
+            params.intent = $.extend(true, ev_intent, intent);
+            return params;
+        }
+
+        for (var l = 0; l < tempObjectInfo.length; l++) {
+            var params = {};
+            if (tempObjectInfo[l].type == "file") {
+                params_arr.push(objinfo2loadParams(tempObjectInfo[l]));
+            } else if (tempObjectInfo[l].type == "subfolder") {
+                var elem = $(
+                    "tr[rowid_parent='" +
+                        tempObjectInfo[l].piz +
+                        riddelim +
+                        tempObjectInfo[l].sid +
+                        riddelim +
+                        tempObjectInfo[l].subfolder +
+                        "'][data-type='file']:first"
+                );
+                if (elem.length > 0) params_arr.push(objinfo2loadParams(packObjectInfo(elem[0])));
+            } else if (tempObjectInfo[l].type == "study") {
+                return { patient_study_drop: tempObjectInfo[l].piz + riddelim + tempObjectInfo[l].sid };
+            } else if (tempObjectInfo[l].type == "patient") {
+                return { patient_study_drop: tempObjectInfo[l].piz };
+            } else if (tempObjectInfo[l].type == "markertemplate") {
+                return tempObjectInfo[l];
+            } else if (tempObjectInfo[l].type == "tagpaneltag") {
+                return tempObjectInfo[l];
+            }
+        }
+        return params_arr;
+    }
+
+    return params_arr;
 }
 
-function cleanAllDropIndicators()
-{
-    $('.KView_viewportdropIndicator').fadeOut(220, function(){});
-    $('.KView_autoloader_dropIndicator').fadeOut(220, function() { $(this).remove() } );
-    $('.body_dropindicator').fadeOut(220, function() { $(this).remove() } );
+function cleanAllDropIndicators() {
+    $(".KView_viewportdropIndicator").fadeOut(220, function () {});
+    $(".KView_autoloader_dropIndicator").fadeOut(220, function () {
+        $(this).remove();
+    });
+    $(".body_dropindicator").fadeOut(220, function () {
+        $(this).remove();
+    });
     //tempObjectInfo = undefined;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7224,414 +5871,365 @@ function cleanAllDropIndicators()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function UserSettingsDialog()
-{
-   
-   var that = new dialog_generic();
-   that.$frame.width("500px").height("800px");
+function UserSettingsDialog() {
+    var that = new dialog_generic();
+    that.$frame.width("500px").height("800px");
 
-   var sz = UserSettingsDialog.getLocalStorageSize();
-   var form = 
-   { 
-	name 		: "usersettings",
-	lastchange  : "",
-	layout: 
-	[
- 	  {	type: 'title', val: userinfo.username}
-	 ,{ type: 'separator', css: ["height","1px"] }
-	 	,{name:"fullname"				, type: 'input',     defaultval:""  }
-	 	,{name:"email"					, type: 'input',     defaultval:""  }
-	 	,{name:"institution"				, type: 'input',     defaultval:""  }
-	 	,{name:"street"				, type: 'input',     defaultval:""  }
-	 	,{name:"city"				, type: 'input',     defaultval:""  }
-	 	,{name:"forceanonymize"				, type: 'check',     defaultval:false  }
-	 	 ,{type:"separator"}
-	 	,{name:"passwd"				    , type: 'input', val:'3434',    defaultval:""  }
-	 	 ,{type:"separator"}
-		,{name:"styletheme"		        , type: 'option',  style:"",  title:" Styling theme",
-  	    	choices: ["classic blue","greenish","redish"],
-  	    	ids:     ["classic", "green", "red"] ,defaultval:'classic' }
-		,{name:"localstoragesizeMB"     , type: 'input',  	 defaultval:sz    , title:'Size of local hard disk cache, use this if you are remote (in MB)'   }
+    var sz = UserSettingsDialog.getLocalStorageSize();
+    var form = {
+        name: "usersettings",
+        lastchange: "",
+        layout: [
+            { type: "title", val: userinfo.username },
+            { type: "separator", css: ["height", "1px"] },
+            { name: "fullname", type: "input", defaultval: "" },
+            { name: "email", type: "input", defaultval: "" },
+            { name: "institution", type: "input", defaultval: "" },
+            { name: "street", type: "input", defaultval: "" },
+            { name: "city", type: "input", defaultval: "" },
+            { name: "forceanonymize", type: "check", defaultval: false },
+            { type: "separator" },
+            { name: "passwd", type: "input", val: "3434", defaultval: "" },
+            { type: "separator" },
+            {
+                name: "styletheme",
+                type: "option",
+                style: "",
+                title: " Styling theme",
+                choices: ["classic blue", "greenish", "redish"],
+                ids: ["classic", "green", "red"],
+                defaultval: "classic",
+            },
+            {
+                name: "localstoragesizeMB",
+                type: "input",
+                defaultval: sz,
+                title: "Size of local hard disk cache, use this if you are remote (in MB)",
+            },
+        ],
+    };
 
-	] }
-
-	userinfo.id = userinfo.ID;
-    var content= userinfo;
+    userinfo.id = userinfo.ID;
+    var content = userinfo;
 
     KForm.getFormContent(form, content);
-
-
-
 
     var $div = $("<div class='usersettings'></div>").appendTo(that.$container);
     KForm.createForm(form, content, $div, undefined);
 
-
     var $style = $div.find("div[name='styletheme']").find("select");
-    $style.on("change",function()
-    {
+    $style.on("change", function () {
         that.saveChanges();
         alertify.success("Reload/press F5 to let changes to become active");
-
     });
 
     var $pwd = $div.find("input[name='passwd']");
-    $pwd.attr('placeholder','click to change').attr('readonly',true).on("click",changepwd);
-	
-	function changepwd()
-	{
-		$pwd.parent().nextAll().remove();
-		var $div = $("<div><br></div>").insertAfter($pwd.parent())	
-		var $errmsg = $("<div style='color:red; text-align:center'></div>").appendTo($div);
-		var $pw0 = $("<label class='KFormItem_label' >old password:</label><input type='password' name='newpwd0' />").appendTo( $("<div class='KFormItem'><br></div>").appendTo($div)  );
-		
-        var $dummy = $("<div style='text-align:left;padding:10px 40px;'>Use your LDAP password or choose another one.<br>Using LDAP is save, it will not be stored in our database.  </div>").appendTo($div);
+    $pwd.attr("placeholder", "click to change").attr("readonly", true).on("click", changepwd);
 
-		var $pw1 = $("<label class='KFormItem_label' >new password:</label><input type='password' name='newpwd1' />").appendTo( $("<div class='KFormItem'><br></div>").appendTo($div)  );
-		var $pw2 = $("<label class='KFormItem_label' >repeat new password:</label><input type='password' name='newpwd2' />").appendTo( $("<div class='KFormItem'></div>").appendTo($div) );
-		var $submit = $("<label class='KFormItem_label' ></label><input type='submit' name='submit' value='submit' />").appendTo( $("<div class='KFormItem'></div>").appendTo($div) )
-				.click(function(){
-					if($pw1.next().val() !== $pw2.next().val())
-					{
-						$errmsg.html("Your must enter the same password twice.");
-						return false;
-					}
-					else if($pw1.next().val().length < 4)
-					{
-						$errmsg.html("New password is too simple");
-						return false;
-					}
-					else
-					{
-						that.passwdChange($pw0.next().val(), $pw1.next().val(), function(result) 
-						{
-						    if(result.custom_success !== undefined && result.custom_success == 0)
-						    {
-        						$errmsg.html(result.custom_msg).hide().slideDown();
-						    }
-						    else if(result.custom_success !== undefined && result.custom_success == 1)
-						    {
-                                alertify.alert(result.custom_msg);
-                                $div.remove();
-						    }
-						});
-					}
+    function changepwd() {
+        $pwd.parent().nextAll().remove();
+        var $div = $("<div><br></div>").insertAfter($pwd.parent());
+        var $errmsg = $("<div style='color:red; text-align:center'></div>").appendTo($div);
+        var $pw0 = $(
+            "<label class='KFormItem_label' >old password:</label><input type='password' name='newpwd0' />"
+        ).appendTo($("<div class='KFormItem'><br></div>").appendTo($div));
 
-				});
-		
-		var $cancel = $("<input type='reset' name='cancel' value='cancel' style='margin-left:50px;' />").appendTo($submit.parent()).click(function(){$div.remove()});
+        var $dummy = $(
+            "<div style='text-align:left;padding:10px 40px;'>Use your LDAP password or choose another one.<br>Using LDAP is save, it will not be stored in our database.  </div>"
+        ).appendTo($div);
 
-		return
-	}
+        var $pw1 = $(
+            "<label class='KFormItem_label' >new password:</label><input type='password' name='newpwd1' />"
+        ).appendTo($("<div class='KFormItem'><br></div>").appendTo($div));
+        var $pw2 = $(
+            "<label class='KFormItem_label' >repeat new password:</label><input type='password' name='newpwd2' />"
+        ).appendTo($("<div class='KFormItem'></div>").appendTo($div));
+        var $submit = $("<label class='KFormItem_label' ></label><input type='submit' name='submit' value='submit' />")
+            .appendTo($("<div class='KFormItem'></div>").appendTo($div))
+            .click(function () {
+                if ($pw1.next().val() !== $pw2.next().val()) {
+                    $errmsg.html("Your must enter the same password twice.");
+                    return false;
+                } else if ($pw1.next().val().length < 4) {
+                    $errmsg.html("New password is too simple");
+                    return false;
+                } else {
+                    that.passwdChange($pw0.next().val(), $pw1.next().val(), function (result) {
+                        if (result.custom_success !== undefined && result.custom_success == 0) {
+                            $errmsg.html(result.custom_msg).hide().slideDown();
+                        } else if (result.custom_success !== undefined && result.custom_success == 1) {
+                            alertify.alert(result.custom_msg);
+                            $div.remove();
+                        }
+                    });
+                }
+            });
 
-	that.ontoggle = function()
-	{
-		if(that.$frame.css('display') != "none")
-		{
-			delete content.modified;
-			that.saveChanges();
+        var $cancel = $("<input type='reset' name='cancel' value='cancel' style='margin-left:50px;' />")
+            .appendTo($submit.parent())
+            .click(function () {
+                $div.remove();
+            });
 
-        }
-        else
-        {
+        return;
+    }
+
+    that.ontoggle = function () {
+        if (that.$frame.css("display") != "none") {
+            delete content.modified;
+            that.saveChanges();
+        } else {
             userinfo.localstoragesizeMB = UserSettingsDialog.getLocalStorageSize();
-            userinfo.update("localstoragesizeMB")
+            userinfo.update("localstoragesizeMB");
         }
-	}
-	
-	that.passwdChange = function(oldpasswd, newpwd, whendone)
-	{
-		ajaxRequest('command=passwordChange&json=' + encodeURIComponent(JSON.stringify([{id:userinfo.ID, oldpasswd:oldpasswd, passwd:newpwd}])) , whendone);
-	}
+    };
 
+    that.passwdChange = function (oldpasswd, newpwd, whendone) {
+        ajaxRequest(
+            "command=passwordChange&json=" +
+                encodeURIComponent(JSON.stringify([{ id: userinfo.ID, oldpasswd: oldpasswd, passwd: newpwd }])),
+            whendone
+        );
+    };
 
-	that.saveChanges = function(onsave)
-	{
-		function whendone(result)
-		{
-			if (onsave)
-			   onsave();
-            document.cookie = "localstoragesizeMB="+userinfo.localstoragesizeMB+";";
-            
-		}
-// 		var userinfo_tmp = $.extend(true,{},userinfo);
-// 		delete userinfo_tmp.passwd;
-		// do NOT save all fields
-		var userinfo_tmp = 
-		{
-		    id:userinfo.id,
-		    forceanonymize: userinfo.forceanonymize,
-		    email: userinfo.email,
-		    city: userinfo.city,
-		    fullname: userinfo.fullname,
-		    street: userinfo.street,
-		    styletheme: userinfo.styletheme,
-		}
-		ajaxRequest('command=userTable_save&json=' + encodeURIComponent(JSON.stringify([userinfo_tmp])) , whendone);
-        
-	}
-
+    that.saveChanges = function (onsave) {
+        function whendone(result) {
+            if (onsave) onsave();
+            document.cookie = "localstoragesizeMB=" + userinfo.localstoragesizeMB + ";";
+        }
+        // 		var userinfo_tmp = $.extend(true,{},userinfo);
+        // 		delete userinfo_tmp.passwd;
+        // do NOT save all fields
+        var userinfo_tmp = {
+            id: userinfo.id,
+            forceanonymize: userinfo.forceanonymize,
+            email: userinfo.email,
+            city: userinfo.city,
+            fullname: userinfo.fullname,
+            street: userinfo.street,
+            styletheme: userinfo.styletheme,
+        };
+        ajaxRequest("command=userTable_save&json=" + encodeURIComponent(JSON.stringify([userinfo_tmp])), whendone);
+    };
 
     return that;
 }
-UserSettingsDialog.getLocalStorageSize = function()
-    {
-            var toks = document.cookie.split(";")
-            try {
-                return parseInt(toks.find((x) => x.search("localstoragesizeMB=")>=0).split("=")[1]);
-            } catch (err)
-            {  return 1;}
-        
+UserSettingsDialog.getLocalStorageSize = function () {
+    var toks = document.cookie.split(";");
+    try {
+        return parseInt(toks.find((x) => x.search("localstoragesizeMB=") >= 0).split("=")[1]);
+    } catch (err) {
+        return 1;
     }
+};
 
-function ChangePatIDDialog(obj)
-{
-   
-   var that = new dialog_generic();
-   that.$frame.width("500px").height("auto");
+function ChangePatIDDialog(obj) {
+    var that = new dialog_generic();
+    that.$frame.width("500px").height("auto");
 
-	
-   var form = 
-   { 
-	name 		: "changeiddialog",
-	lastchange  : "",
-	layout: 
-	[
-					 { type: 'title', val: "Edit patient/study information", css: ["font-size","20px",'display','inline-block'] },
-					 { type: 'input', name:"PIZ",   title: "Patients ID",  
-							 defaultval: ""},
-					 { type: 'input', name:"StudyID",   title: "Studies ID" , class:"Study"},
-					 { type: 'input', name:"StudyDescription",   title: "StudyDescription" , class:"Study" },
-					 { type: 'input', name:"StudyInstanceUID",   title: "StudyInstanceUID" , class:"Study" },
+    var form = {
+        name: "changeiddialog",
+        lastchange: "",
+        layout: [
+            {
+                type: "title",
+                val: "Edit patient/study information",
+                css: ["font-size", "20px", "display", "inline-block"],
+            },
+            { type: "input", name: "PIZ", title: "Patients ID", defaultval: "" },
+            { type: "input", name: "StudyID", title: "Studies ID", class: "Study" },
+            { type: "input", name: "StudyDescription", title: "StudyDescription", class: "Study" },
+            { type: "input", name: "StudyInstanceUID", title: "StudyInstanceUID", class: "Study" },
 
-					 { type: 'separator', css: ["height","5px"] },
-                     { type: 'input',  name:"GivenName",   title: "Given name",  
-											 defaultval: ""},
-									  { type: 'input',  name:"FamilyName",   title: "Family name",  
-											 defaultval: ""},					
-					 { type: 'separator', css: ["height","5px"] },
-							 
-					 { type: 'option', name:"Sex",  title: "Sex", 
-							 style:"radio vert", 
-							 choices: ["Male","Female"], 
-							 ids: ["M","F"] , 
-							 defaultval:"" },
-					 { type: 'input', name:"BirthDate", title: "Birthdate",  
-							 defaultval: ""},
-/*
+            { type: "separator", css: ["height", "5px"] },
+            { type: "input", name: "GivenName", title: "Given name", defaultval: "" },
+            { type: "input", name: "FamilyName", title: "Family name", defaultval: "" },
+            { type: "separator", css: ["height", "5px"] },
+
+            {
+                type: "option",
+                name: "Sex",
+                title: "Sex",
+                style: "radio vert",
+                choices: ["Male", "Female"],
+                ids: ["M", "F"],
+                defaultval: "",
+            },
+            { type: "input", name: "BirthDate", title: "Birthdate", defaultval: "" },
+            /*
 					 { type: 'input', name:"PatientsAge",   title: "Age",  
 							 defaultval: ""},
 					 { type: 'input', name:"PatientsWeight",   title: "Weight",  
 							 defaultval: ""},
 					 { type: 'input', name:"PatientsSize",   title: "Size",  
 							 defaultval: ""},*/
-					 { type: 'separator', css: ["height","5px"] },
-                    {type: 'customelement',  val: applyChanges   , css:['display','inline-block']   },
-                    {type: 'customelement',  val: anonymization   , css:['display','inline-block']   },
-					 { type: 'separator', css: ["height","25px"] },
-                        
-	] }
-	function anonymization(content)
-	{
-	    
-		var $div1 = $("<span class='modernbutton large green'><i class='fa fa-1x fa-user-secret'></i>anonymize</span>").click(function(e){                
-      
-             pid_hashfun("",content.PIZ,function(ppid)    {
-                ppid = ppid.substr(0,10);
-                content.BirthDate = "01012000"
-                content.FamilyName = ppid
-                content.GivenName = "anonym"
-                content.PIZ = ppid
-                content.Sex = "X"
+            { type: "separator", css: ["height", "5px"] },
+            { type: "customelement", val: applyChanges, css: ["display", "inline-block"] },
+            { type: "customelement", val: anonymization, css: ["display", "inline-block"] },
+            { type: "separator", css: ["height", "25px"] },
+        ],
+    };
+    function anonymization(content) {
+        var $div1 = $(
+            "<span class='modernbutton large green'><i class='fa fa-1x fa-user-secret'></i>anonymize</span>"
+        ).click(function (e) {
+            pid_hashfun("", content.PIZ, function (ppid) {
+                ppid = ppid.substr(0, 10);
+                content.BirthDate = "01012000";
+                content.FamilyName = ppid;
+                content.GivenName = "anonym";
+                content.PIZ = ppid;
+                content.Sex = "X";
                 content.update("BirthDate");
                 content.update("FamilyName");
                 content.update("GivenName");
                 content.update("PIZ");
                 content.update("Sex");
-             });
-                
-		});;
-	    var $div = $("<div></div>").append($div1);
-		return $div;
-	}
-	function applyChanges(content)
-	{
-	    
-		var $div1 = $("<span class='modernbutton large green'><i class='fa fa-1x fa-refresh'></i>Apply Changes</span>").click(function(e){                
+            });
+        });
+        var $div = $("<div></div>").append($div1);
+        return $div;
+    }
+    function applyChanges(content) {
+        var $div1 = $(
+            "<span class='modernbutton large green'><i class='fa fa-1x fa-refresh'></i>Apply Changes</span>"
+        ).click(function (e) {
+            alertify.confirm("Are you sure to change basis information? This might break references", function (e) {
+                if (e) {
+                    $(document.body).addClass("wait");
 
-		   alertify.confirm('Are you sure to change basis information? This might break references',
-		   function(e)
-		   {
-		       if (e)
-		       {
-               $(document.body).addClass("wait");		
+                    that.saveChanges(function () {
+                        refreshButton();
+                        that.toggle();
+                        $(document.body).removeClass("wait");
+                    });
+                }
+            });
+        });
+        var $div = $("<div></div>").append($div1);
+        return $div;
+    }
 
-                that.saveChanges(function(){                    
-                    refreshButton();
-                    that.toggle();
-                    $(document.body).removeClass("wait");		
-
-                })
-		       }
-		   });
-		});;
-	    var $div = $("<div></div>").append($div1);
-		return $div;
-	}
-
-    var content= {};
-    var oldobj = {}
+    var content = {};
+    var oldobj = {};
     KForm.getFormContent(form, content);
-
-
-
 
     var $div = $("<div class='changeiddlg'></div>").appendTo(that.$container);
 
+    that.ontoggle = function () {};
 
-	that.ontoggle = function()
-	{
-
-	}
-	
-
-	that.saveChanges = function(callback)
-	{
-
-	    var str = ""
-	    if (content.StudyID)
-	    {
-	       if (content.StudyID[0] != '#')
-	           content.StudyID = "#" + content.StudyID;
-	       oldobj.FamilyName = oldobj['[SQL]PATIENT'].FamilyName
-	       oldobj.GivenName = oldobj['[SQL]PATIENT'].GivenName
-	       oldobj.Sex = oldobj['[SQL]PATIENT'].Sex
-	       oldobj.BirthDate = oldobj['[SQL]PATIENT'].BirthDate
-	    }
-	    for (var k in oldobj)
-	    {
-          if (content[k] != undefined && content[k] != oldobj[k] & k != "PIZ"  & k != "StudyID")
-              str += k+":'"+content[k]+"' ";
-	    }
-	    if (content.StudyID)
-	    {
-	       str = "'" + oldobj['[SQL]PATIENT'].PIZ +  oldobj.StudyID + "' '" +  content['PIZ'] + content.StudyID + "' " + str;
-	    }
-        else
-	       str = oldobj['PIZ'] +  " " +  content['PIZ'] + " " + str;
-        var json = JSON.stringify({exec:str});
-		ajaxRequest('command=changePID&json=' + encodeURIComponent(json) , function(res)
-		{
-		    console.log(res.content);
-		    var m = res.content.match(/moved/g);
-		    if (m != undefined)
-		    {
-                var movecnt = res.content.match(/moved/g).length
-                if (movecnt>0)
-                {   
-                    alertify.success("sucessfully moved study ("+movecnt+")");
+    that.saveChanges = function (callback) {
+        var str = "";
+        if (content.StudyID) {
+            if (content.StudyID[0] != "#") content.StudyID = "#" + content.StudyID;
+            oldobj.FamilyName = oldobj["[SQL]PATIENT"].FamilyName;
+            oldobj.GivenName = oldobj["[SQL]PATIENT"].GivenName;
+            oldobj.Sex = oldobj["[SQL]PATIENT"].Sex;
+            oldobj.BirthDate = oldobj["[SQL]PATIENT"].BirthDate;
+        }
+        for (var k in oldobj) {
+            if (content[k] != undefined && (content[k] != oldobj[k]) & (k != "PIZ") & (k != "StudyID"))
+                str += k + ":'" + content[k] + "' ";
+        }
+        if (content.StudyID) {
+            str =
+                "'" +
+                oldobj["[SQL]PATIENT"].PIZ +
+                oldobj.StudyID +
+                "' '" +
+                content["PIZ"] +
+                content.StudyID +
+                "' " +
+                str;
+        } else str = oldobj["PIZ"] + " " + content["PIZ"] + " " + str;
+        var json = JSON.stringify({ exec: str });
+        ajaxRequest("command=changePID&json=" + encodeURIComponent(json), function (res) {
+            console.log(res.content);
+            var m = res.content.match(/moved/g);
+            if (m != undefined) {
+                var movecnt = res.content.match(/moved/g).length;
+                if (movecnt > 0) {
+                    alertify.success("sucessfully moved study (" + movecnt + ")");
                 }
-		    }
-		    else
-		    {
-		        alertify.error(res.content)
-		    }
-		    console.log(res.content);
-		    callback();
+            } else {
+                alertify.error(res.content);
+            }
+            console.log(res.content);
+            callback();
+        });
+    };
 
-		})
-	}
+    var params = {
+        URLType: "serverfile",
+        fileID: obj.fileID,
+        callback: function (e) {
+            oldobj = JSON.parse(e.content);
 
+            var pat = oldobj;
+            if (oldobj["[SQL]PATIENT"]) {
+                pat = oldobj["[SQL]PATIENT"];
+                if (oldobj.StudyID[0] != "#") oldobj.StudyID = "#" + oldobj.StudyID;
 
+                content.StudyID = oldobj.StudyID;
+                content.StudyDescription = oldobj.StudyDescription;
+                content.StudyInstanceUID = oldobj.StudyInstanceUID;
+            }
 
-    var params = {URLType: "serverfile", fileID: obj.fileID, 
-           callback:function(e)
-            {
-                oldobj = JSON.parse(e.content);                
+            content.GivenName = pat.GivenName;
+            content.FamilyName = pat.FamilyName;
+            content.Sex = pat.Sex;
+            content.BirthDate = pat.BirthDate;
+            content.PIZ = pat.PIZ;
 
-                var pat = oldobj;
-                if (oldobj['[SQL]PATIENT'])
-                {
-                    pat = oldobj['[SQL]PATIENT'];
-                    if (oldobj.StudyID[0] != '#')
-                       oldobj.StudyID = '#' + oldobj.StudyID;
-                   
-                    content.StudyID = oldobj.StudyID;
-                    content.StudyDescription = oldobj.StudyDescription;
-                    content.StudyInstanceUID = oldobj.StudyInstanceUID;
-                }
+            KForm.createForm(form, content, $div, onchange);
+            if (!oldobj["[SQL]PATIENT"]) $div.find(".Study").hide();
 
-
-
-                content.GivenName = pat.GivenName;
-                content.FamilyName = pat.FamilyName;
-                content.Sex = pat.Sex;
-                content.BirthDate = pat.BirthDate;
-                content.PIZ = pat.PIZ;
-
-                KForm.createForm(form, content, $div, onchange);
-                if (!oldobj['[SQL]PATIENT'])
-                    $div.find(".Study").hide();
-
-                that.toggle();
-
-            }};
-      KViewer.dataManager.loadData(params)
-
-
+            that.toggle();
+        },
+    };
+    KViewer.dataManager.loadData(params);
 
     return that;
 }
 
-function OpenPatientInfo(obj)
-{
-    var x = ChangePatIDDialog(obj); 
+function OpenPatientInfo(obj) {
+    var x = ChangePatIDDialog(obj);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // resizer, for example for the codemirror
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function addCustomResizer($target, opts_in)
-{
-    var opts = 
-    {
-        x:true,
-        y:true,
-        min_x:20,
-        max_x:10000000,
-        min_y:20,
-        max_y:10000000,
+function addCustomResizer($target, opts_in) {
+    var opts = {
+        x: true,
+        y: true,
+        min_x: 20,
+        max_x: 10000000,
+        min_y: 20,
+        max_y: 10000000,
     };
-    opts = $.extend(true, opts,opts_in)
-    var $resizer = $("<div class='dialog_generic_resizeTriangle'></div>").appendTo($target).mousedown( 
-    function()
-    {
-        $resizer.addClass('dialog_generic_resizeTriangle_hovered');
-        $(document.body).on('mousemove', function(ev)
-        {
-            var newwidth = ev.clientX - $target.offset().left ;
-            var newheight = ev.clientY - $target.offset().top ;
-            if(newwidth < opts.min_x | newheight < opts.min_y ) 
-                return;
-            if(newwidth > opts.max_x | newheight > opts.max_y ) 
-                return;
-            if(opts.x)
-                $target.width( newwidth  );
-            if(opts.y)
-                $target.height( newheight );
+    opts = $.extend(true, opts, opts_in);
+    var $resizer = $("<div class='dialog_generic_resizeTriangle'></div>")
+        .appendTo($target)
+        .mousedown(function () {
+            $resizer.addClass("dialog_generic_resizeTriangle_hovered");
+            $(document.body).on("mousemove", function (ev) {
+                var newwidth = ev.clientX - $target.offset().left;
+                var newheight = ev.clientY - $target.offset().top;
+                if ((newwidth < opts.min_x) | (newheight < opts.min_y)) return;
+                if ((newwidth > opts.max_x) | (newheight > opts.max_y)) return;
+                if (opts.x) $target.width(newwidth);
+                if (opts.y) $target.height(newheight);
+            });
 
+            $(document.body).on("mouseup mouseleave", function () {
+                $resizer.removeClass("dialog_generic_resizeTriangle_hovered");
+                $(document.body).off("mousemove mouseup mouseleave");
+            });
+            return false;
         });
-
-        $(document.body).on('mouseup mouseleave', function() 
-        {       
-            $resizer.removeClass('dialog_generic_resizeTriangle_hovered');   $(document.body).off('mousemove mouseup mouseleave')
-        });
-        return false;
-    });
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7639,59 +6237,54 @@ function addCustomResizer($target, opts_in)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function dialog_generic()
-{
+function dialog_generic() {
+    // that.$menu       :   the ul menubar. just append your menu here
+    // that.$container  :   append your content here
+    // that.ontoggle     : add additional functionality to ontoggle button
+    // that.$frame     : the outer main frame. this is hidden on toggle
+    // that.deleteonclose: delete window on close. default is false;
 
-  // that.$menu       :   the ul menubar. just append your menu here
-  // that.$container  :   append your content here
-  // that.ontoggle     : add additional functionality to ontoggle button
-  // that.$frame     : the outer main frame. this is hidden on toggle
-  // that.deleteonclose: delete window on close. default is false;
+    // ================= resize
+    var that = new Object();
+    that.$frame = $("<div class='dialog_generic_frame movableWindows'></div>").appendTo($(document.body));
+    //that.$frame.click(function(){ that.$frame.appendTo($(document.body))  }) ; //does not work. will steel focus.
+    that.$resizer = $("<div class='dialog_generic_resizeTriangle'></div>")
+        .appendTo(that.$frame)
+        .mousedown(function () {
+            var $elems = that.$frame.find(".sbox_resizable");
+            var scpos = [];
+            for (var k = 0; k < $elems.length; k++) {
+                var scroll = $elems.eq(k).scrollTop();
+                scpos.push(Math.min($elems[k].scrollHeight - $elems[k].clientHeight, scroll));
+            }
+            that.$resizer.addClass("dialog_generic_resizeTriangle_hovered");
+            $(document.body).on("mousemove", function (ev) {
+                var newwidth = ev.clientX - that.$frame.offset().left;
+                var newheight = ev.clientY - that.$frame.offset().top;
+                if ((newwidth < 200) | (newheight < 200)) return;
+                that.$frame.width(newwidth);
+                that.$frame.height(newheight);
 
-// ================= resize
-  var that = new Object();
-  that.$frame =  $("<div class='dialog_generic_frame movableWindows'></div>").appendTo( $(document.body) );
-  //that.$frame.click(function(){ that.$frame.appendTo($(document.body))  }) ; //does not work. will steel focus.
-   that.$resizer = $("<div class='dialog_generic_resizeTriangle'></div>").appendTo(that.$frame)
-     .mousedown( function()
-     {
+                for (var k = 0; k < $elems.length; k++) $elems.eq(k).scrollTop(scpos[k]);
+            });
 
-       var $elems = that.$frame.find(".sbox_resizable");
-       var scpos = [];
-	   for(var k=0; k<$elems.length; k++)
-       {				
-            var scroll = $elems.eq(k).scrollTop();
-            scpos.push( Math.min($elems[k].scrollHeight-$elems[k].clientHeight,scroll));
-       }		
-       that.$resizer.addClass('dialog_generic_resizeTriangle_hovered');
-       $(document.body).on('mousemove', function(ev)
-       {
-         var newwidth = ev.clientX - that.$frame.offset().left ;
-         var newheight = ev.clientY - that.$frame.offset().top ;
-         if(newwidth < 200 | newheight < 200 ) return;
-         that.$frame.width( newwidth  );
-         that.$frame.height( newheight );
+            $(document.body).on("mouseup mouseleave", function () {
+                that.$resizer.removeClass("dialog_generic_resizeTriangle_hovered");
+                $(document.body).off("mousemove mouseup mouseleave");
+            });
+            return false;
+        });
 
-         for(var k=0; k<$elems.length; k++)
-                    $elems.eq(k).scrollTop(scpos[k]);
+    // ============== move
+    that.$menuDIV = $("<div class='dialog_generic_menu'></div>")
+        .appendTo(that.$frame)
+        .mousedown(function (ev) {
+            movableWindowMousedownFn(ev, that.$frame);
+        });
 
-       });
-       
-       $(document.body).on('mouseup mouseleave', function() 
-       {       
-         that.$resizer.removeClass('dialog_generic_resizeTriangle_hovered');   $(document.body).off('mousemove mouseup mouseleave')
-
-       });
-       return false;
-
-   });
-
-   // ============== move
-  that.$menuDIV = $("<div class='dialog_generic_menu'></div>").appendTo(that.$frame).mousedown( function(ev) { movableWindowMousedownFn(ev, that.$frame)})
-
-  // why was this? == because of z-index.
-  // but leads to jumping to top behaviour... this can b
-  /*
+    // why was this? == because of z-index.
+    // but leads to jumping to top behaviour... this can b
+    /*
   that.$menuDIV.click( function() 
   { 
     var st = that.$container.scrollTop();
@@ -7700,92 +6293,79 @@ function dialog_generic()
   } ) ;
   */
 
-  that.$menu = $("<ul class='menu_generic' style=''>").appendTo( that.$menuDIV );
-  //$("<li class='menu_generic_disabled' ></li>").appendTo($(ul));
+    that.$menu = $("<ul class='menu_generic' style=''>").appendTo(that.$menuDIV);
+    //$("<li class='menu_generic_disabled' ></li>").appendTo($(ul));
 
-  // set this to true to delete the window completey on close instead of just hiding it
-  that.deleteonclose = false;
+    // set this to true to delete the window completey on close instead of just hiding it
+    that.deleteonclose = false;
 
-  // this is the defautl behaviour for click on close button. add additional handles by overwriting ontoggle
-  that.ontoggle = function() {return true;};
-  that.toggle = function(ev)
-  {
+    // this is the defautl behaviour for click on close button. add additional handles by overwriting ontoggle
+    that.ontoggle = function () {
+        return true;
+    };
+    that.toggle = function (ev) {
+        var res = that.ontoggle();
 
-   
-    var res = that.ontoggle();
-
-    // if the custom toggle fun returns false, abort here, it probably took care of everything (check for unsaved ...)
-    if(res === false)
-    {
-    	return;
-    }
-    else
-    {
-        if( that.deleteonclose)
-        {
-            that.$frame.remove(); 
-        }
-        else
-        {
-          //  that.$frame.appendTo($(document.body));
-            if (that.$frame.css('display') != 'none')
-            {
-               that.toggle.scpos = [];
-               var scpos = that.toggle.scpos;  
-               that.toggle.$elems = that.$frame.find('.sbox_resizable' );
-               var $elems = that.toggle.$elems;
-               for(var k=0; k<$elems.length; k++)
-               {				
-                    var scroll = $elems.eq(k).scrollTop();
-                    scpos.push( Math.min($elems[k].scrollHeight-$elems[k].clientHeight,scroll));
-                  
-               }
-               that.$frame.hide();        
-               if (that.onPastToggle)
-                  that.onPastToggle(false)
-
-            }
-            else
-            {
-                that.$frame.css('visibility','hidden')
-                that.$frame.show();
-                var $elems = that.toggle.$elems;
-                var scpos = that.toggle.scpos;  
-                if ($elems)
-                    for(var k=0; k<$elems.length; k++)
-                    {				
-                        $elems.eq(k).scrollTop(scpos[k]);                          
+        // if the custom toggle fun returns false, abort here, it probably took care of everything (check for unsaved ...)
+        if (res === false) {
+            return;
+        } else {
+            if (that.deleteonclose) {
+                that.$frame.remove();
+            } else {
+                //  that.$frame.appendTo($(document.body));
+                if (that.$frame.css("display") != "none") {
+                    that.toggle.scpos = [];
+                    var scpos = that.toggle.scpos;
+                    that.toggle.$elems = that.$frame.find(".sbox_resizable");
+                    var $elems = that.toggle.$elems;
+                    for (var k = 0; k < $elems.length; k++) {
+                        var scroll = $elems.eq(k).scrollTop();
+                        scpos.push(Math.min($elems[k].scrollHeight - $elems[k].clientHeight, scroll));
                     }
-                bringToFront(that.$frame)
-                if (that.onPastToggle)
-                    that.onPastToggle(true)
-                setTimeout(function(){
-                that.$frame.css('visibility','visible')
-                },0);
+                    that.$frame.hide();
+                    if (that.onPastToggle) that.onPastToggle(false);
+                } else {
+                    that.$frame.css("visibility", "hidden");
+                    that.$frame.show();
+                    var $elems = that.toggle.$elems;
+                    var scpos = that.toggle.scpos;
+                    if ($elems)
+                        for (var k = 0; k < $elems.length; k++) {
+                            $elems.eq(k).scrollTop(scpos[k]);
+                        }
+                    bringToFront(that.$frame);
+                    if (that.onPastToggle) that.onPastToggle(true);
+                    setTimeout(function () {
+                        that.$frame.css("visibility", "visible");
+                    }, 0);
 
-                return true;
+                    return true;
+                }
+
+                // that.$frame.toggle();
             }
-
-           // that.$frame.toggle();
         }
-    }
-  }
-  that.closebtn = $("<li style='float:right;'> <a><i class='close_button fa fa-close' /></i> </a> </li>").appendTo(that.$menu  ).mousedown( function(ev){  ev.stopPropagation(); that.toggle()} );
+    };
+    that.closebtn = $("<li style='float:right;'> <a><i class='close_button fa fa-close' /></i> </a> </li>")
+        .appendTo(that.$menu)
+        .mousedown(function (ev) {
+            ev.stopPropagation();
+            that.toggle();
+        });
 
-  maximizerButton(that.$menu, that.$frame);
+    maximizerButton(that.$menu, that.$frame);
 
-  that.$container = $("<div class='dialog_generic_container'></div>").appendTo(that.$frame);
+    that.$container = $("<div class='dialog_generic_container'></div>").appendTo(that.$frame);
 
-  that.bringToFront = function()
-  {
-      bringToFront(that.$frame);
-  }
-  
-  that.bringToFront();
-  
-  return that;
+    that.bringToFront = function () {
+        bringToFront(that.$frame);
+    };
+
+    that.bringToFront();
+
+    return that;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7793,8 +6373,7 @@ function dialog_generic()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function KList(struct)
-{
+function KList(struct) {
     /* Usage:
     struct.$targetcontainer
     struct.$menucontainer (optional), otherwise use return.$ul
@@ -7810,254 +6389,212 @@ function KList(struct)
     tabber.clear;
     */
 
-	var klm = new Object();
-	klm.list = new Object();
+    var klm = new Object();
+    klm.list = new Object();
 
-	klm.activeID = undefined;
+    klm.activeID = undefined;
 
-	var $target;
+    var $target;
 
-	if(struct.$targetcontainer != undefined)
-		settarget(struct.$targetcontainer);
+    if (struct.$targetcontainer != undefined) settarget(struct.$targetcontainer);
 
-	
-	var classes = "KList ";
-	if(struct.classes !=undefined)
-	{
-		for(var k=0; k< struct.classes.length; k++)
-		{
-			classes +=  " KList_" + struct.classes[k] ;
-		}
-	}
-
-	// the menu container does already exist, append
-	if(struct.$menucontainer)
-		klm.$ul = struct.$menucontainer.addClass(classes);
-	else
-		klm.$ul = $("<ul class='" + classes + "'></ul>");
-	
-
-    klm.deselect = function()
-    {
-        klm.$ul.children().removeClass('active')  
+    var classes = "KList ";
+    if (struct.classes != undefined) {
+        for (var k = 0; k < struct.classes.length; k++) {
+            classes += " KList_" + struct.classes[k];
+        }
     }
 
+    // the menu container does already exist, append
+    if (struct.$menucontainer) klm.$ul = struct.$menucontainer.addClass(classes);
+    else klm.$ul = $("<ul class='" + classes + "'></ul>");
 
-	/**********************************
+    klm.deselect = function () {
+        klm.$ul.children().removeClass("active");
+    };
+
+    /**********************************
 	set the target where content shall be updated
-	**********************************/	
-	function settarget($t)
-	{
-		$target = $t;
-	}
-	klm.settarget = settarget;
-
-
-	/**********************************
-	reset, when MList becomes empty after deletion of last element
-	**********************************/	
-	klm.reset = function()
-	{
-		if( klm.subList  && klm.subList.activeID)
-			klm.subList[klm.subList.activeID].trigger('click');		
-		
-		if($target!=undefined)
-			$target.empty();
-	}
-
-	/**********************************
-	setVisibleGroups
-	**********************************/	
-	klm.groupsexpanded = {};
-    klm.setGroupsExpanded = function(groups)
-    {
-        if (groups == undefined)
-        	klm.groupsexpanded = {};
-        else
-            klm.groupsexpanded = groups;
+	**********************************/
+    function settarget($t) {
+        $target = $t;
     }
+    klm.settarget = settarget;
 
-	/**********************************
+    /**********************************
+	reset, when MList becomes empty after deletion of last element
+	**********************************/
+    klm.reset = function () {
+        if (klm.subList && klm.subList.activeID) klm.subList[klm.subList.activeID].trigger("click");
+
+        if ($target != undefined) $target.empty();
+    };
+
+    /**********************************
+	setVisibleGroups
+	**********************************/
+    klm.groupsexpanded = {};
+    klm.setGroupsExpanded = function (groups) {
+        if (groups == undefined) klm.groupsexpanded = {};
+        else klm.groupsexpanded = groups;
+    };
+
+    /**********************************
 	append items
-	**********************************/	
-	klm.append = function(uid, title_, content, onclick, addons)
-	{
-		var title, addon;
-		addon = "";
-	    if (typeof title_ == "string")
-	       title = title_;
-	    else 
-	    {
-	       title = title_.title
-	       addon = title_.addon;
-	    }
+	**********************************/
+    klm.append = function (uid, title_, content, onclick, addons) {
+        var title, addon;
+        addon = "";
+        if (typeof title_ == "string") title = title_;
+        else {
+            title = title_.title;
+            addon = title_.addon;
+        }
 
-
-		/**********************************
+        /**********************************
 		sub-tree with groups
 		**********************************/
-		var temp = title.split('/');
-		if(temp.length>1)
-		{
-			var group= temp[0];
-			var ititle = temp.slice(1).join('/');
+        var temp = title.split("/");
+        if (temp.length > 1) {
+            var group = temp[0];
+            var ititle = temp.slice(1).join("/");
 
-			var $li = $("<li class='KListItem KListItem_subitem'><a>"+ititle+"</a>"+addon+"</li>").hide();
-			var $parent = klm.$ul.find('ul[klist_groupid="'+group+'"]')
-			var selstr = "right"
-			if(	klm.groupsexpanded[group])
-			  selstr = "down";
-			if($parent.length==0)
-				$("<ul class='KListItem KListItem_subgroup' klist_groupid='"+group+"'></ul>").appendTo(klm.$ul)
-				.append( $("<li class='KListItem'><a><i class='fa fa-caret-"+selstr+"' style='float:left'></i><span>"+group+"</span></a></ul>").click(function(){
-					$(this).nextUntil().toggle()
-					var thestate;
-					var $i = $(this).find('i');
-					if($i.hasClass('fa-caret-right')){thestate = 1;
-					   $i.removeClass('fa-caret-right').addClass('fa-caret-down')}
-					else{thestate = 0;
-					   $i.removeClass('fa-caret-down').addClass('fa-caret-right')}
-					klm.groupsexpanded[group] = thestate;
-					if(onclick) 
-					    onclick({klistgroup_id: group, klistgroup_state:thestate });
-					}
-				))
-				.append($li);
-			else
-				$li.appendTo($parent.eq(0));
-			if(	klm.groupsexpanded[group])
-			    $li.show();
-		}
-		else
-		{
-			var $li = $("<li class='KListItem'><a>"+title+"</a>"+addon+"</li>").appendTo(klm.$ul);
-		}
+            var $li = $("<li class='KListItem KListItem_subitem'><a>" + ititle + "</a>" + addon + "</li>").hide();
+            var $parent = klm.$ul.find('ul[klist_groupid="' + group + '"]');
+            var selstr = "right";
+            if (klm.groupsexpanded[group]) selstr = "down";
+            if ($parent.length == 0)
+                $("<ul class='KListItem KListItem_subgroup' klist_groupid='" + group + "'></ul>")
+                    .appendTo(klm.$ul)
+                    .append(
+                        $(
+                            "<li class='KListItem'><a><i class='fa fa-caret-" +
+                                selstr +
+                                "' style='float:left'></i><span>" +
+                                group +
+                                "</span></a></ul>"
+                        ).click(function () {
+                            $(this).nextUntil().toggle();
+                            var thestate;
+                            var $i = $(this).find("i");
+                            if ($i.hasClass("fa-caret-right")) {
+                                thestate = 1;
+                                $i.removeClass("fa-caret-right").addClass("fa-caret-down");
+                            } else {
+                                thestate = 0;
+                                $i.removeClass("fa-caret-down").addClass("fa-caret-right");
+                            }
+                            klm.groupsexpanded[group] = thestate;
+                            if (onclick) onclick({ klistgroup_id: group, klistgroup_state: thestate });
+                        })
+                    )
+                    .append($li);
+            else $li.appendTo($parent.eq(0));
+            if (klm.groupsexpanded[group]) $li.show();
+        } else {
+            var $li = $("<li class='KListItem'><a>" + title + "</a>" + addon + "</li>").appendTo(klm.$ul);
+        }
 
-		if(uid == 'spacer')
-		{
-			$li.addClass('KListSpacer');
-			return $li.appendTo(klm.$ul);
-		}
+        if (uid == "spacer") {
+            $li.addClass("KListSpacer");
+            return $li.appendTo(klm.$ul);
+        }
 
-		/**********************************
+        /**********************************
 		deleteable items
 		**********************************/
-		if(struct.ondelete)
-		{
-			$("<i class='fa fa-trash'></i>").appendTo($li).click(function(ev){struct.ondelete(uid);ev.stopPropagation();});
-		}
+        if (struct.ondelete) {
+            $("<i class='fa fa-trash'></i>")
+                .appendTo($li)
+                .click(function (ev) {
+                    struct.ondelete(uid);
+                    ev.stopPropagation();
+                });
+        }
 
-		/**********************************
+        /**********************************
 		arbitrary mods
 		**********************************/
-        if (addons)
-            addons(uid,$li);
+        if (addons) addons(uid, $li);
 
+        $li.uid = uid;
 
-		$li.uid = uid;
-		
-		// save the li twice, as shortcut and as dedicated list
-		klm[uid] = $li;
-		klm.list[uid] = $li;
+        // save the li twice, as shortcut and as dedicated list
+        klm[uid] = $li;
+        klm.list[uid] = $li;
 
-		/**********************************
+        /**********************************
 		first: run custom handler, e.g. to set a new variable in background
 		**********************************/
 
-		/**********************************
+        /**********************************
 		click handler for marking and setting content
 		**********************************/
-		$li.click( function(uid) { return function()
-		{
-			
-    		if(onclick) 
-    		{
-			    if ( onclick($li,dothechange) == "donotcall" )
-			         return;
-			    dothechange();
-    		}
-    		else
-    		  dothechange();
+        $li.click(
+            (function (uid) {
+                return function () {
+                    if (onclick) {
+                        if (onclick($li, dothechange) == "donotcall") return;
+                        dothechange();
+                    } else dothechange();
 
+                    function dothechange() {
+                        klm.$ul.find("li").removeClass("active");
+                        $li.addClass("active");
+                        klm.activeID = uid;
 
-            function dothechange()
-            {
+                        // Before clearing the content: If there was a subList set remember its active list element and re-trigger
+                        // 			var activeID;
+                        // 			if( klm.subList )
+                        // 				activeID = klm.subList.$ul.children('.active').uid;
+                        var newContent = undefined;
+                        if (typeof content == "function") newContent = content(uid);
+                        else if (content instanceof jQuery) newContent = content;
+                        if (newContent != undefined) {
+                            // careful here: empty will destroy click handlers on objects. Only empty if create function is given for new object
+                            if (typeof content == "function") $target.empty();
+                            else if (content instanceof jQuery) $target.children().detach();
 
-                klm.$ul.find('li').removeClass('active')  
-                $li.addClass('active');
-                klm.activeID = uid;
+                            $target.append(newContent.hide());
+                            newContent.fadeIn(200);
+                        }
 
-                // Before clearing the content: If there was a subList set remember its active list element and re-trigger
-    // 			var activeID;
-    // 			if( klm.subList )
-    // 				activeID = klm.subList.$ul.children('.active').uid;
-                var newContent = undefined;
-                if(typeof content == 'function' )
-                    newContent = content(uid);
-                else if(content instanceof jQuery )
-                    newContent =  content;
-                if(newContent != undefined)
-                {
-                    // careful here: empty will destroy click handlers on objects. Only empty if create function is given for new object
-                    if(typeof content == 'function' )
-                        $target.empty(); 
-                    else if(content instanceof jQuery )    
-                        $target.children().detach();
+                        if (klm.subList && klm.subList.activeID) klm.subList[klm.subList.activeID].trigger("click");
+                    }
+                };
+            })(uid)
+        );
 
-                    $target.append( newContent.hide() );
-                    newContent.fadeIn(200);
-                }
+        return $li;
+    };
 
-                if( klm.subList  && klm.subList.activeID)
-                     klm.subList[klm.subList.activeID].trigger('click');
+    klm.updateOrSelectByID = function (id) {
+        if (id == undefined) {
+            // select the active One
+            if (klm.activeID !== undefined && klm.list[klm.activeID] != undefined) {
+                id = klm.activeID;
+            } else {
+                var list = Object.getOwnPropertyNames(klm.list);
+                if (list.length > 0) klm.list[list[0]].trigger("click");
             }
+        }
 
-		}}(uid));
-		
-		
-		return $li;
+        if (id != undefined && klm[id] != undefined) klm.list[id].trigger("click");
+    };
 
-	}
+    // rebuild the list
+    klm.clear = function () {
+        klm.$ul.empty();
+        klm.list = new Object();
+    };
 
-
-	klm.updateOrSelectByID = function(id)
-	{
-		if (id == undefined)
-		{
-			// select the active One
-			if(klm.activeID!==undefined && klm.list[klm.activeID]!=undefined)
-			{
-				id = klm.activeID;
-			}
-			else
-			{
-				var list = Object.getOwnPropertyNames(klm.list);
-				if(list.length > 0 )
-					klm.list[list[0]].trigger("click");
-			}
-		}
-
-		if(id != undefined && klm[id] !=undefined)
-				klm.list[id].trigger("click");
-	}
-
-	// rebuild the list
-	klm.clear = function()
-	{
-		klm.$ul.empty();
-		klm.list = new Object();
-	}
-
-	return klm;
-
+    return klm;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// Generic Table Manager (similar to localfiletable)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function table_generic(opts_in)
-{
+function table_generic(opts_in) {
     /*
     that.$table  
     that.$thead  
@@ -8065,276 +6602,217 @@ function table_generic(opts_in)
     that.appendToHead( [] )
     that.appendToBody( [] )
     */
-    
-    var opts = 
-    {
+
+    var opts = {
         selectable: 0,
         checkable: 0,
         checkonclick: 0,
-        class_checked: 'selectedGray',
-        class_active : 'selected',       
+        class_checked: "selectedGray",
+        class_active: "selected",
         resizable: 0,
-        sortable: 0
-    }
-    $.extend(true, opts, opts_in)
+        sortable: 0,
+    };
+    $.extend(true, opts, opts_in);
 
     var that = new Object();
-    var $table = that.$table = $("<table cellspacing=0  class='localfiletable' style=''></table>"); 
-    var $thead = that.$thead   = $("<thead></thead>").appendTo($table);
-    var $tbody = that.$tbody   = $("<tbody></tbody>").appendTo($table);
+    var $table = (that.$table = $("<table cellspacing=0  class='localfiletable' style=''></table>"));
+    var $thead = (that.$thead = $("<thead></thead>").appendTo($table));
+    var $tbody = (that.$tbody = $("<tbody></tbody>").appendTo($table));
 
-
-	/**********************************
+    /**********************************
 	Append a row to head or body
-	**********************************/	
-    that.appendToHead =  function(row)
-    {
-       return that.append($thead, row);
-    }
-    that.appendToBody = function(row)
-    {
-       return that.append($tbody, row);
-    }
+	**********************************/
+    that.appendToHead = function (row) {
+        return that.append($thead, row);
+    };
+    that.appendToBody = function (row) {
+        return that.append($tbody, row);
+    };
 
-	/**********************************
+    /**********************************
 	Append a row 
-	**********************************/	
-    that.append = function($where, row)
-    {
+	**********************************/
+    that.append = function ($where, row) {
         // ***** row is already created from outside
-        if(row.jquery)
-        {
+        if (row.jquery) {
             var $row = row;
         }
         //******** row is array of values
-        else if (row instanceof Array)
-        {
+        else if (row instanceof Array) {
             var rowid = "xxx";
-            var $row = $("<tr id="+rowid+"></tr>");
-            for(var k=0; k<row.length; k++)
-            {
-                if(row[k] instanceof jQuery)
-                {
-                    row[k].appendTo( $("<td></td>").appendTo($row) ); 
-                }
-                else
-                {
-                    if( row[k]==null || row[k] == undefined)
-                        var val  = "";
-                    else
-                        var val = (row[k]).toString();
-    
-                    $("<span>"+val+"</span>").appendTo( $("<td></td>").appendTo($row) ); 
-                }
+            var $row = $("<tr id=" + rowid + "></tr>");
+            for (var k = 0; k < row.length; k++) {
+                if (row[k] instanceof jQuery) {
+                    row[k].appendTo($("<td></td>").appendTo($row));
+                } else {
+                    if (row[k] == null || row[k] == undefined) var val = "";
+                    else var val = row[k].toString();
 
+                    $("<span>" + val + "</span>").appendTo($("<td></td>").appendTo($row));
+                }
             }
-
         }
         // row is an object --> take the keys
-        else if (row instanceof Object)
-        {
+        else if (row instanceof Object) {
             var rowid = "xxx";
-            var $row = $("<tr id="+rowid+"></tr>");
-            for(var k in row)
-            {
-                if( !(row[k] instanceof Object) && !(row[k] instanceof Array) )
-                {
-                    if( row[k]==null || row[k] == undefined)
-                        var val  = "";
-                    else
-                        var val = (row[k]).toString();
+            var $row = $("<tr id=" + rowid + "></tr>");
+            for (var k in row) {
+                if (!(row[k] instanceof Object) && !(row[k] instanceof Array)) {
+                    if (row[k] == null || row[k] == undefined) var val = "";
+                    else var val = row[k].toString();
 
-                    $("<span>"+val+"</span>").appendTo( $("<td></td>").appendTo($row) ); 
+                    $("<span>" + val + "</span>").appendTo($("<td></td>").appendTo($row));
                 }
             }
-        }
-        else
-        {
+        } else {
             return false;
         }
 
-        if(opts.checkable)
-            $("<td ><i class='fa fa-square-o'></i></td>").prependTo($row).click(  function(ev){toggleChecked(ev, $row); return false;}  );	
-        
-        if(opts.checkable || opts.selectable )
-            $row.click( clickOnRow  );
+        if (opts.checkable)
+            $("<td ><i class='fa fa-square-o'></i></td>")
+                .prependTo($row)
+                .click(function (ev) {
+                    toggleChecked(ev, $row);
+                    return false;
+                });
+
+        if (opts.checkable || opts.selectable) $row.click(clickOnRow);
 
         $row.appendTo($where);
         return $row;
-    }
-	/**********************************
+    };
+    /**********************************
 	clean all
-	**********************************/	
-    that.clean = function()
-    {
+	**********************************/
+    that.clean = function () {
         $thead.empty();
         $tbody.empty();
-    }
+    };
 
-
-	/**********************************
+    /**********************************
 	clickOnRow
-	**********************************/	
-    function clickOnRow(ev, callback)
-    {
+	**********************************/
+    function clickOnRow(ev, callback) {
         ev.stopPropagation();
         ev.preventDefault();
         return false;
 
-        if( (ev.shiftKey || ev.ctrlKey) && opts.checkonclick )
-        {
-            toggleChecked(ev,  $(this) );
+        if ((ev.shiftKey || ev.ctrlKey) && opts.checkonclick) {
+            toggleChecked(ev, $(this));
             return false;
+        } else if (opts.selectable) {
+            setActive($(this));
+            if (callback) return callback();
+            else return false;
         }
-        else if( opts.selectable )
-        {
-            setActive( $(this) );
-            if(callback)
-                return callback()
-            else
-                return false;
-        }
-        
     }
 
-	/***************************************************************************************
-	* setActive: set the active row 
-	****************************************************************************************/
-	var $currentfocus;
-	function setActive($row)
-    {
-	    //var $row = $(this);
+    /***************************************************************************************
+     * setActive: set the active row
+     ****************************************************************************************/
+    var $currentfocus;
+    function setActive($row) {
+        //var $row = $(this);
         $virtualInput.focus();
         $currentfocus = $row;
-	    $tbody.find("tr").removeClass(opts.class_active);
-	    $row.addClass(opts.class_active);
-	}
+        $tbody.find("tr").removeClass(opts.class_active);
+        $row.addClass(opts.class_active);
+    }
 
-	/***************************************************************************************
-	* clickOnCheck: clicked on the check box or with ctrl/shift on row
-	****************************************************************************************/
-    function toggleChecked(ev, $row)
-    {
-        if(ev.shiftKey)
-        {
-            if($currentfocus == undefined)
-                return false;
+    /***************************************************************************************
+     * clickOnCheck: clicked on the check box or with ctrl/shift on row
+     ****************************************************************************************/
+    function toggleChecked(ev, $row) {
+        if (ev.shiftKey) {
+            if ($currentfocus == undefined) return false;
 
             var indlast = $currentfocus.index();
             var indthis = $row.index();
-            var diff = indthis-indlast;
-            if(diff > 0)
-            {
-                var $cc= $currentfocus;
-            }
-            else if(diff < 0)
-            {
-                var $cc= $row;
+            var diff = indthis - indlast;
+            if (diff > 0) {
+                var $cc = $currentfocus;
+            } else if (diff < 0) {
+                var $cc = $row;
                 diff = -diff;
             }
-            for(var x=0; x<=diff; x++)
-            {
+            for (var x = 0; x <= diff; x++) {
                 //toggleCheckedInternal($cc, indlast.hasClass(opts.class_checked));
                 toggleCheckedInternal($cc, ev.ctrlKey);
                 $cc = $cc.next();
             }
-        }
-        else// if(ev.ctrlKey)
-        {
+        } // if(ev.ctrlKey)
+        else {
             toggleCheckedInternal($row);
         }
         return false;
     }
 
+    /***************************************************************************************
+     * toggleChecked: toggle the CHECK Selection
+     ****************************************************************************************/
+    function toggleCheckedInternal($row, force) {
+        if ($row.parent().is("thead")) {
+            var $allrows = $tbody.find("tr");
+            if (!$row.hasClass(opts.class_checked)) {
+                $row.find(".fa").eq(0).addClass("fa-check-square");
+                $row.find(".fa").eq(0).removeClass("fa-square-o");
+                $row.addClass(opts.class_checked);
+                $allrows.addClass(opts.class_checked);
+                $allrows.find(".fa").addClass("fa-check-square");
+                $allrows.find(".fa").removeClass("fa-square-o");
+            } else {
+                $row.find(".fa").removeClass("fa-check-square");
+                $row.find(".fa").addClass("fa-square-o");
+                $row.removeClass(opts.class_checked);
+                $allrows.removeClass(opts.class_checked);
+                $allrows.find(".fa").removeClass("fa-check-square");
+                $allrows.find(".fa").addClass("fa-square-o");
+            }
+        } else {
+            if (force !== undefined) var newstate = force;
+            else var newstate = $row.hasClass(opts.class_checked);
 
-	/***************************************************************************************
-	* toggleChecked: toggle the CHECK Selection
-	****************************************************************************************/
-	function toggleCheckedInternal($row, force)
-	{
-		if($row.parent().is('thead'))
-		{
-			var $allrows = $tbody.find("tr");
-			if(!$row.hasClass(opts.class_checked) )
-			{
-				$row.find('.fa').eq(0).addClass('fa-check-square');
-				$row.find('.fa').eq(0).removeClass('fa-square-o');
-				$row.addClass(opts.class_checked);
-				$allrows.addClass(opts.class_checked);
-				$allrows.find('.fa').addClass('fa-check-square');
-				$allrows.find('.fa').removeClass('fa-square-o');
-			}
-			else 
-			{
-				$row.find('.fa').removeClass('fa-check-square');
-				$row.find('.fa').addClass('fa-square-o');
-				$row.removeClass(opts.class_checked);
-				$allrows.removeClass(opts.class_checked);
-				$allrows.find('.fa').removeClass('fa-check-square');
-				$allrows.find('.fa').addClass('fa-square-o');
-			}
-		}
-		else
-		{
-			if(force!==undefined)
-				var newstate = force;
-			else
-				var newstate = $row.hasClass(opts.class_checked);
-				  
-			if(newstate )
-			{
-				$row.removeClass(opts.class_checked);
-				$row.children().eq(0).find('.fa').removeClass('fa-check-square');
-				$row.children().eq(0).find('.fa').addClass('fa-square-o');
-			}
-			else 
-			{
-				$row.addClass(opts.class_checked);
-				$row.children().eq(0).find('.fa').addClass('fa-check-square');
-				$row.children().eq(0).find('.fa').removeClass('fa-check-o');
+            if (newstate) {
+                $row.removeClass(opts.class_checked);
+                $row.children().eq(0).find(".fa").removeClass("fa-check-square");
+                $row.children().eq(0).find(".fa").addClass("fa-square-o");
+            } else {
+                $row.addClass(opts.class_checked);
+                $row.children().eq(0).find(".fa").addClass("fa-check-square");
+                $row.children().eq(0).find(".fa").removeClass("fa-check-o");
+            }
+        }
+    }
 
-			}
-		}
-	}
-
-
-	/**********************************
+    /**********************************
 	Keyboard move functionality: move up and down 
-	**********************************/		
-	// put an key event handler to som element, It must have tabindex to work.
-	if(opts.selectable)
-	{
+	**********************************/
+    // put an key event handler to som element, It must have tabindex to work.
+    if (opts.selectable) {
         $virtualInput = $table;
-        $virtualInput.attr("tabindex",-1)
-        $virtualInput.on('keyup', keyhandler);
-	}
-    function keyhandler(ev) 
-    {
-    	if($currentfocus)
-    	{
-    		if(ev.keyCode==38 && $currentfocus.prev().length > 0)
-    		   		$currentfocus = $currentfocus.prev();
-    		else if(ev.keyCode==40 && $currentfocus.next().length > 0)
-    		   		$currentfocus = $currentfocus.next();
-    		
-    		if($currentfocus)
-    			$currentfocus.trigger('click');
-    	}
+        $virtualInput.attr("tabindex", -1);
+        $virtualInput.on("keyup", keyhandler);
+    }
+    function keyhandler(ev) {
+        if ($currentfocus) {
+            if (ev.keyCode == 38 && $currentfocus.prev().length > 0) $currentfocus = $currentfocus.prev();
+            else if (ev.keyCode == 40 && $currentfocus.next().length > 0) $currentfocus = $currentfocus.next();
+
+            if ($currentfocus) $currentfocus.trigger("click");
+        }
         ev.preventDefault();
         return false;
     }
 
-
-    function createTestTable()
-    {
+    function createTestTable() {
         that.$tbody.empty();
         that.$thead.empty();
 
-        var h  = ["h2", "h3" , "h5"];
-        var b1 = ["b2aada", "badada3" , "b5"];
-        var b2 = ["b2",  1 , "b5adaa"];
-        var b3 = ["b3",  1 , "bdaa"];
-        var b4 = ["b524",  1 , "b5adaa"];
+        var h = ["h2", "h3", "h5"];
+        var b1 = ["b2aada", "badada3", "b5"];
+        var b2 = ["b2", 1, "b5adaa"];
+        var b3 = ["b3", 1, "bdaa"];
+        var b4 = ["b524", 1, "b5adaa"];
         that.appendToHead(h);
         that.appendToBody(b1);
         that.appendToBody(b2);
@@ -8342,63 +6820,51 @@ function table_generic(opts_in)
         that.appendToBody(b4);
 
         $table.appendTo($body);
-        $table.css('position', 'absolute');
-        $table.css('z-index', '1000000000000');
-        $table.dblclick( function(){$table.remove()} );
+        $table.css("position", "absolute");
+        $table.css("z-index", "1000000000000");
+        $table.dblclick(function () {
+            $table.remove();
+        });
     }
-    
+
     //createTestTable();
 
-    return that;	
+    return that;
 }
-
-
-
-
-
-
 
 var scriptLoader = new ScriptLoader();
-function ScriptLoader() 
-{
-	var that = new Object();
-	that.scripts = new Array();
-	that.loadScript = function(scriptName, whendone)
-	{
+function ScriptLoader() {
+    var that = new Object();
+    that.scripts = new Array();
+    that.loadScript = function (scriptName, whendone) {
         var url;
-        if (url_pref == "import:")
-        {
-               //blob = new Blob([scriptStore[scriptName]], {type: 'application/javascript'});
-    		   if(that.scripts[scriptName] === undefined)            
-                  eval.call(null,scriptStore[scriptName]);
-               that.scripts[scriptName] = true;
-               if(whendone)
-                   whendone();
-               return;
-        }     
-        else
-        {
-    		 url = url_pref + "/" + scriptName;        
-             if (url.substring(0,1) == "/")
-                 url = url.substring(1);
+        if (url_pref == "import:") {
+            //blob = new Blob([scriptStore[scriptName]], {type: 'application/javascript'});
+            if (that.scripts[scriptName] === undefined) eval.call(null, scriptStore[scriptName]);
+            that.scripts[scriptName] = true;
+            if (whendone) whendone();
+            return;
+        } else {
+            url = url_pref + "/" + scriptName;
+            if (url.substring(0, 1) == "/") url = url.substring(1);
 
-    		 if(that.scripts[scriptName] === undefined)
-    			$.getScript(url, function()				{ that.scripts[scriptName] = true; if (whendone) whendone();});
-    		else 		{if(whendone)whendone();}
-            
+            if (that.scripts[scriptName] === undefined)
+                $.getScript(url, function () {
+                    that.scripts[scriptName] = true;
+                    if (whendone) whendone();
+                });
+            else {
+                if (whendone) whendone();
+            }
         }
+    };
 
-	}
-
-	return that;
+    return that;
 }
 
-
-
-function setdragend(ev)
-{
-  cleanAllDropIndicators();	
-/*
+function setdragend(ev) {
+    cleanAllDropIndicators();
+    /*
   $('.KView_viewportdropIndicator').fadeOut(220, function()
   {
   	//$(this).remove()
@@ -8411,13 +6877,11 @@ function setdragend(ev)
 */
 }
 
-
-function setdragstart(ev)
-{
-	/***************************************************************************************
+function setdragstart(ev) {
+    /***************************************************************************************
 	drop-cancellator
 	****************************************************************************************/
-	/*
+    /*
   	var $cancel = $("<div class='dropindicator_general_vert body_dropindicator' style=''></div>").hide().appendTo($body).fadeIn(150);
   	setPixelPosition($cancel, [1,1, 300,100], 0);
   	var $cancelInner = $("<div style='background:rgba(255, 139, 0, 0.9);padding:10px 20px;'>Dragged by accident? <br><br>Drop here to cancel drop.</div>").appendTo($cancel);
@@ -8428,380 +6892,326 @@ function setdragstart(ev)
 			$cancelInner.on("drop", function(ev)
 			{ $cancel.remove(); cleanAllDropIndicators();				ev.preventDefault();ev.stopPropagation();return false; });
 	*/
-	
-	/***************************************************************************************
+
+    /***************************************************************************************
 	Autoloaders
 	****************************************************************************************/
-	if(!ev.ctrlKey && ($(ev.target).hasClass("patient") || $(ev.target).hasClass("study")) )
-	{ 
-
-		/***************************************************************************************
+    if (!ev.ctrlKey && ($(ev.target).hasClass("patient") || $(ev.target).hasClass("study"))) {
+        /***************************************************************************************
 		the starter
 		****************************************************************************************/
-		var $start = $("<div class='dropindicator_general_vert body_dropindicator' style='border-radius:5px;'><div>Drag here to show all autoloaders</div></div>").hide().appendTo($body).fadeIn(150);
-		var pos = getPixelPosition($("#KView_toolBarLeft").find('.fa-car'));
-		setPixelPosition($start, [pos[0]-00,pos[1]-100, 180,150], 0);
-				$start.on("dragenter dragover", function(ev)
-				{ $start.remove(); showAutoloaderIndicators(); 			ev.preventDefault();ev.stopPropagation();return false; });
+        var $start = $(
+            "<div class='dropindicator_general_vert body_dropindicator' style='border-radius:5px;'><div>Drag here to show all autoloaders</div></div>"
+        )
+            .hide()
+            .appendTo($body)
+            .fadeIn(150);
+        var pos = getPixelPosition($("#KView_toolBarLeft").find(".fa-car"));
+        setPixelPosition($start, [pos[0] - 00, pos[1] - 100, 180, 150], 0);
+        $start.on("dragenter dragover", function (ev) {
+            $start.remove();
+            showAutoloaderIndicators();
+            ev.preventDefault();
+            ev.stopPropagation();
+            return false;
+        });
 
-		function showAutoloaderIndicators()
-		{
-			var $frame = $("<div class='KView_autoloader_dropIndicator' style=''></div>")
-				.offset(KViewer.$container.offset()).width(KViewer.$container.width()).height(KViewer.$container.height());
+        function showAutoloaderIndicators() {
+            var $frame = $("<div class='KView_autoloader_dropIndicator' style=''></div>")
+                .offset(KViewer.$container.offset())
+                .width(KViewer.$container.width())
+                .height(KViewer.$container.height());
 
-			$("<div><span style='font-size:30px'>AUTOLOADERS</span><br><br><span>Drop patient or study to start an autoloader<br>You can add / remove / manage autoloaders using the autloader menu</span></div>").appendTo($frame);
+            $(
+                "<div><span style='font-size:30px'>AUTOLOADERS</span><br><br><span>Drop patient or study to start an autoloader<br>You can add / remove / manage autoloaders using the autloader menu</span></div>"
+            ).appendTo($frame);
 
-			var $list = $("<div></div>").appendTo($frame);
-			var plist = presetManager.getPresetList();
-			var keys = Object.getOwnPropertyNames(plist);
-			keys.unshift("0");
-			for(var z=0; z<keys.length; z++)
-			{	
-				var k = keys[z];
-				if(k=="0")
-				{
-					var preset = state.viewer;
-					var title = "<b>currentSnapshot</b>";
-				}
-				else
-				{
-					var preset = plist[k].content;
-					var title = preset.name;
-				}
+            var $list = $("<div></div>").appendTo($frame);
+            var plist = presetManager.getPresetList();
+            var keys = Object.getOwnPropertyNames(plist);
+            keys.unshift("0");
+            for (var z = 0; z < keys.length; z++) {
+                var k = keys[z];
+                if (k == "0") {
+                    var preset = state.viewer;
+                    var title = "<b>currentSnapshot</b>";
+                } else {
+                    var preset = plist[k].content;
+                    var title = preset.name;
+                }
 
-				if(1)//preset.autoloaders.length > 0)
-				{
-					var str = "" ;
+                if (1) {
+                    //preset.autoloaders.length > 0)
+                    var str = "";
 
-					str += "<div>" + title + "</div>";
-					str += "<div>"; 
-					//str += "Viewports: <b>" + preset.nVisibleRows + " x " + preset.nVisibleCols +" | " + preset.nVisibleBarports + "</b><br />";
-					str += "<b>" + preset.nVisibleRows + " x " + preset.nVisibleCols + "</b><br />";
-					for(var i=0; i<preset.autoloaders.length;i++)
-						str += "<span style='font-size:12px;color:gray'>"+ preset.autoloaders[i].pattern.slice(0,20) + "...<span> <br />" ;
-					str += "</div>";
+                    str += "<div>" + title + "</div>";
+                    str += "<div>";
+                    //str += "Viewports: <b>" + preset.nVisibleRows + " x " + preset.nVisibleCols +" | " + preset.nVisibleBarports + "</b><br />";
+                    str += "<b>" + preset.nVisibleRows + " x " + preset.nVisibleCols + "</b><br />";
+                    for (var i = 0; i < preset.autoloaders.length; i++)
+                        str +=
+                            "<span style='font-size:12px;color:gray'>" +
+                            preset.autoloaders[i].pattern.slice(0, 20) +
+                            "...<span> <br />";
+                    str += "</div>";
 
-					var $item = $("<div>"+ str +"</div>").appendTo($list);
-					// this must be set, otherwise drop will not work!!!
-					$item.on("dragenter dragover", function(ev)
-					{ $(this).css('background', 'rgba(190, 0, 0, 0.6)'); 				ev.preventDefault();ev.stopPropagation();return false; });
-					$item.on("dragleave", function(ev)
-					{ $(this).css('background', 'rgba(139, 0, 0, 0.6)');				ev.preventDefault();ev.stopPropagation();return false; });
-					$item.on("drop", creatDropFunction(preset));
-					function creatDropFunction(p)
-					{
-						return function(evd)
-						{
-							evd.preventDefault(); evd.stopPropagation();
-							var psid = {piz:($(ev.target)).attr('data-piz'),sid:($(ev.target)).attr('data-sid')};
-							
-							state.viewer.nVisibleCols =  p.nVisibleCols;
-							state.viewer.nVisibleRows =  p.nVisibleRows;
-							state.viewer.nVisibleBarports =  p.nVisibleBarports;
-							KViewer.applyNewViewportLayout();
-							
-							startAutoloader(p.autoloaders, psid);
-							cleanAllDropIndicators();
-							return;
-						}
-					}
+                    var $item = $("<div>" + str + "</div>").appendTo($list);
+                    // this must be set, otherwise drop will not work!!!
+                    $item.on("dragenter dragover", function (ev) {
+                        $(this).css("background", "rgba(190, 0, 0, 0.6)");
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        return false;
+                    });
+                    $item.on("dragleave", function (ev) {
+                        $(this).css("background", "rgba(139, 0, 0, 0.6)");
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        return false;
+                    });
+                    $item.on("drop", creatDropFunction(preset));
+                    function creatDropFunction(p) {
+                        return function (evd) {
+                            evd.preventDefault();
+                            evd.stopPropagation();
+                            var psid = { piz: $(ev.target).attr("data-piz"), sid: $(ev.target).attr("data-sid") };
 
+                            state.viewer.nVisibleCols = p.nVisibleCols;
+                            state.viewer.nVisibleRows = p.nVisibleRows;
+                            state.viewer.nVisibleBarports = p.nVisibleBarports;
+                            KViewer.applyNewViewportLayout();
 
-				}
-			}
-			$frame.appendTo(document.body);
-		}
-	}
-
-
-
-  // comes from the roiPanel
-  if($(ev.target).parents('.roiToolContainer').length > 0 )
-  {
-  	 ev.dataTransfer.setData("fromroitool","yea");
-  }
-
-  if ($(ev.target).hasClass("formtable"))
-  {
-  	 ev.dataTransfer.setData("form","");
-  	 ev.dataTransfer.setData($(ev.target).attr("data-fileid"),"");
-  }
-  else
-  {
-	  prepObjectInfo(ev.target);
-
-	  // drag from file cacheManager
-	  if ($(ev.target).hasClass("filecache"))
-	  {
-		  if(ev.originalEvent!== undefined)
-			   ev.originalEvent.dataTransfer.setData("fromcachetable","yea");
-		  else
-			   ev.dataTransfer.setData("fromcachetable","yea");
-	  }
-
-      if(ev.originalEvent!== undefined)
-           ev.originalEvent.dataTransfer.setData("fromfiletable","yea");
-      else
-      {
-           ev.dataTransfer.setData("fromfiletable","yea");
-//           var fi = myownurl() + '?asuser=' + userinfo.username + "&project=" + projectInfo.name + "&fileID=100";
-//           ev.dataTransfer.setData("DownloadURL",fi);
-      }
-
-	  for (var p in tempObjectInfo[0])
-		  ev.dataTransfer.setData(p,tempObjectInfo[0][p]);// just needed for backward compatability (still have to change drop in Kviewports)
-	  buildDragImg(ev);
-
-  }
-
-  var fromTool = $(ev.target).parents('.annotation_tool_listDIV');
-  if (fromTool.length>0)
-  {
-     patientTableScrollLock($(fromTool[0]));
-  }
-  else
-  	patientTableScrollLock($("#patientTableWrap"));
-
-
-}
-
-
-
-/***************************************************************************************
-*  Interprets/packs selection in patient table
-****************************************************************************************/
- // gathers selection if target coincides with selected target,
- // or if target is undefined it gives just the selected objects
-function prepObjectInfo(target)
-{
-
-   var type = 'patientTable';
-   if (target != undefined)
-   {
-   	if  ($(target).hasClass('filecache'))
-   	    type = "filecache";
-   }
-
-  if ($(target).hasClass('atlasdrag selectedBold')) // from atlas panel for multi regions
-  {
-     var selected = $(target).parent().find(".selectedBold")
-     var keys = [];
-     for (var k = 0; k < selected.length;k++)
-        eval("keys.push({"+$(selected[k]).attr("data-intent")+"}.atlaskey)")
-     var obj = packObjectInfo(target);
-     obj.intent = {labelname:"collection",atlaskey:keys};
-     tempObjectInfo= [obj];
-  }
-  else if (type == "filecache")
-  {
-  	   var selected = $(target).parent().find(".selected")
-  	   if (selected.length==0)
-  	   {
-  	   	  tempObjectInfo = [packObjectInfo(target)];
-  	   }
-  	   else
-  	   {
-  	   	  tempObjectInfo = new Array();
-          for (var k = 0; k < selected.length;k++)
-			 tempObjectInfo.push(packObjectInfo(selected[k]));
-  	   }
-
-  }
-  else  // this is putativey the patientable
-  {
-	  var rowid = $(target).attr("id");
-	  if (rowid) rowid = rowid.toString();
- 
-	  tempObjectInfo = new Array();
-	  if (typeof patientTableMirror != "undefined")
-	  {
-          if (target == undefined | patientTableMirror.filesSelected.objs["x"+rowid] != undefined) // gather files
-              prepObjectInfoFromFileSelection(rowid);
-          if (target == undefined | patientTableMirror.selectedItems.indexOf(rowid) != -1)         // gather patients/   studies??
-              prepObjectInfoFromPatientSelection();
-	  }
-	  if (tempObjectInfo.length>0)
-		 return;
-
-
-	  tempObjectInfo = [packObjectInfo(target)];
-  }
-}
-
-
-function prepObjectInfoFromFileSelection(pointed_rowid,target)
-{
-
-      if (target == undefined)
-        target = tempObjectInfo;
-      if (target == undefined)
-      {
-        console.warning("target not initizalied!!")
-      }
-
-	  function addtoTempObjectInfo(rowid)
-	  {
-		  var therow = $("tr[id='" + rowid.substring(1) + "']");
-		  if (therow.length>0)
-			target.push(packObjectInfo(therow));
-	  }
-
-  	  addtoTempObjectInfo("x"+pointed_rowid);
-
-      for (var rowid in patientTableMirror.filesSelected.objs)
-	  	 if (patientTableMirror.filesSelected.objs[rowid] != undefined & "x"+pointed_rowid != rowid)
-	  	 	addtoTempObjectInfo(rowid)
-}
-
-function prepObjectInfoFromPatientSelection(target)
-{
-      if (target == undefined)
-        target = tempObjectInfo;
-      if (target == undefined)
-      {
-        console.warning("target not initizalied!!")
-      }
-
-
-  	  for(var i=0;i<patientTableMirror.selectedItems.length;i++)
-  	  {
-  	  	var therow = $("tr[id='" + patientTableMirror.selectedItems[i] + "']");
-  	  	if (therow.length>0)
-		 	target.push(packObjectInfo(therow));
-		else
-		{
-			if (state.viewer.selectionMode[1] == 'p')
-				target.push({type:'patient',piz:patientTableMirror.selectedItems[i]})
-			else
-			{
-				var ids = patientTableMirror.selectedItems[i].split(riddelim);
-		        if (state.viewer.selectionMode[1] == 's')
-    			{
-    			    if (ids[0] == 'ANALYSIS')
-    			     continue;
-    			}				
-				target.push({type:'study',piz:ids[0],sid:ids[1]});				
-			}
-		}
-  	  }
-}
-
-function packObjectInfo(target)
-{
-	var $target = $(target);
-	var fname;
-	if ($target.attr('data-subfolder') == undefined | $target.attr('data-subfolder')=="" )
-		fname = $target.attr('data-filename');
-	else if ($target.attr('data-filename') == undefined | $target.attr('data-filename')=="" )
-		fname = $target.attr('data-subfolder');
-	else
-		fname = $target.attr('data-subfolder') + "/"+ $target.attr('data-filename');
-
-	// find the patient name
-	if(state.viewer.selectionMode[1]=="p" && $target.attr('rowid_parent')!="")
-		var namecat = ($('#patientTable').find('[id="'+$target.attr('rowid_parent')+'"]')).eq(0).find('.td_NameCat').text().substr(6).trim();
-	else
-		var namecat = $target.find('.td_NameCat').text().substr(6).trim();
-
-	return {type: $target.attr('data-type'),
-		 sid:  $target.attr('data-sid'),
-		 piz:   $target.attr('data-piz'),
-		 namecat: namecat,
-		 subfolder:   $target.attr('data-subfolder'),
-		 tag:   $target.attr('data-tag'),
-		 intent:   $target.attr('data-intent'),
-		 filename: fname,
-		 fileID:  $target.attr('data-fileid'),
-		 mime:  $target.attr('data-mime'),
-	//		 fileURL: $target.attr('href'),
-		 rowid: $target.attr("id"),
-		 date:$target.attr("data-date")
-		 } ;
-}
-
-
-
-
-
-function loadOrthoview(params,offset,cb)
-   {
-       var vp,sl;
-       if (ViewerSettings.nVisibleVertports > 0)
-       {
-            vp = [20,0,2];
-            sl = [2,0,1];
-       }
-       else
-       {
-            offset = Math.floor(offset/4)*4;
-            vp = [0+offset,1+offset,2+offset];
-            sl = [1,0,2];
-       }
-
-       
-	   loadingQueue.execQueue([
-		 //$.extend(true,{intent: {viewportID:3+offset,slicing:2,gl:true}},params),
-		 $.extend(true,{intent: {viewportID:vp[0],slicing:sl[0],gl:false}},params),
-		 $.extend(true,{intent: {viewportID:vp[1],slicing:sl[1],gl:false}},params),
-		 $.extend(true,{intent: {viewportID:vp[2],slicing:sl[2],gl:false}},params)
-		  ],
-		 function () { 
-		               //signalhandler.send("reslice"); 
-		               signalhandler.send("positionChange"); 
-                       if (cb) 
-                        cb();
-		 } );
-
-   }
-
-
-function binsearch(fun,target,lower,upper,tolerance)
-{
-    var current;
-
-    function search(low,up)
-    {
-        current = (low+up)*0.5;
-        var dif = fun(current)-target;
-        if (Math.abs(dif) < tolerance)
-            return;
-        else
-        {
-           if (dif < 0)
-             search(current,up)             
-           else 
-             search(low,current)
+                            startAutoloader(p.autoloaders, psid);
+                            cleanAllDropIndicators();
+                            return;
+                        };
+                    }
+                }
+            }
+            $frame.appendTo(document.body);
         }
     }
 
-    search(lower,upper);
+    // comes from the roiPanel
+    if ($(ev.target).parents(".roiToolContainer").length > 0) {
+        ev.dataTransfer.setData("fromroitool", "yea");
+    }
 
-    return current;
+    if ($(ev.target).hasClass("formtable")) {
+        ev.dataTransfer.setData("form", "");
+        ev.dataTransfer.setData($(ev.target).attr("data-fileid"), "");
+    } else {
+        prepObjectInfo(ev.target);
 
+        // drag from file cacheManager
+        if ($(ev.target).hasClass("filecache")) {
+            if (ev.originalEvent !== undefined) ev.originalEvent.dataTransfer.setData("fromcachetable", "yea");
+            else ev.dataTransfer.setData("fromcachetable", "yea");
+        }
+
+        if (ev.originalEvent !== undefined) ev.originalEvent.dataTransfer.setData("fromfiletable", "yea");
+        else {
+            ev.dataTransfer.setData("fromfiletable", "yea");
+            //           var fi = myownurl() + '?asuser=' + userinfo.username + "&project=" + projectInfo.name + "&fileID=100";
+            //           ev.dataTransfer.setData("DownloadURL",fi);
+        }
+
+        for (var p in tempObjectInfo[0]) ev.dataTransfer.setData(p, tempObjectInfo[0][p]); // just needed for backward compatability (still have to change drop in Kviewports)
+        buildDragImg(ev);
+    }
+
+    var fromTool = $(ev.target).parents(".annotation_tool_listDIV");
+    if (fromTool.length > 0) {
+        patientTableScrollLock($(fromTool[0]));
+    } else patientTableScrollLock($("#patientTableWrap"));
 }
 
-function createMetaIndex(name,index,type,level, shared)
-{					
+/***************************************************************************************
+ *  Interprets/packs selection in patient table
+ ****************************************************************************************/
+// gathers selection if target coincides with selected target,
+// or if target is undefined it gives just the selected objects
+function prepObjectInfo(target) {
+    var type = "patientTable";
+    if (target != undefined) {
+        if ($(target).hasClass("filecache")) type = "filecache";
+    }
 
-    var jsonString = JSON.stringify({name:name,index:index,type:type,level:level, shared: shared});
-    ajaxRequest('command=addMetaIndex'+'&json=' + jsonString , function(e) {
-        state.metaindices = e.metaindices; 
+    if ($(target).hasClass("atlasdrag selectedBold")) {
+        // from atlas panel for multi regions
+        var selected = $(target).parent().find(".selectedBold");
+        var keys = [];
+        for (var k = 0; k < selected.length; k++)
+            eval("keys.push({" + $(selected[k]).attr("data-intent") + "}.atlaskey)");
+        var obj = packObjectInfo(target);
+        obj.intent = { labelname: "collection", atlaskey: keys };
+        tempObjectInfo = [obj];
+    } else if (type == "filecache") {
+        var selected = $(target).parent().find(".selected");
+        if (selected.length == 0) {
+            tempObjectInfo = [packObjectInfo(target)];
+        } else {
+            tempObjectInfo = new Array();
+            for (var k = 0; k < selected.length; k++) tempObjectInfo.push(packObjectInfo(selected[k]));
+        }
+    } // this is putativey the patientable
+    else {
+        var rowid = $(target).attr("id");
+        if (rowid) rowid = rowid.toString();
+
+        tempObjectInfo = new Array();
+        if (typeof patientTableMirror != "undefined") {
+            if ((target == undefined) | (patientTableMirror.filesSelected.objs["x" + rowid] != undefined))
+                // gather files
+                prepObjectInfoFromFileSelection(rowid);
+            if ((target == undefined) | (patientTableMirror.selectedItems.indexOf(rowid) != -1))
+                // gather patients/   studies??
+                prepObjectInfoFromPatientSelection();
+        }
+        if (tempObjectInfo.length > 0) return;
+
+        tempObjectInfo = [packObjectInfo(target)];
+    }
+}
+
+function prepObjectInfoFromFileSelection(pointed_rowid, target) {
+    if (target == undefined) target = tempObjectInfo;
+    if (target == undefined) {
+        console.warning("target not initizalied!!");
+    }
+
+    function addtoTempObjectInfo(rowid) {
+        var therow = $("tr[id='" + rowid.substring(1) + "']");
+        if (therow.length > 0) target.push(packObjectInfo(therow));
+    }
+
+    addtoTempObjectInfo("x" + pointed_rowid);
+
+    for (var rowid in patientTableMirror.filesSelected.objs)
+        if ((patientTableMirror.filesSelected.objs[rowid] != undefined) & ("x" + pointed_rowid != rowid))
+            addtoTempObjectInfo(rowid);
+}
+
+function prepObjectInfoFromPatientSelection(target) {
+    if (target == undefined) target = tempObjectInfo;
+    if (target == undefined) {
+        console.warning("target not initizalied!!");
+    }
+
+    for (var i = 0; i < patientTableMirror.selectedItems.length; i++) {
+        var therow = $("tr[id='" + patientTableMirror.selectedItems[i] + "']");
+        if (therow.length > 0) target.push(packObjectInfo(therow));
+        else {
+            if (state.viewer.selectionMode[1] == "p")
+                target.push({ type: "patient", piz: patientTableMirror.selectedItems[i] });
+            else {
+                var ids = patientTableMirror.selectedItems[i].split(riddelim);
+                if (state.viewer.selectionMode[1] == "s") {
+                    if (ids[0] == "ANALYSIS") continue;
+                }
+                target.push({ type: "study", piz: ids[0], sid: ids[1] });
+            }
+        }
+    }
+}
+
+function packObjectInfo(target) {
+    var $target = $(target);
+    var fname;
+    if (($target.attr("data-subfolder") == undefined) | ($target.attr("data-subfolder") == ""))
+        fname = $target.attr("data-filename");
+    else if (($target.attr("data-filename") == undefined) | ($target.attr("data-filename") == ""))
+        fname = $target.attr("data-subfolder");
+    else fname = $target.attr("data-subfolder") + "/" + $target.attr("data-filename");
+
+    // find the patient name
+    if (state.viewer.selectionMode[1] == "p" && $target.attr("rowid_parent") != "")
+        var namecat = $("#patientTable")
+            .find('[id="' + $target.attr("rowid_parent") + '"]')
+            .eq(0)
+            .find(".td_NameCat")
+            .text()
+            .substr(6)
+            .trim();
+    else var namecat = $target.find(".td_NameCat").text().substr(6).trim();
+
+    return {
+        type: $target.attr("data-type"),
+        sid: $target.attr("data-sid"),
+        piz: $target.attr("data-piz"),
+        namecat: namecat,
+        subfolder: $target.attr("data-subfolder"),
+        tag: $target.attr("data-tag"),
+        intent: $target.attr("data-intent"),
+        filename: fname,
+        fileID: $target.attr("data-fileid"),
+        mime: $target.attr("data-mime"),
+        //		 fileURL: $target.attr('href'),
+        rowid: $target.attr("id"),
+        date: $target.attr("data-date"),
+    };
+}
+
+function loadOrthoview(params, offset, cb) {
+    var vp, sl;
+    if (ViewerSettings.nVisibleVertports > 0) {
+        vp = [20, 0, 2];
+        sl = [2, 0, 1];
+    } else {
+        offset = Math.floor(offset / 4) * 4;
+        vp = [0 + offset, 1 + offset, 2 + offset];
+        sl = [1, 0, 2];
+    }
+
+    loadingQueue.execQueue(
+        [
+            //$.extend(true,{intent: {viewportID:3+offset,slicing:2,gl:true}},params),
+            $.extend(true, { intent: { viewportID: vp[0], slicing: sl[0], gl: false } }, params),
+            $.extend(true, { intent: { viewportID: vp[1], slicing: sl[1], gl: false } }, params),
+            $.extend(true, { intent: { viewportID: vp[2], slicing: sl[2], gl: false } }, params),
+        ],
+        function () {
+            //signalhandler.send("reslice");
+            signalhandler.send("positionChange");
+            if (cb) cb();
+        }
+    );
+}
+
+function binsearch(fun, target, lower, upper, tolerance) {
+    var current;
+
+    function search(low, up) {
+        current = (low + up) * 0.5;
+        var dif = fun(current) - target;
+        if (Math.abs(dif) < tolerance) return;
+        else {
+            if (dif < 0) search(current, up);
+            else search(low, current);
+        }
+    }
+
+    search(lower, upper);
+
+    return current;
+}
+
+function createMetaIndex(name, index, type, level, shared) {
+    var jsonString = JSON.stringify({ name: name, index: index, type: type, level: level, shared: shared });
+    ajaxRequest("command=addMetaIndex" + "&json=" + jsonString, function (e) {
+        state.metaindices = e.metaindices;
         refreshButton();
     });
 }
 
-
-
-function attachWheelHandlerBrowserSafe(target, wheelhandler)
-{
-
-// mousewheel handling depends on browserWheelType
-// since we do not support IE lower than 8, it is best to add  both mousewheel and DOMMouseScroll directly
-// this should also be done, since removal of the handlers doe NOT work using when passing the functio as an argument.
-// Another aspect:
-// removal of handlers does NOT work with this secondary function!
-//  
-/*
+function attachWheelHandlerBrowserSafe(target, wheelhandler) {
+    // mousewheel handling depends on browserWheelType
+    // since we do not support IE lower than 8, it is best to add  both mousewheel and DOMMouseScroll directly
+    // this should also be done, since removal of the handlers doe NOT work using when passing the functio as an argument.
+    // Another aspect:
+    // removal of handlers does NOT work with this secondary function!
+    //
+    /*
     // jquery object
     if(target.get)
         target = target.get(0);
@@ -8828,187 +7238,161 @@ function attachWheelHandlerBrowserSafe(target, wheelhandler)
 */
 }
 
-function getWheelDelta(ev)
-{
+function getWheelDelta(ev) {
     ev = ev || ev.originalEvent;
-    return (ev.wheelDelta || -ev.detail ) > 0? 1:-1;
+    return (ev.wheelDelta || -ev.detail) > 0 ? 1 : -1;
 }
 
-
-function getOnParentPath(obj,condition,depth)
-{
-    if (depth == undefined)
-        depth = 5;
+function getOnParentPath(obj, condition, depth) {
+    if (depth == undefined) depth = 5;
 
     var d = 0;
-    while (!condition(obj) &  d < depth)
-    {
+    while (!condition(obj) & (d < depth)) {
         obj = obj.parent();
     }
 
-    if (d<depth)
-        return obj;
+    if (d < depth) return obj;
 }
 
+function createDummyNifti(sizes, bbox_max, bbox_min, perm, flip) {
+    var voxsz = [0, 0, 0, 1];
+    var centerWorld = [0, 0, 0, 1];
+    for (var i = 0; i < 3; i++) {
+        voxsz[i] = (bbox_max[i] - bbox_min[i]) / sizes[i];
+        centerWorld[i] = (bbox_max[i] + bbox_min[i]) * 0.5;
+    }
 
-function createDummyNifti(sizes,bbox_max,bbox_min,perm,flip)
-{
-	  var voxsz = [0,0,0,1];
-	  var centerWorld = [0,0,0,1];
- 	  for (var i=0; i< 3;i++)
- 	  {
- 	  	 voxsz[i] = (bbox_max[i]-bbox_min[i])/sizes[i];
- 	  	 centerWorld[i] = (bbox_max[i]+bbox_min[i])*0.5;
- 	  }
+    var edges = math.matrix(math.diag(voxsz));
 
-  
-	  var edges = math.matrix(math.diag(voxsz));
- 	  
+    for (var i = 0; i < 3; i++) edges._data[i][3] = +bbox_min[i];
 
-      for (var i = 0;i < 3;i++)
-		   edges._data[i][3] = +bbox_min[i];
-	  	
-
-	  var nii = {
-		  edges: edges,
-		  voxSize: voxsz,
-		  sizes: sizes,//  newsizes,
-		  permutationOrder:perm,
-		  arrayReadDirection:flip, 
-		  centerWorld:math.matrix(centerWorld),
-		  dummy:true,
-		  detsign:math.sign(math.det(edges)),
-          dummy_params: {sizes:sizes,bbox_max:bbox_max,bbox_min:bbox_min,perm:perm,flip:flip}
-	   }
-	return nii;
+    var nii = {
+        edges: edges,
+        voxSize: voxsz,
+        sizes: sizes, //  newsizes,
+        permutationOrder: perm,
+        arrayReadDirection: flip,
+        centerWorld: math.matrix(centerWorld),
+        dummy: true,
+        detsign: math.sign(math.det(edges)),
+        dummy_params: { sizes: sizes, bbox_max: bbox_max, bbox_min: bbox_min, perm: perm, flip: flip },
+    };
+    return nii;
 }
 
+function ignoreDblClickBeforeClose(ev) {
+    var $target = $(ev.target);
+    for (var j = 0; j < 4; j++) {
+        if ($target.is("tr")) $target.attr("ondblclick", "");
+        $target = $target.parent();
+    }
+}
 
-function ignoreDblClickBeforeClose(ev)
- {
-			var $target = $(ev.target);
-			for (var j = 0; j< 4;j++)
-			{
-				if ($target.is("tr"))
-					$target.attr("ondblclick","");
-				$target = $target.parent();
-			}
- }
-
- function setAutoSelectAllOnFocus($elem)
- {
-     $elem.on('focus', function() {  setTimeout(function() { document.execCommand('selectAll', false, null)  }, 0); })
- }
-
-
+function setAutoSelectAllOnFocus($elem) {
+    $elem.on("focus", function () {
+        setTimeout(function () {
+            document.execCommand("selectAll", false, null);
+        }, 0);
+    });
+}
 
 /***************************************************************************************
 create timestamp in sql date format YYYY-MM-DD hh:mm:ss
 ****************************************************************************************/
-function createSQLDate()
-{
+function createSQLDate() {
     var d = new Date();
     var YYYY = d.getFullYear().toString();
-    var MM = (d.getMonth()+1).toString();
-    var DD = (d.getDate()).toString();
-    var hh = (d.getHours()).toString();
-    var mm = (d.getMinutes()).toString();
-    var ss = (d.getSeconds()).toString();
-    var out =     YYYY + "-" 
-                + (MM.length==2?MM:"0"+MM) + "-" 
-                + (DD.length==2?DD:"0"+DD) + " " 
-                + (hh.length==2?hh:"0"+hh) + ":" 
-                + (mm.length==2?mm:"0"+mm) + ":" 
-                + (ss.length==2?ss:"0"+ss) + "" 
+    var MM = (d.getMonth() + 1).toString();
+    var DD = d.getDate().toString();
+    var hh = d.getHours().toString();
+    var mm = d.getMinutes().toString();
+    var ss = d.getSeconds().toString();
+    var out =
+        YYYY +
+        "-" +
+        (MM.length == 2 ? MM : "0" + MM) +
+        "-" +
+        (DD.length == 2 ? DD : "0" + DD) +
+        " " +
+        (hh.length == 2 ? hh : "0" + hh) +
+        ":" +
+        (mm.length == 2 ? mm : "0" + mm) +
+        ":" +
+        (ss.length == 2 ? ss : "0" + ss) +
+        "";
     return out;
 }
 
-
-function cloneCanvas(canvas,clipbox)
-{
+function cloneCanvas(canvas, clipbox) {
     var $c = $("<canvas> </canvas>");
 
     var ctx = $c[0].getContext("2d");
 
-
-    if(clipbox)
-    {
-        var ax = clipbox[0]*canvas[0].width/100;
-        var ay = clipbox[1]*canvas[0].height/100;
-        var bx = (100-clipbox[2])*canvas[0].width/100;
-        var by = (100-clipbox[3])*canvas[0].height/100;
-        ctx.canvas.width = canvas[0].width*(clipbox[2]-clipbox[0])/100
-        ctx.canvas.height = canvas[0].height*(clipbox[3]-clipbox[0])/100
+    if (clipbox) {
+        var ax = (clipbox[0] * canvas[0].width) / 100;
+        var ay = (clipbox[1] * canvas[0].height) / 100;
+        var bx = ((100 - clipbox[2]) * canvas[0].width) / 100;
+        var by = ((100 - clipbox[3]) * canvas[0].height) / 100;
+        ctx.canvas.width = (canvas[0].width * (clipbox[2] - clipbox[0])) / 100;
+        ctx.canvas.height = (canvas[0].height * (clipbox[3] - clipbox[0])) / 100;
+    } else {
+        var ax = 0;
+        var ay = 0;
+        var bx = 0;
+        var by = 0;
+        ctx.canvas.width = canvas[0].width;
+        ctx.canvas.height = canvas[0].height;
     }
-    else
-    {
-        var ax=0; var ay=0; var bx=0; var by=0;
-        ctx.canvas.width = canvas[0].width
-        ctx.canvas.height = canvas[0].height
-    }
 
-
-    ctx.drawImage(canvas[0],ax,ay,ctx.canvas.width,ctx.canvas.height,
-    0,0,ctx.canvas.width,ctx.canvas.height)
+    ctx.drawImage(canvas[0], ax, ay, ctx.canvas.width, ctx.canvas.height, 0, 0, ctx.canvas.width, ctx.canvas.height);
     return $c;
 }
 
-
-function getTicks(a,b)
-{
-    function fix(x,order)
-    {
-        if (Math.abs(order) > 3)
-            return x.toFixed(1) + "e" + order;
-        else
-        {
-            if (order > 0)
-                return ""+ (x*Math.pow(10,order)).toFixed(0);
-            else
-                return ""+ (x*Math.pow(10,order)).toFixed(-order+1);
+function getTicks(a, b) {
+    function fix(x, order) {
+        if (Math.abs(order) > 3) return x.toFixed(1) + "e" + order;
+        else {
+            if (order > 0) return "" + (x * Math.pow(10, order)).toFixed(0);
+            else return "" + (x * Math.pow(10, order)).toFixed(-order + 1);
         }
     }
 
-    if (a > b)
-    {
+    if (a > b) {
         var tmp = a;
         a = b;
         b = tmp;
     }
 
-    var order = Math.floor(Math.log10(b-a));
-    a = a*Math.pow(10,-order)
-    b = b*Math.pow(10,-order)
-    //console.log(b-a);    
+    var order = Math.floor(Math.log10(b - a));
+    a = a * Math.pow(10, -order);
+    b = b * Math.pow(10, -order);
+    //console.log(b-a);
     var ticks = [];
     var pos = [];
 
-    var thres = [ 8, 6,   3.2, 1.5, 0 ];
-    var fu =    [ 1, 4/3, 2,   5  , 10];
+    var thres = [8, 6, 3.2, 1.5, 0];
+    var fu = [1, 4 / 3, 2, 5, 10];
 
-    for (var j = 0; j < thres.length;j++)
-    {
-        if (b-a > thres[j])
-        {
-            var aa = (Math.floor(a*fu[j])/fu[j]);
-            var bb   = (Math.ceil(b*fu[j])/fu[j]);
-            var nsteps = ( (bb-aa) * fu[j]).toFixed(2);
-            for (var k = 0; k <= nsteps;k++)
-            {
-                var zz = Math.floor(a*fu[j]+k)/fu[j];
-                ticks.push(fix(zz,order));
-                pos.push(zz*Math.pow(10,order));
+    for (var j = 0; j < thres.length; j++) {
+        if (b - a > thres[j]) {
+            var aa = Math.floor(a * fu[j]) / fu[j];
+            var bb = Math.ceil(b * fu[j]) / fu[j];
+            var nsteps = ((bb - aa) * fu[j]).toFixed(2);
+            for (var k = 0; k <= nsteps; k++) {
+                var zz = Math.floor(a * fu[j] + k) / fu[j];
+                ticks.push(fix(zz, order));
+                pos.push(zz * Math.pow(10, order));
             }
 
-//             for (var k = 0; k <= (end-start)*fu[j] ;k++)
-//             {
-//                 ticks.push(fix(Math.floor(a*fu[j]+k)/fu[j],order));
-//                 pos.push((a*fu[j]+k)/fu[j]*Math.pow(10,order));
-//             }
+            //             for (var k = 0; k <= (end-start)*fu[j] ;k++)
+            //             {
+            //                 ticks.push(fix(Math.floor(a*fu[j]+k)/fu[j],order));
+            //                 pos.push((a*fu[j]+k)/fu[j]*Math.pow(10,order));
+            //             }
             break;
         }
     }
-    return {ticks:ticks,position:pos};
+    return { ticks: ticks, position: pos };
 }
 /*
 function test()
@@ -9022,927 +7406,698 @@ function test()
     console.log(t)
 }*/
 
-
-
-
 /********************************************************
   SBOX: box with resizable elements, see above and css.
 ********************************************************/
 var sbox = {};
-sbox.appendResizer = function appendResizer($a, callback)
-	{
-		if($a.parent().hasClass('sbox_vert'))
-			var type = 'resizer_vert';
-		else
-			var type = 'resizer_horz';
+sbox.appendResizer = function appendResizer($a, callback) {
+    if ($a.parent().hasClass("sbox_vert")) var type = "resizer_vert";
+    else var type = "resizer_horz";
 
+    //var $v =  $("<div class = '"+type+"'></div>").appendTo($a);
+    var $pc = $("<div class = '" + type + "_placeholder'></div>").insertAfter($a);
+    var $v = $("<div class = '" + type + "'></div>").appendTo($pc);
 
-		//var $v =  $("<div class = '"+type+"'></div>").appendTo($a);
-		var $pc =  $("<div class = '"+type+"_placeholder'></div>").insertAfter($a);
-		var $v =  $("<div class = '"+type+"'></div>").appendTo($pc);
+    //********************************************************
+    $v.mousedown(function (ev) {
+        var $elems = $a.parent().children(".sbox_resizable");
+        $v.addClass("resizer_hovered");
 
-	
-		//********************************************************
-		$v.mousedown(function(ev)
-		{
-			var $elems = $a.parent().children('.sbox_resizable' );
-			$v.addClass('resizer_hovered');
+        var diff;
+        //console.log($elems);
+        var sizes = [];
+        var scpos = [];
 
-            var diff;
-			//console.log($elems);
-			var sizes = [];
-			var scpos = [];
+        var wtot = 0;
+        var htot = 0;
+        var nelems = $elems.length;
+        var ind = 0;
+        for (var k = 0; k < $elems.length; k++) {
+            if (type == "resizer_horz") var siz = $elems.eq(k).width();
+            else var siz = $elems.eq(k).height();
+            sizes.push(siz);
+            wtot += siz;
 
-			var wtot = 0;
-			var htot = 0;
-			var nelems = $elems.length;
-			var ind = 0;
-			for(var k=0; k<$elems.length; k++)
-			{
-				if(type == 'resizer_horz')
-					var siz = $elems.eq(k).width();
-				else
-					var siz = $elems.eq(k).height();
-				sizes.push(siz);
-				wtot += siz;
+            if ($a.get(0) == $elems.get(k)) ind = k;
 
-				if( $a.get(0) == $elems.get(k) )
-					ind = k;
-
-				var scroll = $elems.eq(k).scrollTop();
-				scpos.push( Math.min($elems[k].scrollHeight-$elems[k].clientHeight,scroll));
-					
-			}
-			if(type == 'resizer_horz')
-				var startDiff = -ev.clientX;
-			else
-				var startDiff = -ev.clientY;
-			if(type == 'resizer_horz')
-			{
-				var w1 = $elems.eq(ind).width();
-				var w2 = $elems.eq(ind+1).width();
-			}
-			else
-			{
-				var w1 = $elems.eq(ind).height();
-				var w2 = $elems.eq(ind+1).height();
-			}
-
-
-		    //********************************************************
-		    $body.mousemove(function(ev)
-			{
-				if(type == 'resizer_horz')
-					diff = startDiff + ev.clientX;
-				else
-					diff = startDiff + ev.clientY
-
-				var wnew1 = w1 + diff;
-				var wnew2 = w2 - diff;
-				if(wnew1<1 || wnew2 <1)
-					return;
-
-				sizes[ind] = wnew1;
-				sizes[ind+1] = wnew2;
-
-	
-				for(var k=0; k<$elems.length; k++)
-				{
-					if(type == 'resizer_horz')
-					{
-						$elems.eq(k).width( sizes[k] );
-					}
-					else
-					{
-						$elems.eq(k).height( sizes[k] );
-						$($elems[k]).find(".sbox_resizable").height(sizes[k])
-					}
-
-				}
-
-				for(var k=0; k<$elems.length; k++)
-				{
-					if(type == 'resizer_horz')
-					{
-						$elems.eq(k).scrollTop(scpos[k]);
-					}
-				}
-				
-				if(callback)
-				    callback()
-
-			});
-
-			//********************************************************
-			$body.on('mouseup mouseleave', function(ev)
-			{
-				$(document.body).off('mousemove mouseup mouseleave');
-				$v.removeClass('resizer_hovered');
-
-			});
-		});
-
-	}
-
-
-
-function isDragFromFileTable(ev)
-{
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "fromfiletable" | ev.dataTransfer.types[i] == "fromviewport")
-      	  return true;
-  return false;
-}
-
-function isDragFromViewport(ev)
-{
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "fromviewport")
-      	  return true;
-  return false;
-}
-
-function isDragFromBatchtool(ev)
-{
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "frombatchtool")
-      	  return true;
-  return false;
-}
-
-function isDragFromMarkertool(ev)
-{
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "frommarkertool")
-      	  return true;
-  return false;
-}
-
-function isDragFromCacheTable(ev)
-{
-  if (ev.dataTransfer == undefined)
-      return false;
-  if (ev.dataTransfer.types == undefined)
-    return false;
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "fromcachetable")
-      	  return true;
-  return false;
-}
-
-function isDragFromHostSystem(ev)
-{
-  if (ev.originalEvent)
-  	ev = ev.originalEvent;
-
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "Files")
-      	  return true;
-  return false;
-}
-
-function isDragFromRoiTool(ev)
-{
-  for(var i=0;i<ev.dataTransfer.types.length;i++)
-      if (ev.dataTransfer.types[i] == "fromroitool")
-      	  return true;
-  return false;
-}
-
-
-
-/***************************************************************************************
-*  global key event listener
-***************************************************************************************/
-
-function addKeyboardShortcuts()
-{
-    var lastmove,lastmove_sincekey
-    document.addEventListener("mousemove",function(evt) 
-    {
-        lastmove = evt;
-    })
-
-    document.addEventListener("keydown",function(evt) 
-    {
-
-            lastmove_sincekey = lastmove
-            if(evt.keyCode==33 || evt.keyCode==34){
-                   evt.preventDefault();
-               }            
-        /* slice navigation: XY for QWERTZ; XZ for QWERTY */
-        if ((evt.keyCode == 89 || evt.keyCode == 88 || evt.keyCode == 90) &&
-            /* do not capture alt, ctrl, shift */
-            !(evt.ctrlKey || evt.altKey || evt.shiftKey))
-            {
-                if(!evt.shiftKey && evt.target == document.body && KViewer)
-                {
-                    var mv = KViewer.findMedViewer(function(mv) { return mv.viewport.hasMouse });
-                    if (mv == undefined)
-                        mv = KViewer.findMedViewer(function(mv) { return true });
-                    if (mv == undefined)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        mv.handleSliceChange(mv.getSlicingDimOfArray(),1,(evt.keyCode == 88)?1:-1);                        
-                    }
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    return false;   
-                }
-            }
-    });
-
-    document.addEventListener("keyup",function(evt) 
-    {
-            if (evt.keyCode == 16 && lastmove == lastmove_sincekey && lastmove != undefined)
-            {
-                var $obj = $(lastmove.target)
-                for (var k = 0; k < 4; k++)
-                {
-                    if ($obj.is("td"))
-                        break;
-                    $obj = $obj.parent();
-                }
-
-                if ($obj.hasClass('fileCell') | $obj.hasClass('studyCell') | $obj.hasClass('patientCell')) 
-                {
-                    //console.log($obj)
-                    if ($obj.hasClass("cellEditable")) 
-                        return;
-                    patientTableContextMenu(lastmove,true)
-                }
-            }
-
-
-    });
-
-    document.addEventListener("keyup",function(evt) 
-    {
-
-          evt = evt || window.event;
-
-        // a reading is enabled, overwrite this handler
-        if(typeof KViewer.readingTool != "undefined" && KViewer.readingTool.isinstance && KViewer.readingTool.readingIsActive)
-        {
-            var res = KViewer.readingTool.handleKeyEvent(evt);
-            if(!res)
-                return false;
+            var scroll = $elems.eq(k).scrollTop();
+            scpos.push(Math.min($elems[k].scrollHeight - $elems[k].clientHeight, scroll));
+        }
+        if (type == "resizer_horz") var startDiff = -ev.clientX;
+        else var startDiff = -ev.clientY;
+        if (type == "resizer_horz") {
+            var w1 = $elems.eq(ind).width();
+            var w2 = $elems.eq(ind + 1).width();
+        } else {
+            var w1 = $elems.eq(ind).height();
+            var w2 = $elems.eq(ind + 1).height();
         }
 
-          if (false & state.viewer.selectionMode[0] == "w")
-          {
-            if (!$(evt.target).is("input"))
-            {
-              if (evt.keyCode == 40) {
-                var nextStudy = $("tr[id="+patientTableMirror.selectedItems[0]+"]").next();
-                while (!nextStudy.hasClass("study") & nextStudy.length != 0) nextStudy = nextStudy.next();
-                if (nextStudy.length==0)
-                    return;
-                patientTableMirror.tree_click({},nextStudy.attr("id"));
-              }
-              if (evt.keyCode == 38) {
-                var nextStudy = $("tr[id="+patientTableMirror.selectedItems[0]+"]").prev();
-                while (!nextStudy.hasClass("study") & nextStudy.length != 0) nextStudy = nextStudy.prev();
-                if (nextStudy.length==0)
-                    return;
-                patientTableMirror.tree_click({},nextStudy.attr("id"));
+        //********************************************************
+        $body.mousemove(function (ev) {
+            if (type == "resizer_horz") diff = startDiff + ev.clientX;
+            else diff = startDiff + ev.clientY;
 
-              }
+            var wnew1 = w1 + diff;
+            var wnew2 = w2 - diff;
+            if (wnew1 < 1 || wnew2 < 1) return;
+
+            sizes[ind] = wnew1;
+            sizes[ind + 1] = wnew2;
+
+            for (var k = 0; k < $elems.length; k++) {
+                if (type == "resizer_horz") {
+                    $elems.eq(k).width(sizes[k]);
+                } else {
+                    $elems.eq(k).height(sizes[k]);
+                    $($elems[k]).find(".sbox_resizable").height(sizes[k]);
+                }
             }
-          }
 
-          // ESC key
-          if (evt.keyCode == 27) {
+            for (var k = 0; k < $elems.length; k++) {
+                if (type == "resizer_horz") {
+                    $elems.eq(k).scrollTop(scpos[k]);
+                }
+            }
 
-              if (typeof projectInfo != "undefined" && projectInfo.rights && projectInfo.rights.batchtool == "on")
-              {
-                  if (commandDialog && commandDialog.$frame)
-                  { 
-                     if (commandDialog.zoomBatch() == "notzoomed")
-                        if (commandDialog.$frame.css("display") != "none")
-                            commandDialog.toggle();
-                  }
-                  if (gridjobsDialog.$frame.css("display") != "none")
-                     gridjobsDialog.toggle();
-              }
-              if ($(".patientTableContextmenu").css("display") != "none")
-                 $(".patientTableContextmenu").remove();
-              if (typeof settingsDialog != "undefined" &&  settingsDialog.dialog != undefined)
-                  if (settingsDialog.dialog.$frame.css("display") != "none")
-                    settingsDialog.dialog.toggle();
-              if (typeof userSettingsDialog != "undefined"  && userSettingsDialog != undefined)
-                  if (userSettingsDialog.$frame.css("display") != "none")
-                    userSettingsDialog.toggle();
+            if (callback) callback();
+        });
 
-          }
+        //********************************************************
+        $body.on("mouseup mouseleave", function (ev) {
+            $(document.body).off("mousemove mouseup mouseleave");
+            $v.removeClass("resizer_hovered");
+        });
+    });
+};
+
+function isDragFromFileTable(ev) {
+    for (var i = 0; i < ev.dataTransfer.types.length; i++)
+        if ((ev.dataTransfer.types[i] == "fromfiletable") | (ev.dataTransfer.types[i] == "fromviewport")) return true;
+    return false;
+}
+
+function isDragFromViewport(ev) {
+    for (var i = 0; i < ev.dataTransfer.types.length; i++) if (ev.dataTransfer.types[i] == "fromviewport") return true;
+    return false;
+}
+
+function isDragFromBatchtool(ev) {
+    for (var i = 0; i < ev.dataTransfer.types.length; i++) if (ev.dataTransfer.types[i] == "frombatchtool") return true;
+    return false;
+}
+
+function isDragFromMarkertool(ev) {
+    for (var i = 0; i < ev.dataTransfer.types.length; i++)
+        if (ev.dataTransfer.types[i] == "frommarkertool") return true;
+    return false;
+}
+
+function isDragFromCacheTable(ev) {
+    if (ev.dataTransfer == undefined) return false;
+    if (ev.dataTransfer.types == undefined) return false;
+    for (var i = 0; i < ev.dataTransfer.types.length; i++)
+        if (ev.dataTransfer.types[i] == "fromcachetable") return true;
+    return false;
+}
+
+function isDragFromHostSystem(ev) {
+    if (ev.originalEvent) ev = ev.originalEvent;
+
+    for (var i = 0; i < ev.dataTransfer.types.length; i++) if (ev.dataTransfer.types[i] == "Files") return true;
+    return false;
+}
+
+function isDragFromRoiTool(ev) {
+    for (var i = 0; i < ev.dataTransfer.types.length; i++) if (ev.dataTransfer.types[i] == "fromroitool") return true;
+    return false;
+}
+
+/***************************************************************************************
+ *  global key event listener
+ ***************************************************************************************/
+
+function addKeyboardShortcuts() {
+    var lastmove, lastmove_sincekey;
+    document.addEventListener("mousemove", function (evt) {
+        lastmove = evt;
+    });
+
+    document.addEventListener("keydown", function (evt) {
+        lastmove_sincekey = lastmove;
+        if (evt.keyCode == 33 || evt.keyCode == 34) {
+            evt.preventDefault();
+        }
+        /* slice navigation: XY for QWERTZ; XZ for QWERTY */
+        if (
+            (evt.keyCode == 89 || evt.keyCode == 88 || evt.keyCode == 90) &&
+            /* do not capture alt, ctrl, shift */
+            !(evt.ctrlKey || evt.altKey || evt.shiftKey)
+        ) {
+            if (!evt.shiftKey && evt.target == document.body && KViewer) {
+                var mv = KViewer.findMedViewer(function (mv) {
+                    return mv.viewport.hasMouse;
+                });
+                if (mv == undefined)
+                    mv = KViewer.findMedViewer(function (mv) {
+                        return true;
+                    });
+                if (mv == undefined) {
+                    return false;
+                } else {
+                    mv.handleSliceChange(mv.getSlicingDimOfArray(), 1, evt.keyCode == 88 ? 1 : -1);
+                }
+                evt.stopPropagation();
+                evt.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    document.addEventListener("keyup", function (evt) {
+        if (evt.keyCode == 16 && lastmove == lastmove_sincekey && lastmove != undefined) {
+            var $obj = $(lastmove.target);
+            for (var k = 0; k < 4; k++) {
+                if ($obj.is("td")) break;
+                $obj = $obj.parent();
+            }
+
+            if ($obj.hasClass("fileCell") | $obj.hasClass("studyCell") | $obj.hasClass("patientCell")) {
+                //console.log($obj)
+                if ($obj.hasClass("cellEditable")) return;
+                patientTableContextMenu(lastmove, true);
+            }
+        }
+    });
+
+    document.addEventListener("keyup", function (evt) {
+        evt = evt || window.event;
+
+        // a reading is enabled, overwrite this handler
+        if (
+            typeof KViewer.readingTool != "undefined" &&
+            KViewer.readingTool.isinstance &&
+            KViewer.readingTool.readingIsActive
+        ) {
+            var res = KViewer.readingTool.handleKeyEvent(evt);
+            if (!res) return false;
+        }
+
+        if (false & (state.viewer.selectionMode[0] == "w")) {
+            if (!$(evt.target).is("input")) {
+                if (evt.keyCode == 40) {
+                    var nextStudy = $("tr[id=" + patientTableMirror.selectedItems[0] + "]").next();
+                    while (!nextStudy.hasClass("study") & (nextStudy.length != 0)) nextStudy = nextStudy.next();
+                    if (nextStudy.length == 0) return;
+                    patientTableMirror.tree_click({}, nextStudy.attr("id"));
+                }
+                if (evt.keyCode == 38) {
+                    var nextStudy = $("tr[id=" + patientTableMirror.selectedItems[0] + "]").prev();
+                    while (!nextStudy.hasClass("study") & (nextStudy.length != 0)) nextStudy = nextStudy.prev();
+                    if (nextStudy.length == 0) return;
+                    patientTableMirror.tree_click({}, nextStudy.attr("id"));
+                }
+            }
+        }
+
+        // ESC key
+        if (evt.keyCode == 27) {
+            if (typeof projectInfo != "undefined" && projectInfo.rights && projectInfo.rights.batchtool == "on") {
+                if (commandDialog && commandDialog.$frame) {
+                    if (commandDialog.zoomBatch() == "notzoomed")
+                        if (commandDialog.$frame.css("display") != "none") commandDialog.toggle();
+                }
+                if (gridjobsDialog.$frame.css("display") != "none") gridjobsDialog.toggle();
+            }
+            if ($(".patientTableContextmenu").css("display") != "none") $(".patientTableContextmenu").remove();
+            if (typeof settingsDialog != "undefined" && settingsDialog.dialog != undefined)
+                if (settingsDialog.dialog.$frame.css("display") != "none") settingsDialog.dialog.toggle();
+            if (typeof userSettingsDialog != "undefined" && userSettingsDialog != undefined)
+                if (userSettingsDialog.$frame.css("display") != "none") userSettingsDialog.toggle();
+        }
 
         /***************************************************
          key schortcuts:
         ***************************************************/
-        if(evt.target == document.body && KViewer)
-        {
+        if (evt.target == document.body && KViewer) {
             //console.log(evt.keyCode);
             //numbers 1 to 9: adjust contrast (keycode 48 to 57)
 
-			if(typeof ktagpanel != "undefined" && ktagpanel && ktagpanel.enabled)
-			{
-				if( ktagpanel.handleKeyEvent(evt) )
-					return 
-			}
+            if (typeof ktagpanel != "undefined" && ktagpanel && ktagpanel.enabled) {
+                if (ktagpanel.handleKeyEvent(evt)) return;
+            }
 
-			if (evt.keyCode == 82)
-			{
-			     KViewer.resetCrossHair() 
-			}
-			if (evt.keyCode == 67)
-			{
-			    signalhandler.send("centralize");
-			}
+            if (evt.keyCode == 82) {
+                KViewer.resetCrossHair();
+            }
+            if (evt.keyCode == 67) {
+                signalhandler.send("centralize");
+            }
 
-            if( evt.keyCode >= 48 && evt.keyCode < 57)
-            {
-                KViewer.iterateMedViewers(function(medviewer)
-                {
-                    if(medviewer.nii)
-                    {
+            if (evt.keyCode >= 48 && evt.keyCode < 57) {
+                KViewer.iterateMedViewers(function (medviewer) {
+                    if (medviewer.nii) {
                         var p = colormap.colorlimpresets;
-                        var num = (evt.keyCode - 48);
-                        if(p[num])
-                        {
-                            medviewer.resetColorMapLims( [p[num].min, p[num].max   ]   );
-                            $("<div class='KViewPort_sliceOutsideRange'>"+ p[num].title +"</div>").appendTo(medviewer.viewport.$container).fadeOut(1450, function(){$(this).remove();}); ;
+                        var num = evt.keyCode - 48;
+                        if (p[num]) {
+                            medviewer.resetColorMapLims([p[num].min, p[num].max]);
+                            $("<div class='KViewPort_sliceOutsideRange'>" + p[num].title + "</div>")
+                                .appendTo(medviewer.viewport.$container)
+                                .fadeOut(1450, function () {
+                                    $(this).remove();
+                                });
                         }
                     }
                 });
             }
             // y / x: change scroll speed
-            else if(evt.shiftKey && (evt.keyCode == 89  || evt.keyCode == 88) )
-            {
-                var incr = evt.keyCode==88?1:-1;
-                KViewer.globalScrollSpeed += incr; 
-                if(KViewer.globalScrollSpeed == 0)
-                {
+            else if (evt.shiftKey && (evt.keyCode == 89 || evt.keyCode == 88)) {
+                var incr = evt.keyCode == 88 ? 1 : -1;
+                KViewer.globalScrollSpeed += incr;
+                if (KViewer.globalScrollSpeed == 0) {
                     KViewer.globalScrollSpeed = 1;
+                } else {
                 }
-                else
-                {
-
-                }
-                var $stop = $("<div class='KViewPort_sliceOutsideRange' style='padding:15px;'>Scroll Speed: <b>x "+KViewer.globalScrollSpeed  +"</b></div>").appendTo($body).fadeOut(1250, function(){$(this).remove();}); ;
-
+                var $stop = $(
+                    "<div class='KViewPort_sliceOutsideRange' style='padding:15px;'>Scroll Speed: <b>x " +
+                        KViewer.globalScrollSpeed +
+                        "</b></div>"
+                )
+                    .appendTo($body)
+                    .fadeOut(1250, function () {
+                        $(this).remove();
+                    });
             }
             //************ space bar: toggle roi tool in roi mode
-            else if(evt.keyCode == 32)
-            {
-                if( KViewer.roiTool.isinstance )
-                    KViewer.roiTool.toggleCurrentROI()
-            } 
+            else if (evt.keyCode == 32) {
+                if (KViewer.roiTool.isinstance) KViewer.roiTool.toggleCurrentROI();
+            }
             //************ esc: disable roi drawing
-            else if(evt.keyCode == 27)
-            {
-                if( KViewer.roiTool.isinstance &&  KViewer.roiTool.getCurrentGlobal()!=undefined )
-                    KViewer.roiTool.makeCurrentGlobal( undefined );
-            } 
-            //************ v: visible vvroi 
-            else if(evt.keyCode == 86)
-            {
-             
-                if( KViewer.roiTool.isinstance)
-                {
-                    if (addKeyboardShortcuts.ROIs_visibility == undefined)
-                    {
-                        addKeyboardShortcuts.ROIs_visibility = {}
-                        KViewer.iterateMedViewers(function(medviewer)
-                        {
-                            for (var k = 0; k < medviewer.ROIs.length;k++)
-                            {
-                               if (medviewer.ROIs[k].visible)
-                               {
-                                   medviewer.ROIs[k].toggle({shiftKey:true})
-                                   var id = medviewer.viewport.viewPortID;
-                                   addKeyboardShortcuts.ROIs_visibility[id+"_"+k] = true;
-                               }
+            else if (evt.keyCode == 27) {
+                if (KViewer.roiTool.isinstance && KViewer.roiTool.getCurrentGlobal() != undefined)
+                    KViewer.roiTool.makeCurrentGlobal(undefined);
+            }
+            //************ v: visible vvroi
+            else if (evt.keyCode == 86) {
+                if (KViewer.roiTool.isinstance) {
+                    if (addKeyboardShortcuts.ROIs_visibility == undefined) {
+                        addKeyboardShortcuts.ROIs_visibility = {};
+                        KViewer.iterateMedViewers(function (medviewer) {
+                            for (var k = 0; k < medviewer.ROIs.length; k++) {
+                                if (medviewer.ROIs[k].visible) {
+                                    medviewer.ROIs[k].toggle({ shiftKey: true });
+                                    var id = medviewer.viewport.viewPortID;
+                                    addKeyboardShortcuts.ROIs_visibility[id + "_" + k] = true;
+                                }
                             }
-                        })
-                    }
-                    else
-                    {
-                        for (var k in addKeyboardShortcuts.ROIs_visibility)
-                        {
+                        });
+                    } else {
+                        for (var k in addKeyboardShortcuts.ROIs_visibility) {
                             var x = k.split("_");
                             var v = KViewer.viewports[x[0]].medViewer;
-                            var r = v.ROIs[x[1]]  
-                            if (r != undefined)
-                            {
-                                if (!r.visible)
-                                    r.toggle({shiftKey:true});
+                            var r = v.ROIs[x[1]];
+                            if (r != undefined) {
+                                if (!r.visible) r.toggle({ shiftKey: true });
                             }
                         }
                         addKeyboardShortcuts.ROIs_visibility = undefined;
                     }
-                 }
-            } 
+                }
+            }
             //************ up / down arrow in single mode: got next case
-            else if(evt.keyCode == 38 || evt.keyCode == 40 )
-            {
+            else if (evt.keyCode == 38 || evt.keyCode == 40) {
                 {
                     // a reading is enabled
-                    if(0)//typeof KViewer.readingTool != "undefined" && KViewer.readingTool.isinstance && KViewer.readingTool.readingIsActive)
-                    {
+                    if (0) {
+                        //typeof KViewer.readingTool != "undefined" && KViewer.readingTool.isinstance && KViewer.readingTool.readingIsActive)
                         KViewer.readingTool.handleKeyEvent(evt.keyCode);
                     }
                     //else if( state.viewer.selectionMode[0] == "w")
-                    else if(state.viewer.enableAutoloaders && typeof patientTable_gotoRow != "undefined")
-                    {
-                        var dir = evt.keyCode == 40?1:-1;
-                        patientTable_gotoRow(dir)	
-                    }
-                    else
-                    {
-
+                    else if (state.viewer.enableAutoloaders && typeof patientTable_gotoRow != "undefined") {
+                        var dir = evt.keyCode == 40 ? 1 : -1;
+                        patientTable_gotoRow(dir);
+                    } else {
                     }
                 }
-            }		
-            else if(evt.keyCode == 66 & !evt.shiftKey & !evt.ctrlKey)
-            {
+            } else if ((evt.keyCode == 66) & !evt.shiftKey & !evt.ctrlKey) {
                 commandDialog.toggle();
-            }	
-            else if(evt.keyCode == 67 & evt.shiftKey & !evt.ctrlKey)
-            {
+            } else if ((evt.keyCode == 67) & evt.shiftKey & !evt.ctrlKey) {
                 settingsDialog.dialog.toggle();
-        		settingsDialog.selectDialog('projectManagement',"clin_info");        		
-            }
-            else if(evt.keyCode == 82 & !evt.shiftKey & !evt.ctrlKey)
-            {
+                settingsDialog.selectDialog("projectManagement", "clin_info");
+            } else if ((evt.keyCode == 82) & !evt.shiftKey & !evt.ctrlKey) {
                 settingsDialog.dialog.toggle();
-        		settingsDialog.selectDialog('projectManagement',"rights");        	
-            }
-            else if(evt.keyCode == 83 & !evt.shiftKey & !evt.ctrlKey)
-            {
+                settingsDialog.selectDialog("projectManagement", "rights");
+            } else if ((evt.keyCode == 83) & !evt.shiftKey & !evt.ctrlKey) {
                 settingsDialog.dialog.toggle();
-            }	
-            else if(evt.keyCode == 80 & evt.shiftKey)
-            {
-                addWorkstatePostCode()
-            }	
-            else if (evt.keyCode ==71) // gridstats
-            {
-                gridjobsDialog.toggle()
-
+            } else if ((evt.keyCode == 80) & evt.shiftKey) {
+                addWorkstatePostCode();
+            } else if (evt.keyCode == 71) {
+                // gridstats
+                gridjobsDialog.toggle();
             }
-          
-
         }
     });
-
-
 }
 
-
-if (typeof $ != "undefined")
-{
-    $(document).bind('keydown', function(e) {
-      if(e.ctrlKey && (e.which == 83)) {
-         if (commandDialog.visible)
-         {
-            e.preventDefault();
-            commandDialog.$container.find(".KListItem.active").find(".fa-save").click()     
-            return false;
-         }  
-     
-      }
-      if(e.ctrlKey && (e.which == 68)) {
-         if (gridjobsDialog.$container.is(':visible'))
-         {
-            e.preventDefault();
-            gridjobs_cleardead();     
-            return false;
-         }  
-     
-      }
+if (typeof $ != "undefined") {
+    $(document).bind("keydown", function (e) {
+        if (e.ctrlKey && e.which == 83) {
+            if (commandDialog.visible) {
+                e.preventDefault();
+                commandDialog.$container.find(".KListItem.active").find(".fa-save").click();
+                return false;
+            }
+        }
+        if (e.ctrlKey && e.which == 68) {
+            if (gridjobsDialog.$container.is(":visible")) {
+                e.preventDefault();
+                gridjobs_cleardead();
+                return false;
+            }
+        }
     });
 }
 
-function waiter(condition,callback,delta,maxtimes)
-{
+function waiter(condition, callback, delta, maxtimes) {
     var t = 0;
     iterate();
-    function iterate()
-    {
-        setTimeout(function() { 
-            if (condition())
-                callback()
-            else 
-            {
+    function iterate() {
+        setTimeout(function () {
+            if (condition()) callback();
+            else {
                 t++;
-                if (t>maxtimes)
-                    callback()
-                else
-                    iterate();
+                if (t > maxtimes) callback();
+                else iterate();
             }
-        },delta);
+        }, delta);
     }
 }
 
-
-
 navigationElementsVisible = true;
-function hideNavigationElements()
-{
-	navigationElementsVisible = false;
-    $("#patientTableTopTools").hide()
-	$("#patientTableToolsWrench").hide()
-	$(".KSearchFields").hide()
-	$(".KSearchFieldContainer").hide()
-	$(".Kcaretmenu").hide()
-	$("#patientTableEditMode").show();	
-	$(".patientTable_timeMarker").hide();
-	$("#patientTableEditModeTextFirst").hide();
-	$("#patientTableEditMode").hide();
-	$("#topMenu").remove();
-	$("#frame").css('padding','0px 0px 0px 0px');
+function hideNavigationElements() {
+    navigationElementsVisible = false;
+    $("#patientTableTopTools").hide();
+    $("#patientTableToolsWrench").hide();
+    $(".KSearchFields").hide();
+    $(".KSearchFieldContainer").hide();
+    $(".Kcaretmenu").hide();
+    $("#patientTableEditMode").show();
+    $(".patientTable_timeMarker").hide();
+    $("#patientTableEditModeTextFirst").hide();
+    $("#patientTableEditMode").hide();
+    $("#topMenu").remove();
+    $("#frame").css("padding", "0px 0px 0px 0px");
 
-	KViewer.setViewPortLayout()
-	setPatientTableLayout();
-
+    KViewer.setViewPortLayout();
+    setPatientTableLayout();
 }
 
 toolBarLeftVisible = true;
-function hideAllElements()
-{
-	toolBarLeftVisible = false;
-	KViewer.toggleLeftBar() 
-	$("#topMenu").remove();
-	$("#KView_toolBarLeft").remove();
-	$("#frame").css('padding','0px 0px 0px 0px');
+function hideAllElements() {
+    toolBarLeftVisible = false;
+    KViewer.toggleLeftBar();
+    $("#topMenu").remove();
+    $("#KView_toolBarLeft").remove();
+    $("#frame").css("padding", "0px 0px 0px 0px");
 
-	KViewer.setViewPortLayout()
-	setPatientTableLayout();
-
-    
+    KViewer.setViewPortLayout();
+    setPatientTableLayout();
 }
 
-
-
-
-
-function dryimport_Patient(StudyInstanceUID,whendone)
-{
-     var request = { command:"PACSQuery_dryimport_full_study"  , dryimport:true, StudyInstanceUID:StudyInstanceUID, pacsid:"UKLFR", targetproject:currentModule}
- 	 var scripturl  = window.location.href.substr(0, window.location.href.lastIndexOf('/')) + '/pacsquery.php';
-     var xhr = ajaxRequest('command=PACSQuery_dryimport_full_study&json=' + encodeURIComponent(JSON.stringify(request))
-        , whendone,  scripturl);			
+function dryimport_Patient(StudyInstanceUID, whendone) {
+    var request = {
+        command: "PACSQuery_dryimport_full_study",
+        dryimport: true,
+        StudyInstanceUID: StudyInstanceUID,
+        pacsid: "UKLFR",
+        targetproject: currentModule,
+    };
+    var scripturl = window.location.href.substr(0, window.location.href.lastIndexOf("/")) + "/pacsquery.php";
+    var xhr = ajaxRequest(
+        "command=PACSQuery_dryimport_full_study&json=" + encodeURIComponent(JSON.stringify(request)),
+        whendone,
+        scripturl
+    );
 }
 
+function executeExternalCall() {
+    if (extern_call.pid) {
+        var sid = "";
+        if (extern_call.sid != undefined) sid = "#" + extern_call.sid;
+        openPatient({ PatientID: extern_call.pid, SID: sid });
+    } else if (extern_call.suid) {
+        var StudyInstanceUID = extern_call.suid;
+        SIUID_call(StudyInstanceUID, openPatient);
+    } else if (extern_call.dcmweb) {
+        loadDICOMwebURL(extern_call.dcmweb);
+        $("#KLoadingFrame").css("display", "none");
+    } else {
+        $("#KLoadingFrame").css("display", "none");
+    }
 
-
-
-
-function executeExternalCall()
-{
-         if (extern_call.pid)
-         {
-             var sid = "";
-             if (extern_call.sid != undefined)
-                 sid = "#"+extern_call.sid;        
-             openPatient({PatientID:extern_call.pid,SID:sid});
-         }
-         else if (extern_call.suid)
-         {
-             var StudyInstanceUID = extern_call.suid;
-             SIUID_call(StudyInstanceUID,openPatient);
-         }
-         else if (extern_call.dcmweb)
-         {
-             loadDICOMwebURL(extern_call.dcmweb)
-             $("#KLoadingFrame").css('display','none')
-         }
-         else
-         {
-             $("#KLoadingFrame").css('display','none')
-         }
-
-        
-         function removeAccessTokenFromUrl() {
-              const { history, location } = window
-              const { search } = location
-              if (search && search.indexOf('call') !== -1 && history && history.replaceState) {
-                // remove access_token from url
-                var cleanSearch = search.replace(/(\&|\?)call(.*)/g, '').replace(/^&/, '?')
-                // replace search params with clean params
-                var cleanURL = location.toString().replace(search, cleanSearch)
-                if (extern_call.token != undefined)
-                    delete extern_call.token
-                cleanURL += "&call="+JSON.stringify(extern_call)
-                // use browser history API to clean the params
-                history.replaceState({}, '', cleanURL)
-              }
+    function removeAccessTokenFromUrl() {
+        const { history, location } = window;
+        const { search } = location;
+        if (search && search.indexOf("call") !== -1 && history && history.replaceState) {
+            // remove access_token from url
+            var cleanSearch = search.replace(/(\&|\?)call(.*)/g, "").replace(/^&/, "?");
+            // replace search params with clean params
+            var cleanURL = location.toString().replace(search, cleanSearch);
+            if (extern_call.token != undefined) delete extern_call.token;
+            cleanURL += "&call=" + JSON.stringify(extern_call);
+            // use browser history API to clean the params
+            history.replaceState({}, "", cleanURL);
         }
+    }
 
-        removeAccessTokenFromUrl()
-        // => https://site.com?haha=false&lol=true
-    
-         function SIUID_call(siuid,whendone)
-         {
+    removeAccessTokenFromUrl();
+    // => https://site.com?haha=false&lol=true
 
+    function SIUID_call(siuid, whendone) {
+        dryimport_Patient(StudyInstanceUID, function (result) {
+            if (result.log && result.log.err && result.log.err.length > 0) {
+                alertify.error(result.log.err[0]);
 
-             dryimport_Patient(StudyInstanceUID,function(result)
-             {
-                if (result.log && result.log.err && result.log.err.length > 0)
-                {
-                    alertify.error(result.log.err[0]);
+                return;
+            }
+            if (result.json == undefined) {
+                alertify.error("no matching reponse for given SUID");
+                return;
+            }
 
-                    return;
-                }
-                if (result.json == undefined)
-                {
-                    alertify.error("no matching reponse for given SUID");           
-                    return;
-                }
+            var patinfo = result.json[StudyInstanceUID];
+            if (patinfo == undefined) {
+                alertify.error("no matching entry for given SUID");
+                return;
+            }
 
-                var patinfo = result.json[StudyInstanceUID];
-                if (patinfo == undefined)
-                {
-                    alertify.error("no matching entry for given SUID");           
-                    return;
-                }
+            whendone(patinfo);
+        });
+    }
 
-                whendone(patinfo)
-             });
+    function openPatient(patinfo) {
+        if (extern_call.preset) presetManager.applyPresetByName(extern_call.preset);
+        if (extern_call.selmode) switchto(extern_call.selmode);
 
-         }
+        if (patinfo.SID != "") $("input[name='PIZ']")[0].value = patinfo.PatientID + patinfo.SID;
+        else $("input[name='PIZ']")[0].value = patinfo.PatientID;
 
+        patientTable_jumpToRow(patinfo.PatientID + patinfo.SID, currentModule, function () {
+            waiter(
+                function () {
+                    return KViewer.formManager.loadedFromServer;
+                },
+                function () {
+                    if (all_patients.length == 0) {
+                        alertify.error("patient not found");
+                        $("#KLoadingFrameText").html("patient not found");
+                        return;
+                    }
 
-
-
-         function openPatient(patinfo)
-         {
-                if (extern_call.preset)
-                    presetManager.applyPresetByName(extern_call.preset)
-                if (extern_call.selmode)
-                    switchto(extern_call.selmode)
-
-                if (patinfo.SID != "")
-                    $("input[name='PIZ']")[0].value = patinfo.PatientID + patinfo.SID;
-                else
-                    $("input[name='PIZ']")[0].value = patinfo.PatientID
-             
-                patientTable_jumpToRow( patinfo.PatientID + patinfo.SID,currentModule ,function()
-                {
-   
-                    waiter(function() {return KViewer.formManager.loadedFromServer},function()
-                    {
-
-
-                        if (all_patients.length == 0)
-                        {
-                            alertify.error("patient not found")
-                            $("#KLoadingFrameText").html("patient not found")
-                            return;
+                    var autoloader = ViewerSettings.autoloaders;
+                    //var autoloader = [{enabled: true, viewportID: 0,
+                    //                  pattern: "FFilename:recent.json↵FSubFolder:workstates", intent:{}
+                    //                 } ];
+                    startAutoloader(autoloader, { piz: patinfo.PatientID, sid: patinfo.SID }, undefined, function () {
+                        if (extern_call.hide_nav) {
+                            hideNavigationElements();
+                            $(".studyRow,.patientRow").css("pointer-events", "none");
                         }
-                    
-
-                        var autoloader = ViewerSettings.autoloaders
-                        //var autoloader = [{enabled: true, viewportID: 0, 
-                         //                  pattern: "FFilename:recent.json↵FSubFolder:workstates", intent:{}
-                          //                 } ];
-                        startAutoloader(autoloader, {piz:patinfo.PatientID , sid: patinfo.SID} , undefined, function() {
-                            if (extern_call.hide_nav)
-                            {
-                                hideNavigationElements();
-                                $(".studyRow,.patientRow").css("pointer-events",'none');
-                            }
-                            if (extern_call.hide_all)
-                            {
-                               hideAllElements();
-                            }
-                            $("#KLoadingFrame").css('display','none')
-                        });
-                        
-
-                    },50,10);
-
-                });
-         }
-
-
- 
-
-
-
-
-
+                        if (extern_call.hide_all) {
+                            hideAllElements();
+                        }
+                        $("#KLoadingFrame").css("display", "none");
+                    });
+                },
+                50,
+                10
+            );
+        });
+    }
 }
 
-
-
-function KProgressBar(txt,fa,onclose,noprogressinformation)
-{
+function KProgressBar(txt, fa, onclose, noprogressinformation) {
     var progressBar = {};
 
     var closebutton = "";
-    if (onclose != undefined)
-        closebutton = "<i class='fa fa-close'>";
+    if (onclose != undefined) closebutton = "<i class='fa fa-close'>";
 
-    progressBar.$div = $("<div class='KSyncBar'> <i class='fa "+fa+" fa-spin'> </i> <i class='fafa-spin'> </i> " 
-                       + " <div class='spinnerbar'> <div class='innerbar'>  </div>  </div> " 
-                       + "<span class = 'uploadtext'> "+txt+" </span> "+closebutton+" </div>").appendTo($(document.body));
+    progressBar.$div = $(
+        "<div class='KSyncBar'> <i class='fa " +
+            fa +
+            " fa-spin'> </i> <i class='fafa-spin'> </i> " +
+            " <div class='spinnerbar'> <div class='innerbar'>  </div>  </div> " +
+            "<span class = 'uploadtext'> " +
+            txt +
+            " </span> " +
+            closebutton +
+            " </div>"
+    ).appendTo($(document.body));
     progressBar.$div.show(); //fadeIn(1000);
-//								  var $download = $div.find(".fa-download");
-//								  var $upload = $div.find(".fa-upload").hide();
+    //								  var $download = $div.find(".fa-download");
+    //								  var $upload = $div.find(".fa-upload").hide();
     progressBar.$bar = progressBar.$div.find(".innerbar").width(0);
     progressBar.$text = progressBar.$div.find(".uploadtext");
 
+    progressBar.$div.find(".fa-close").click(function () {
+        if (onclose) onclose();
+        setTimeout(function () {
+            progressBar.done("aborted");
+        }, 10);
+    });
 
-    progressBar.$div.find(".fa-close").click(function() {	
-                if (onclose)
-                    onclose();
-				setTimeout(function() {
-					progressBar.done("aborted");
-				},10)})
-
-	progressBar.progress = function(perc,text)
-	{
-	    if (perc != -1)
-	    {
-	    	progressBar.$bar.width(perc + "%");			
-	    	noprogressinformation = false;
-	    }
-	    else
-	    	noprogressinformation = true;
+    progressBar.progress = function (perc, text) {
+        if (perc != -1) {
+            progressBar.$bar.width(perc + "%");
+            noprogressinformation = false;
+        } else noprogressinformation = true;
         progressBar.$text.text(text);
-				
-	}
-	progressBar.done = function(text)
-	{
-	    	progressBar.$bar.width("100%");			
-			progressBar.$text.text(text);
-			progressBar.$div.fadeOut(1500,progressBar.$div.remove);
-			if (progressBar.blinker) 
-			 clearInterval(  progressBar.blinker);
-				
-	}
-    
-    if (noprogressinformation)
-    {
+    };
+    progressBar.done = function (text) {
+        progressBar.$bar.width("100%");
+        progressBar.$text.text(text);
+        progressBar.$div.fadeOut(1500, progressBar.$div.remove);
+        if (progressBar.blinker) clearInterval(progressBar.blinker);
+    };
+
+    if (noprogressinformation) {
         progressBar.blinker_state = 0;
-        progressBar.blinker = setInterval(function() {
-            if (noprogressinformation)
-            {
+        progressBar.blinker = setInterval(function () {
+            if (noprogressinformation) {
                 progressBar.blinker_state += 2;
                 progressBar.blinker_state = progressBar.blinker_state % 100;
-                progressBar.$bar.width(progressBar.blinker_state+"%");			
+                progressBar.$bar.width(progressBar.blinker_state + "%");
             }
-        },50);
+        }, 50);
     }
-
-
-
 
     return progressBar;
 }
 
-
-
-
 /// elementary ///////////////////////////////////
 
-function union(a,b)
-{
-	var r = {};
-	for (var k in a)
-		r[k] = true;
-	for (var k in b)
-		r[k] = true;
-	return r;
+function union(a, b) {
+    var r = {};
+    for (var k in a) r[k] = true;
+    for (var k in b) r[k] = true;
+    return r;
 }
 
-
-function union_array(A)
-{
-	var res = {}
-	for (var k = 0;k <A.length;k++)
-		for (var j in A[k])
-			res[j] = true;
-	return res;			
+function union_array(A) {
+    var res = {};
+    for (var k = 0; k < A.length; k++) for (var j in A[k]) res[j] = true;
+    return res;
 }
 
-
-function intersect(A,B)
-{
-	 var C = {};
-	for (var x in A)
-	{
-	if (B[x])
-		C[x] = true;
-	}
-	return C;
+function intersect(A, B) {
+    var C = {};
+    for (var x in A) {
+        if (B[x]) C[x] = true;
+    }
+    return C;
 }
 
-function diff(A,B)
-{
-	var C = {};
-	for (var x in A)
-	{
-	  if (B[x] == undefined)
-		C[x] = true;
-	}
-	return C;
+function diff(A, B) {
+    var C = {};
+    for (var x in A) {
+        if (B[x] == undefined) C[x] = true;
+    }
+    return C;
 }
 
-function intersect_array(A)
-{
-	var res = {}
-	for (var j in A[0])
-	{
-		var isin = true;
-		for (var k = 1;k <A.length;k++)
-		{
-			if (A[k][j])
-				continue;
-			else
-			{
-				isin = false;
-				break;
-			}
-		}
-		if (isin)
-			res[j] = true;
-	}
-	return res;
-
+function intersect_array(A) {
+    var res = {};
+    for (var j in A[0]) {
+        var isin = true;
+        for (var k = 1; k < A.length; k++) {
+            if (A[k][j]) continue;
+            else {
+                isin = false;
+                break;
+            }
+        }
+        if (isin) res[j] = true;
+    }
+    return res;
 }
 
-function array_to_setObject(A)
-{
-    var x = {}
-    for (var k in A)
-        x[A[k]] = true;
+function array_to_setObject(A) {
+    var x = {};
+    for (var k in A) x[A[k]] = true;
     return x;
 }
 
-
-function transpose_array(arr)
-{
+function transpose_array(arr) {
     var res = [];
-    for (var k = 0; k<arr[0].length;k++)
-        res[k] = [];
-    for (var k = 0; k<arr.length;k++)
-    {
-        for (var j = 0 ; j < arr[k].length;j++)
-        {
+    for (var k = 0; k < arr[0].length; k++) res[k] = [];
+    for (var k = 0; k < arr.length; k++) {
+        for (var j = 0; j < arr[k].length; j++) {
             res[j][k] = arr[k][j];
         }
     }
     return res;
 }
 
-
-function KCalcPanel(calcset,inputfiles,pinfo)
-{
-
+function KCalcPanel(calcset, inputfiles, pinfo) {
     var panel = KPanel($(document.body), "CalcPanel", "Application panel");
- 
-    panel.$container.width(400)
-    panel.closeOnCloseAll = true
+
+    panel.$container.width(400);
+    panel.closeOnCloseAll = true;
     var $fileRow = $("<div class='roiTool_panel_flex_persistent'></div>").appendTo(panel.$container);
 
-
     var buts = $("<div class='modernbuttongroup'></div>").appendTo(panel.$container);
-   
-    var $recalc = $("<div class='modernbutton small green'><i class='fa fa-refresh'></i> Calculate</div>").appendTo(buts)
-    var $save = $("<div class='modernbutton small green'><i class='fa fa-save'></i>Save all </div>").appendTo(buts)
-        
+
+    var $recalc = $("<div class='modernbutton small green'><i class='fa fa-refresh'></i> Calculate</div>").appendTo(
+        buts
+    );
+    var $save = $("<div class='modernbutton small green'><i class='fa fa-save'></i>Save all </div>").appendTo(buts);
 
     var during_init = true;
-    function addButton(title,callback)
-    {
-       if (!during_init)
-        return;
-       var $but = $("<div class='modernbutton small green'><i class='fa fa-save'></i>"+title+" </div>").appendTo(buts)
-       $but.click(callback);
+    function addButton(title, callback) {
+        if (!during_init) return;
+        var $but = $("<div class='modernbutton small green'><i class='fa fa-save'></i>" + title + " </div>").appendTo(
+            buts
+        );
+        $but.click(callback);
     }
-    function submitFAVjob(name,queue)
-    {
-        if (commandDialog.buildCommandDialog)
-           commandDialog.buildCommandDialog();
-        commandDialog.submitCommandBatch(usercmdlist[name].def,
-             [{piz:currentPSID.patients_id,sid:currentPSID.studies_id}],undefined,true,undefined,queue);
+    function submitFAVjob(name, queue) {
+        if (commandDialog.buildCommandDialog) commandDialog.buildCommandDialog();
+        commandDialog.submitCommandBatch(
+            usercmdlist[name].def,
+            [{ piz: currentPSID.patients_id, sid: currentPSID.studies_id }],
+            undefined,
+            true,
+            undefined,
+            queue
+        );
     }
-
 
     var stats = KViewer.roiTool.computeStats;
 
-    try
-    {
-      eval(calcset.code);
-    }
-    catch(err)
-    {
-        alertify.error("problem in calcpanel code: "+ err.message)
+    try {
+        eval(calcset.code);
+    } catch (err) {
+        alertify.error("problem in calcpanel code: " + err.message);
     }
 
     during_init = false;
@@ -9950,425 +8105,335 @@ function KCalcPanel(calcset,inputfiles,pinfo)
     $("<div class='roiTool_panel_caption'></div>").appendTo(panel.$container);
     var $div = $("<div class='some'></div>").appendTo(panel.$container);
 
+    var inputform = {
+        name: "calcform",
+        lastchange: "",
+        layout: layout,
+    };
 
-
-
-
-     var inputform = 
-       { 
-        name 		: "calcform",
-        lastchange  : "",
-        layout: layout
-        
-       }    
-
-    var content = {}
-    KForm.createForm(inputform, content, $div, function(e) { });
-console.log(content);
-    for (var k in inputfiles)
-    {
-        if (inputfiles[k] != undefined && inputfiles[k].drawAllPoints != undefined)
-        {
+    var content = {};
+    KForm.createForm(inputform, content, $div, function (e) {});
+    console.log(content);
+    for (var k in inputfiles) {
+        if (inputfiles[k] != undefined && inputfiles[k].drawAllPoints != undefined) {
             var mset = inputfiles[k];
-            if (mset.type == 'pointset')
-            {
+            if (mset.type == "pointset") {
                 var msetpanel = mset.showPanel();
-                var $mtable = msetpanel.$container.find(".markerTable")
-                var $mtpm = msetpanel.$container.find(".markerTemplates")
+                var $mtable = msetpanel.$container.find(".markerTable");
+                var $mtpm = msetpanel.$container.find(".markerTemplates");
                 msetpanel.$container.detach();
-                $mtpm.appendTo(panel.$container)
-                $mtable.appendTo(panel.$container)
+                $mtpm.appendTo(panel.$container);
+                $mtable.appendTo(panel.$container);
                 //msetpanel.$container.attr('class','')
             }
         }
     }
 
-
-    $save.click(function()
-    {
-       KViewer.roiTool.saveAllROIs();
-       var objs = {};
-       for (var k in inputfiles)
-       {
-            if (inputfiles[k].getPointsByName != undefined)
-            {
-                markerProxy.save(undefined,inputfiles[k]);
-      
+    $save.click(function () {
+        KViewer.roiTool.saveAllROIs();
+        var objs = {};
+        for (var k in inputfiles) {
+            if (inputfiles[k].getPointsByName != undefined) {
+                markerProxy.save(undefined, inputfiles[k]);
             }
-       }
-    
-
-
-        if (panel.upstr != undefined)
-        {
-            ajaxRequest('command=createfile&json=' + panel.upstr , function(x)
-              {return function(e) {
-                  patientTableMirror.mirrorState();
-                  alertify.success("json successfully saved")
-              } }());
         }
 
+        if (panel.upstr != undefined) {
+            ajaxRequest(
+                "command=createfile&json=" + panel.upstr,
+                (function (x) {
+                    return function (e) {
+                        patientTableMirror.mirrorState();
+                        alertify.success("json successfully saved");
+                    };
+                })()
+            );
+        }
+    });
 
+    function doTheCalculation() {
+        if (panel.$container.css("display") == "none") {
+            clearInterval(panel.calc_cid);
+            return;
+        }
 
-
-    })
-
-
-
-    function doTheCalculation()
-    {
-
-
-       if (panel.$container.css('display') == "none")
-       {
-              clearInterval(panel.calc_cid);
-              return;
-       }
-
-       // gather all the object needed for doing the calculations 
-       var objs = {};
-       for (var k in inputfiles)
-       {
-           if (inputfiles[k] != undefined)
-           {
-            if (inputfiles[k].getPointsByName != undefined)
-              objs[k] = inputfiles[k].getPointsByName();
-            else
-            {
-              objs[k] = inputfiles[k].content
+        // gather all the object needed for doing the calculations
+        var objs = {};
+        for (var k in inputfiles) {
+            if (inputfiles[k] != undefined) {
+                if (inputfiles[k].getPointsByName != undefined) objs[k] = inputfiles[k].getPointsByName();
+                else {
+                    objs[k] = inputfiles[k].content;
+                }
             }
-           }
-       }
+        }
 
-
-       try {
-
-
-
+        try {
             // this evalates the custom code defined in the pane
             // set here a breakpoint for development
-            eval(calcset.code);           
-
-
+            eval(calcset.code);
 
             // this does the actual execution of the exec function;
-            var obj = exec(objs,pinfo,inputfiles);
-            if (obj != undefined)
-            {
-
-                for (k in obj)
-                {
+            var obj = exec(objs, pinfo, inputfiles);
+            if (obj != undefined) {
+                for (k in obj) {
                     content[k] = obj[k];
-                    content.update(k);                    
+                    content.update(k);
                 }
                 content.result = obj.text;
                 content.update("result");
-                
+
                 // this compses a json, which can be saved via "save ALL"
-                if (obj.json)
-                {
-                	var tmp = patientTableMirror.getCurrentUniquePSID();
-	                var up = {piz:tmp.patients_id,sid:tmp.studies_id};
+                if (obj.json) {
+                    var tmp = patientTableMirror.getCurrentUniquePSID();
+                    var up = { piz: tmp.patients_id, sid: tmp.studies_id };
                     up.content = JSON.stringify(obj.json);
                     up.filename = obj.filename;
                     up.subfolder = "";
-                    if (obj.subfolder != undefined)
-                        up.subfolder = obj.subfolder;
+                    if (obj.subfolder != undefined) up.subfolder = obj.subfolder;
 
                     panel.upstr = JSON.stringify(up);
-
-
                 }
 
                 panel.lasterr = "";
             }
-
-
-       } catch(err)
-       {
-
-          if (panel.lasterr != err.message)         
-            alertify.error("problem in calcpanel exec function code: " +err.message)
-          panel.lasterr = err.message;
-
-       }
+        } catch (err) {
+            if (panel.lasterr != err.message) alertify.error("problem in calcpanel exec function code: " + err.message);
+            panel.lasterr = err.message;
+        }
     }
 
+    panel.customClose = function () {
+        clearInterval(panel.calc_cid);
+    };
 
-
-
-    panel.customClose = function()
-    {
-       clearInterval(panel.calc_cid);
-    }
-
-
-    $recalc.click(function() {  panel.lasterr= ""; doTheCalculation() });
+    $recalc.click(function () {
+        panel.lasterr = "";
+        doTheCalculation();
+    });
 
     doTheCalculation();
 
-    panel.calc_cid = setInterval(doTheCalculation,2500);
-
-
-
-
-
+    panel.calc_cid = setInterval(doTheCalculation, 2500);
 }
-
-
 
 /***************************************************************************************
 generic box for a json / text editor
 ****************************************************************************************/
 //we need the struct, field syntax to keep a true pointer
-function KJSONEditor(struct, field,  options_in)
-{
-	var jsoneditor = new Object();
+function KJSONEditor(struct, field, options_in) {
+    var jsoneditor = new Object();
 
-	var options = 
-	{
-		parseonblur:true,
-		log: true,
-		editable: 1,
-		copybutton:0,
-		type: "json"  // can be json or jscode
-	}
-	$.extend(true, options, options_in);
+    var options = {
+        parseonblur: true,
+        log: true,
+        editable: 1,
+        copybutton: 0,
+        type: "json", // can be json or jscode
+    };
+    $.extend(true, options, options_in);
 
-	var $container = $("<div class='KJSONEditor'></div>")
-	//var $codeCheck = $("<div class='modernbutton small green' style='position:absolute;top:0;right:0'><i class='fa fa-check'></i>validate code</div>").click(function(){jsoneditor.JSONparse()}).appendTo($container);
+    var $container = $("<div class='KJSONEditor'></div>");
+    //var $codeCheck = $("<div class='modernbutton small green' style='position:absolute;top:0;right:0'><i class='fa fa-check'></i>validate code</div>").click(function(){jsoneditor.JSONparse()}).appendTo($container);
 
-	jsoneditor.$textarea = $("<textarea autocorrect='off' autocapitalize='off' spellcheck='false'>{a:1}</textarea>").appendTo($container);
-	
-	if(!options.editable)
-		jsoneditor.$textarea.attr('readonly', "true")
+    jsoneditor.$textarea = $(
+        "<textarea autocorrect='off' autocapitalize='off' spellcheck='false'>{a:1}</textarea>"
+    ).appendTo($container);
 
-	jsoneditor.$log = $("<div class='KJSONEditor_log'></div>").appendTo($container);
-	//jsoneditor.$applybtn = $("<div class='modernbutton green'>Apply</div>").appendTo($container);
+    if (!options.editable) jsoneditor.$textarea.attr("readonly", "true");
 
+    jsoneditor.$log = $("<div class='KJSONEditor_log'></div>").appendTo($container);
+    //jsoneditor.$applybtn = $("<div class='modernbutton green'>Apply</div>").appendTo($container);
 
-	jsoneditor.$log = $("<div class='KJSONEditor_log'></div>").appendTo($container);
+    jsoneditor.$log = $("<div class='KJSONEditor_log'></div>").appendTo($container);
 
-	if(options.copybutton)
-	{
-		var $copy= $("<div class='modernbutton small gray' style='position:absolute;top:0;right:10px'><i class='fa fa-copy'></i>copy to clipboard</div>")
-			.appendTo($container).click( function(){jsoneditor.copyText()} );
-	}
+    if (options.copybutton) {
+        var $copy = $(
+            "<div class='modernbutton small gray' style='position:absolute;top:0;right:10px'><i class='fa fa-copy'></i>copy to clipboard</div>"
+        )
+            .appendTo($container)
+            .click(function () {
+                jsoneditor.copyText();
+            });
+    }
 
+    jsoneditor.copyText = function () {
+        var ta = jsoneditor.$textarea.get(0);
+        jsoneditor.$textarea.focus();
+        ta.selectionStart = 0;
+        ta.selectionEnd = jsoneditor.$textarea.val().length;
+        var successful = document.execCommand("copy");
+        ta.selectionEnd = 0;
+        if (successful) $.notify(" Copied to clipboard", "success");
+    };
 
-	jsoneditor.copyText = function()
-	{
-		var ta = jsoneditor.$textarea.get(0);
-		jsoneditor.$textarea.focus();
-		ta.selectionStart = 0;
-		ta.selectionEnd = jsoneditor.$textarea.val().length; 
-		var successful = document.execCommand('copy');
-		ta.selectionEnd = 0;
-		if(successful)
-  	    	$.notify(" Copied to clipboard","success");
+    jsoneditor.pasteText = function (content, selectCopied) {
+        var $ta = jsoneditor.$textarea;
+        ta = $ta.get(0);
+        $ta.val($ta.val());
+        var s = ta.selectionEnd || $ta.val().length;
+        //console.log(s);
+        $ta.val($ta.val().substr(0, s) + "" + content + "" + $ta.val().substr(s + 1));
+        if (selectCopied) {
+            ta.selectionStart = s;
+            ta.selectionEnd = s + content.length;
+        }
+        $ta.focus();
+    };
 
-	}
+    jsoneditor.JSONstringify = function () {
+        if (options.type !== "jscode") var str = myJSONStringify(struct[field], "", 0);
+        else var str = struct[field];
 
+        jsoneditor.$textarea.val(str);
+        return str;
+    };
 
-	jsoneditor.pasteText = function(content, selectCopied)
-	{
-		var $ta = jsoneditor.$textarea;
-		ta = $ta.get(0);
-		$ta.val($ta.val());
-		var s = ta.selectionEnd || $ta.val().length;
-		//console.log(s);
-		$ta.val($ta.val().substr(0, s) + "" + content + "" + $ta.val().substr(s+1));
-		if(selectCopied)
-		{
-			ta.selectionStart = s;
-			ta.selectionEnd = s + content.length;
-		}
-		$ta.focus();
-	}
-	
-	jsoneditor.JSONstringify = function()
-	{
-		if(options.type !== "jscode")
-			var str = myJSONStringify(struct[field], "", 0);
-		else
-			var str = struct[field];
-			
-		jsoneditor.$textarea.val(str);
-		return str;
-	}
+    jsoneditor.JSONparse = function (forceEval) {
+        jsoneditor.$log.html("");
+        var ret = false;
+        try {
+            // keep comments and linebreaks: to be implemented
+            // 	  	   var txt = jsoneditor.$textarea.val();
+            // 			var pos = txt.indexOf("//");
+            // 			var lastline;
+            // 			while(pos > -1)
+            // 			{
+            // 				 pos = txt.indexOf("//", pos+1);
+            // 			}
+            var text = jsoneditor.$textarea.val();
+            // JSON in javascript has the convention that all \ must be escaped, otherwise they will be removed in eval
+            // However, we want to be able to write "lazy" in the code, so escape \ here manually.
+            //text = text.replace(/\\/g , "\\\\");
+            // but only single bslahes (not followed by another \) and NOT \" (this is an escape seq)
+            text = text.replace(/(\\)(?=[^\\"])/g, "\\\\");
+            // escaped doble quotes \" in json need some special treatment ...?
+            // text = text.replace(/\\"/g , '\\\\"');
+            if (options.type !== "jscode") {
+                if (struct[field] instanceof Array) text = "[" + text + "]";
+                //if( struct[field] instanceof Object)
+                else text = "{" + text + "}";
 
-	jsoneditor.JSONparse = function(forceEval)
-	{
-	  jsoneditor.$log.html("");
-	  var ret = false;
-	  try
-	  { 
-	  	   // keep comments and linebreaks: to be implemented
-// 	  	   var txt = jsoneditor.$textarea.val();
-// 			var pos = txt.indexOf("//");
-// 			var lastline;
-// 			while(pos > -1) 
-// 			{
-// 				 pos = txt.indexOf("//", pos+1);
-// 			}
-			var text = jsoneditor.$textarea.val() ;
-			// JSON in javascript has the convention that all \ must be escaped, otherwise they will be removed in eval
-			// However, we want to be able to write "lazy" in the code, so escape \ here manually.
-			//text = text.replace(/\\/g , "\\\\");
-			// but only single bslahes (not followed by another \) and NOT \" (this is an escape seq)
-			text = text.replace(/(\\)(?=[^\\"])/g , "\\\\");
-			// escaped doble quotes \" in json need some special treatment ...?
-			// text = text.replace(/\\"/g , '\\\\"');
-			if(options.type !== "jscode")
-			{
-				if( struct[field] instanceof Array)
-					text = "[" + text + "]";
-				else //if( struct[field] instanceof Object)
-					text = "{" + text + "}";
-
-				eval('var parsed  = ' + text );
-				struct[field] = parsed;
-				//jsoneditor.JSONstringify();
-			}
-			// this will run the code directly. Difference is, that code is not an object or array, but does return
-			else
-			{
-				struct[field] = text;
-				if(forceEval)
-					eval(text);
-			}
-			jsoneditor.$log.html("Code seems to be correct").css('color','green');
-			ret = true;
-	  }
-	  catch(err)
-	  {
-		  jsoneditor.$log.html("Error: " + err).css('color','red');
-		  //jsoneditor.JSONstringify();
-	  }
-	  return ret;
-	}
-	
-	jsoneditor.getJSONtxt = function()
-	{
-		return jsoneditor.$textarea.val();
-	}
-
-	// enable tab stops in textarea
-	jsoneditor.$textarea.on("keydown", function(e)
-	{
-        if(e.keyCode==9 || e.which==9){
-            e.preventDefault();
-             	var s = this.selectionStart;
-            	this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
-            	this.selectionEnd = s+1; 
+                eval("var parsed  = " + text);
+                struct[field] = parsed;
+                //jsoneditor.JSONstringify();
             }
+            // this will run the code directly. Difference is, that code is not an object or array, but does return
+            else {
+                struct[field] = text;
+                if (forceEval) eval(text);
+            }
+            jsoneditor.$log.html("Code seems to be correct").css("color", "green");
+            ret = true;
+        } catch (err) {
+            jsoneditor.$log.html("Error: " + err).css("color", "red");
+            //jsoneditor.JSONstringify();
+        }
+        return ret;
+    };
 
+    jsoneditor.getJSONtxt = function () {
+        return jsoneditor.$textarea.val();
+    };
+
+    // enable tab stops in textarea
+    jsoneditor.$textarea.on("keydown", function (e) {
+        if (e.keyCode == 9 || e.which == 9) {
+            e.preventDefault();
+            var s = this.selectionStart;
+            this.value = this.value.substring(0, this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+            this.selectionEnd = s + 1;
+        }
     });
 
+    jsoneditor.JSONstringify();
 
-	jsoneditor.JSONstringify();
+    if (options.parseonblur)
+        jsoneditor.$textarea.on("blur", function () {
+            jsoneditor.JSONparse();
+        });
 
-	if(options.parseonblur)
-		jsoneditor.$textarea.on("blur", function(){jsoneditor.JSONparse()} );
-
-	jsoneditor.$container = $container; 
-	return jsoneditor;
+    jsoneditor.$container = $container;
+    return jsoneditor;
 }
 
+function loadDICOMwebURL(urlstr) {
+    // small
+    //https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.2.840.113619.2.66.2158408118.16050010109105933.20000
+    //https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.3.6.1.4.1.25403.345050719074.3824.20170125112931.11/series/1.3.6.1.4.1.25403.345050719074.3824.20170125112931.16
+    //https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.2.392.200140.2.1.1.1.2.799008771.2448.1519719572.518
 
-
-function loadDICOMwebURL(urlstr)
-{
-// small
-//https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.2.840.113619.2.66.2158408118.16050010109105933.20000
-//https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.3.6.1.4.1.25403.345050719074.3824.20170125112931.11/series/1.3.6.1.4.1.25403.345050719074.3824.20170125112931.16
-//https://server.dcmjs.org/dcm4chee-arc/aets/DCM4CHEE/rs/studies/1.2.392.200140.2.1.1.1.2.799008771.2448.1519719572.518
-
-
-   // client.searchForStudies().then(studies => {
-      //console.log(studies)
-   // });
-  //  client.searchForSeries().then(studies => {
-  //    console.log(studies)
- //    });
+    // client.searchForStudies().then(studies => {
+    //console.log(studies)
+    // });
+    //  client.searchForSeries().then(studies => {
+    //    console.log(studies)
+    //    });
 
     try {
-
         var x = urlstr.split("/studies/");
         var url = x[0];
         x = x[1].split("/series/");
         var serUID = x[1];
         var stuUID = x[0];
-    }
-    catch(err)
-    {
+    } catch (err) {
         alertify.error("wrong dicomweb url format");
         return;
     }
 
-    const client = new DICOMwebClient.api.DICOMwebClient({url});
+    const client = new DICOMwebClient.api.DICOMwebClient({ url });
     var retrieve;
-    var progress = function(w)  {   KViewer.cacheManager.progressSpinner("dicomweb: "  + Math.round(w.loaded/1000000) + " MB loaded")   }
+    var progress = function (w) {
+        KViewer.cacheManager.progressSpinner("dicomweb: " + Math.round(w.loaded / 1000000) + " MB loaded");
+    };
 
-    var receive = function (studies) {              
-      var params = []
+    var receive = function (studies) {
+        var params = [];
 
-      TheDicomReader = new DicomReader();
-      for (var k = 0;k < studies.length;k++)
-      {
-          var p = {}
-          p.URLType = 'localfile';
-          p.fileID = "lklk"
-          p.filename = "lklk"
-          p.buffer = new Uint8Array(studies[k]);
-          p.progressSpinner = KViewer.cacheManager.progressSpinner
-          params.push(p);
-      }
-      TheDicomReader.loadDicoms(params,
-                function (loadparams)
-                {
-                    for (var k = 0; k < loadparams.length;k++)
-                    {
-                            if (loadparams[k].buffer != undefined)
-                                KViewer.dataManager.loadData(loadparams[k]);
-                    }
+        TheDicomReader = new DicomReader();
+        for (var k = 0; k < studies.length; k++) {
+            var p = {};
+            p.URLType = "localfile";
+            p.fileID = "lklk";
+            p.filename = "lklk";
+            p.buffer = new Uint8Array(studies[k]);
+            p.progressSpinner = KViewer.cacheManager.progressSpinner;
+            params.push(p);
+        }
+        TheDicomReader.loadDicoms(
+            params,
+            function (loadparams) {
+                for (var k = 0; k < loadparams.length; k++) {
+                    if (loadparams[k].buffer != undefined) KViewer.dataManager.loadData(loadparams[k]);
+                }
 
-                    KViewer.cacheManager.update();
+                KViewer.cacheManager.update();
+            },
+            KViewer.cacheManager.progressSpinner
+        );
+    };
 
-                },KViewer.cacheManager.progressSpinner);
-
-   }
-
-
-    function onerr(e)
-    {
+    function onerr(e) {
         alertify.error("problem during dicom receive: " + e);
     }
 
-
     if (serUID == undefined)
-        client.retrieveStudy({studyInstanceUID: stuUID, progressCallback: progress }).then(receive).catch(onerr)
+        client.retrieveStudy({ studyInstanceUID: stuUID, progressCallback: progress }).then(receive).catch(onerr);
     else
-        client.retrieveSeries({studyInstanceUID: stuUID, seriesInstanceUID:serUID, progressCallback: progress }).then(receive).catch(onerr)
-
-
-
+        client
+            .retrieveSeries({ studyInstanceUID: stuUID, seriesInstanceUID: serUID, progressCallback: progress })
+            .then(receive)
+            .catch(onerr);
 }
-
-
-
-
-
 
 // ======================================================================================
 // ======================================================================================
 // ============= TagPanel
 // ======================================================================================
 // ======================================================================================
-KTagPanel = function()
-{
-	var that = new Object();
-	/* major functions of use:
+KTagPanel = function () {
+    var that = new Object();
+    /* major functions of use:
 		- add tags to patient,study files
 		- hold some custom tags per project
 			copy from all possible, trash can do delete, edit with form
@@ -10393,275 +8458,267 @@ KTagPanel = function()
 		- re-render on every selection	
 
 	*/
-	that.enabled = true;
+    that.enabled = true;
 
+    /******************************************************************
+     * build the tool
+     *******************************************************************/
+    if (ktagpanel != undefined) {
+        ktagpanel.show();
+        return;
+    }
+    ktagpanel = that;
+    var $container = $(
+        "<div id='KTagPanel" + "' class='markerPanel movableWindows' style='width:auto; min-width:150px;'></div>"
+    ).appendTo($(document.body));
 
-	/******************************************************************
-	* build the tool
-	*******************************************************************/
-	if(ktagpanel != undefined)
-	{
-		ktagpanel.show();
-		return;
-	}
-	ktagpanel = that;
-	var $container = $("<div id='KTagPanel"+"' class='markerPanel movableWindows' style='width:auto; min-width:150px;'></div>").appendTo($(document.body));
+    var pp = getPixelPosition($(document.body));
+    //$container.position({left:"10px", top:"450px"})
+    $container.css("left", "10px");
+    $container.css("top", "210px");
 
-
-	var pp = getPixelPosition($(document.body));
-	//$container.position({left:"10px", top:"450px"})
- 	$container.css("left", "10px")
- 	$container.css("top", "210px"  );
-
-	
-	/******************************************************************
+    /******************************************************************
 	  state 
 	*******************************************************************/
-	that.state = 
-	{
-		visible:true,
-		taglist:
-		{
-			ptags:{ptest: 1},
-			stags:{stest:1},
-			ftags:{ftest:1},
-		}
-	}
-	
-	// save the taglist in state
-	if(state.tagpanel != undefined)
-	{
-		that.state = state.tagpanel;
-	}
-	else
-	{
-		state.tagpanel = that.state;
-	}
-	
-	/******************************************************************
-	* close
-	*******************************************************************/
-	that.close = function()
-	{
-		$container.hide();
-		that.enabled = false;
-	}
+    that.state = {
+        visible: true,
+        taglist: {
+            ptags: { ptest: 1 },
+            stags: { stest: 1 },
+            ftags: { ftest: 1 },
+        },
+    };
 
-	
-	/******************************************************************
-	* close
-	*******************************************************************/
-	that.show = function()
-	{
-		$container.show();
-		that.enabled = true;
-		renderTagList();
-	}
+    // save the taglist in state
+    if (state.tagpanel != undefined) {
+        that.state = state.tagpanel;
+    } else {
+        state.tagpanel = that.state;
+    }
 
+    /******************************************************************
+     * close
+     *******************************************************************/
+    that.close = function () {
+        $container.hide();
+        that.enabled = false;
+    };
 
+    /******************************************************************
+     * close
+     *******************************************************************/
+    that.show = function () {
+        $container.show();
+        that.enabled = true;
+        renderTagList();
+    };
 
-	/******************************************************************************
+    /******************************************************************************
 	  tools
 	*******************************************************************************/
-	var $topRow  = that.$topRow = $("<div class='roiTool_panel_flex persistent' style='background: hsl(206, 64%, 37%); padding:2px;' ></div>").appendTo($container);
-	var $caption = $("<span> <b> TagPanel </b></span>");
-	var $close = that.$close = $("<i class='KViewPort_tool fa fa-close'></i>").click( that.close );
-	$topRow.append($caption).append($("<i class='flexspacer'></i>")).append($close);
-	$topRow.mousedown( function(ev) { movableWindowMousedownFn(ev, $container) } );
+    var $topRow = (that.$topRow = $(
+        "<div class='roiTool_panel_flex persistent' style='background: hsl(206, 64%, 37%); padding:2px;' ></div>"
+    ).appendTo($container));
+    var $caption = $("<span> <b> TagPanel </b></span>");
+    var $close = (that.$close = $("<i class='KViewPort_tool fa fa-close'></i>").click(that.close));
+    $topRow.append($caption).append($("<i class='flexspacer'></i>")).append($close);
+    $topRow.mousedown(function (ev) {
+        movableWindowMousedownFn(ev, $container);
+    });
 
-
-	/******************************************************************************
+    /******************************************************************************
 	  toggle a stat var
 	*******************************************************************************/
-	function switch_enabled(prop, force, invert)
-	{
-		that.state[prop] = typeof(force)!=="boolean"?(that.state[prop]?false:true):force;
-		btns["$"+prop][that.state[prop]?"addClass":"removeClass"]('KViewPort_tool_enabled');
-		return that.state[prop];
-	}
-	
+    function switch_enabled(prop, force, invert) {
+        that.state[prop] = typeof force !== "boolean" ? (that.state[prop] ? false : true) : force;
+        btns["$" + prop][that.state[prop] ? "addClass" : "removeClass"]("KViewPort_tool_enabled");
+        return that.state[prop];
+    }
 
-	/******************************************************************************
+    /******************************************************************************
 	 build tag colums for patients studies files
 	*******************************************************************************/
-	$("<div class='roiTool_panel_caption'></div>").appendTo($container);
-	var $tagRow    = $("<div class='roiTool_panel_flex'></div>").appendTo($container);
-	
-	var $tagcontainer = $("<div class='KTagPanel_tagcontainer'></div>").appendTo($container);
+    $("<div class='roiTool_panel_caption'></div>").appendTo($container);
+    var $tagRow = $("<div class='roiTool_panel_flex'></div>").appendTo($container);
 
-	var $ptags = $("<div class=''></div>").appendTo($tagcontainer);
-	var $stags = $("<div class=''></div>").appendTo($tagcontainer);
-	var $ftags = $("<div class=''></div>").appendTo($tagcontainer);
+    var $tagcontainer = $("<div class='KTagPanel_tagcontainer'></div>").appendTo($container);
 
+    var $ptags = $("<div class=''></div>").appendTo($tagcontainer);
+    var $stags = $("<div class=''></div>").appendTo($tagcontainer);
+    var $ftags = $("<div class=''></div>").appendTo($tagcontainer);
 
+    var tagmap = [];
+    var currentrow_tags;
 
-	var tagmap = [];
-	var currentrow_tags;
+    var tcols = {};
+    var tagtypes = ["ptags", "stags", "ftags"];
 
-	var tcols = {};
-	var tagtypes = ['ptags','stags','ftags'];
+    tcols.ptags = buildCol("PTags");
+    tcols.stags = buildCol("STags");
+    tcols.ftags = buildCol("FTags");
 
-	tcols.ptags = buildCol('PTags');
-	tcols.stags = buildCol('STags');
-	tcols.ftags = buildCol('FTags');
+    renderTagList("ftags");
+    renderTagList();
 
-	renderTagList('ftags')
-	renderTagList()
+    function buildCol(tagtype) {
+        var tcol = {};
+        tcol.$div = $("<div class='KTagPanel_taglistdiv'></div>").appendTo($tagcontainer);
+        tcol.$top = $("<div class='KTagPanel_taglisttitle'><span>" + tagtype + "</span></div>").appendTo(tcol.$div);
+        $("<i class='fa fa-pencil'></i>")
+            .appendTo(tcol.$top)
+            .click(function () {
+                editTags(tagtype.toLowerCase());
+            });
+        tcol.$tags = $("<div class='KTagPanel_taglist'>" + "content" + "</div>").appendTo(tcol.$div);
+        return tcol;
+    }
 
-	function buildCol(tagtype)
-	{
-		var tcol = {};
-		tcol.$div = $("<div class='KTagPanel_taglistdiv'></div>").appendTo($tagcontainer);
-		tcol.$top = $("<div class='KTagPanel_taglisttitle'><span>"+ tagtype +"</span></div>").appendTo(tcol.$div);
-			$("<i class='fa fa-pencil'></i>").appendTo(tcol.$top).click(function(){ editTags(tagtype.toLowerCase())});
-		tcol.$tags = $("<div class='KTagPanel_taglist'>"+ "content" +"</div>").appendTo(tcol.$div);
-		return tcol;
-	}
-
-	/******************************************************************************
+    /******************************************************************************
 	 render taglists for current selection
 	*******************************************************************************/
-	function editTags(tagtype)
-	{
-		var $div = $("<div class='KTagPanel_editbox'></div>").appendTo(tcols[tagtype].$top);
-		var $dummy = $("<div class=''></div>").appendTo($div);
+    function editTags(tagtype) {
+        var $div = $("<div class='KTagPanel_editbox'></div>").appendTo(tcols[tagtype].$top);
+        var $dummy = $("<div class=''></div>").appendTo($div);
 
-		var $textarea  = $("<textarea>" + Object.getOwnPropertyNames(that.state.taglist[tagtype]).join("\n") +"</textarea>").appendTo($dummy);
-		var $textarea_alltags  = $("<textarea style='background:hsl(0,0%,60%)'>" + Object.getOwnPropertyNames(taglist[tagtype]).join("\n") +"</textarea>").appendTo($dummy);
-		
+        var $textarea = $(
+            "<textarea>" + Object.getOwnPropertyNames(that.state.taglist[tagtype]).join("\n") + "</textarea>"
+        ).appendTo($dummy);
+        var $textarea_alltags = $(
+            "<textarea style='background:hsl(0,0%,60%)'>" +
+                Object.getOwnPropertyNames(taglist[tagtype]).join("\n") +
+                "</textarea>"
+        ).appendTo($dummy);
 
-		var $tools = $("<div></div>").appendTo($div);
-		$("<div class='modernbutton small blue'>ok</div>").appendTo($tools).click(function(){
-			var tobj = {};
-			var tlist = $textarea.val().split("\n"); for(var k=0; k<tlist.length; k++){var key =tlist[k].trim(); if(key!="")tobj[key] = 1; }
-			that.state.taglist[tagtype] = tobj;
-			renderTagList(tagtype)
-			$div.remove()
-		});
-		$("<div class='modernbutton small red'>cancel</div>").appendTo($tools).click(function(){$div.remove()});;
-		$textarea.focus();
-		//$textarea.get(0).onpaste = function(ev){pastecontent(ev, whichtable)}
-		
-
-	}
-	/******************************************************************************
+        var $tools = $("<div></div>").appendTo($div);
+        $("<div class='modernbutton small blue'>ok</div>")
+            .appendTo($tools)
+            .click(function () {
+                var tobj = {};
+                var tlist = $textarea.val().split("\n");
+                for (var k = 0; k < tlist.length; k++) {
+                    var key = tlist[k].trim();
+                    if (key != "") tobj[key] = 1;
+                }
+                that.state.taglist[tagtype] = tobj;
+                renderTagList(tagtype);
+                $div.remove();
+            });
+        $("<div class='modernbutton small red'>cancel</div>")
+            .appendTo($tools)
+            .click(function () {
+                $div.remove();
+            });
+        $textarea.focus();
+        //$textarea.get(0).onpaste = function(ev){pastecontent(ev, whichtable)}
+    }
+    /******************************************************************************
 	 render taglists for current selection
 	*******************************************************************************/
-	function renderTagList(tagtype)
-	{
-		if(tagtype==undefined)
-		{
-			if(state.viewer.selectionMode[1] == 's')
-			{
-				tcols.stags.$div.show();
-				tcols.ptags.$div.hide();
-				tagtype = 'stags';
-			}
-			else if(state.viewer.selectionMode[1] == 'p')
-			{
-				tcols.ptags.$div.show();
-				tcols.stags.$div.hide();
-				tagtype = 'ptags';
-			}
-		}
+    function renderTagList(tagtype) {
+        if (tagtype == undefined) {
+            if (state.viewer.selectionMode[1] == "s") {
+                tcols.stags.$div.show();
+                tcols.ptags.$div.hide();
+                tagtype = "stags";
+            } else if (state.viewer.selectionMode[1] == "p") {
+                tcols.ptags.$div.show();
+                tcols.stags.$div.hide();
+                tagtype = "ptags";
+            }
+        }
 
-
-		var $target = tcols[tagtype].$tags;
-		var xtaglist = that.state.taglist[tagtype];
-		/******************************************************************************
+        var $target = tcols[tagtype].$tags;
+        var xtaglist = that.state.taglist[tagtype];
+        /******************************************************************************
 		  synchronize with current tags from patient / study
 		*******************************************************************************/
-		var psid = patientTableMirror.getCurrentUniquePSID();
-		// get the list of tags, must 
-		var tagmap_ = []
-		currentrow_tags = {};
-		var ctaglist = {};
-		if(tagtype != 'ftags')
-		{
-			if(psid != undefined)
-			{
-				var rowid = psid.patients_id ;  
-				if(state.viewer.selectionMode[1] == 's')
-					rowid += riddelim + (psid.studies_id==undefined?"":psid.studies_id);
-				var $row = $("tr[id='" + rowid + "']");
-				var $settags =  $row.find('.KTagPatient')//.join( $row.find('.KTagStudy'));
-				for(var z=0; z<$settags.length; z++)
-				{
-					var ctag =  $settags.eq(z).text();
-					currentrow_tags[ctag] = 1;
-					ctaglist[ctag] = 1;
-				}
-			}
-		}
+        var psid = patientTableMirror.getCurrentUniquePSID();
+        // get the list of tags, must
+        var tagmap_ = [];
+        currentrow_tags = {};
+        var ctaglist = {};
+        if (tagtype != "ftags") {
+            if (psid != undefined) {
+                var rowid = psid.patients_id;
+                if (state.viewer.selectionMode[1] == "s")
+                    rowid += riddelim + (psid.studies_id == undefined ? "" : psid.studies_id);
+                var $row = $("tr[id='" + rowid + "']");
+                var $settags = $row.find(".KTagPatient"); //.join( $row.find('.KTagStudy'));
+                for (var z = 0; z < $settags.length; z++) {
+                    var ctag = $settags.eq(z).text();
+                    currentrow_tags[ctag] = 1;
+                    ctaglist[ctag] = 1;
+                }
+            }
+        }
 
-		$target.empty();
-		function appendTag(item, count)
-		{
-			var $tcont = $("<div class='KTagPanel_tagitem KTagPanel_tagitem_disabled' data-tag='"+item+"'>" + "" + "</div>").appendTo($target); 
-			if(count!=undefined && tagtype != 'ftags')
-				$("<div class='KTagPanel_tagitem_shortcut'>"+(count++)+"</div>").appendTo($tcont);
+        $target.empty();
+        function appendTag(item, count) {
+            var $tcont = $(
+                "<div class='KTagPanel_tagitem KTagPanel_tagitem_disabled' data-tag='" + item + "'>" + "" + "</div>"
+            ).appendTo($target);
+            if (count != undefined && tagtype != "ftags")
+                $("<div class='KTagPanel_tagitem_shortcut'>" + count++ + "</div>").appendTo($tcont);
 
-			var $dummy = $("<div class='KTagPatient ' draggable=true>" + item + "</div>").appendTo($tcont)
-			if(tagtype!='ftags')
-				$dummy.click(function(){that.modifyTag_internal(item)});
-			$("<i class='fa fa-check' style='display:none'></i>").appendTo($tcont);
-			return $tcont;
-		}
+            var $dummy = $("<div class='KTagPatient ' draggable=true>" + item + "</div>").appendTo($tcont);
+            if (tagtype != "ftags")
+                $dummy.click(function () {
+                    that.modifyTag_internal(item);
+                });
+            $("<i class='fa fa-check' style='display:none'></i>").appendTo($tcont);
+            return $tcont;
+        }
 
+        var count = 0;
+        for (var k in xtaglist) {
+            tagmap_[count] = k;
+            var $tag = appendTag(k, count++);
 
-		var count = 0;
-		for(var k in xtaglist)
-		{
-			tagmap_[count] = k;
-			var $tag = appendTag(k, count++);
+            if (ctaglist[k] != undefined) {
+                $tag.removeClass("KTagPanel_tagitem_disabled").find("i").show();
+                delete ctaglist[k];
+            }
 
-			if( ctaglist[k] != undefined )
-			{
-				$tag.removeClass('KTagPanel_tagitem_disabled').find('i').show();
-				delete ctaglist[k]
-			}
+            $tag.on(
+                "dragstart",
+                dragstarter(
+                    (function (x, name) {
+                        return function () {
+                            return {
+                                type: "tagpaneltag",
+                                callback: dropCallback,
+                                obj: x,
+                                tag: x,
+                            };
+                        };
+                    })(k),
+                    k
+                )
+            );
+        }
 
-			$tag.on("dragstart", dragstarter( function(x,name)
-					{ 
-						return function()
-						{
-							return {
-								type: 'tagpaneltag',
-								callback: dropCallback,
-								obj:x,
-								tag: x
-							}
-						}
-					}(k), k) );
-		}
+        // render all other tags from current selection
+        for (var k in ctaglist) {
+            tagmap_[count] = k;
+            var $tag = appendTag(k, count++);
+            $tag.removeClass("KTagPanel_tagitem_disabled").find("i").show();
+        }
 
-		// render all other tags from current selection
-		for(var k in ctaglist)
-		{
-			tagmap_[count] = k;
-			var $tag = appendTag(k, count++)
-			$tag.removeClass('KTagPanel_tagitem_disabled').find('i').show();
-		}
-		
-		if(tagtype != 'ftags')
-			tagmap = tagmap_
+        if (tagtype != "ftags") tagmap = tagmap_;
+    }
+    that.update = renderTagList;
 
-	}
-	that.update = renderTagList;
-
-	/******************************************************************************
+    /******************************************************************************
 	 handleDrop
 	*******************************************************************************/
-	function dropCallback(ev, params, ttt)
-	{
-		if(ttt && ttt.getCurrentViewer() && ttt.getCurrentViewer().currentFileID)
-		{
-			tobj = {tag:params.tag,objs:[]};
-			tobj.objs.push({fileID: ttt.getCurrentViewer().currentFileID});
-			var str = "tag_files";
-			var $filerow = $('.fileRow[data-fileid="' + ttt.getCurrentViewer().currentFileID + '"]');
+    function dropCallback(ev, params, ttt) {
+        if (ttt && ttt.getCurrentViewer() && ttt.getCurrentViewer().currentFileID) {
+            tobj = { tag: params.tag, objs: [] };
+            tobj.objs.push({ fileID: ttt.getCurrentViewer().currentFileID });
+            var str = "tag_files";
+            var $filerow = $('.fileRow[data-fileid="' + ttt.getCurrentViewer().currentFileID + '"]');
 
-			/* allow to remove on drop? makes no sense
+            /* allow to remove on drop? makes no sense
 			var filetags = $filerow.find('.KTagFile');
 			for(var k=0; k<filetags.length; k++)
 			{
@@ -10669,11 +8726,10 @@ KTagPanel = function()
 					str = "tag_files_del";
 			}
 			*/
-			var jsonString = JSON.stringify(tobj);
-			ajaxRequest('command='+str+'&json=' + jsonString , function(e)
-			{ 
-				patientTableMirror.mirrorState(); 
-				/*
+            var jsonString = JSON.stringify(tobj);
+            ajaxRequest("command=" + str + "&json=" + jsonString, function (e) {
+                patientTableMirror.mirrorState();
+                /*
 				var $blinker = $("<div class='KReading_ItemBlinker'>tag added</div>").appendTo(document.body);
 				$blinker.css('border-color', 'red');
 				if(!$filerow.is(':visible'))
@@ -10688,275 +8744,265 @@ KTagPanel = function()
 				$blinker.offset( $blinker.css({'top': pp.top , 'left': pp.left }) );
 				$blinker.animate({width: 100, height: 100, opacity:0.2}, 500, function(){$blinker.remove()} )
 				*/
-				$.notify($filerow.attr('data-subfolder') +"/"+ $filerow.attr('data-filename') + " tagged with '" + tobj.tag + "'", "success");
-			});			
-		}
-		tempObjectInfo = undefined;
-	}
+                $.notify(
+                    $filerow.attr("data-subfolder") +
+                        "/" +
+                        $filerow.attr("data-filename") +
+                        " tagged with '" +
+                        tobj.tag +
+                        "'",
+                    "success"
+                );
+            });
+        }
+        tempObjectInfo = undefined;
+    }
 
-
-	/******************************************************************************
+    /******************************************************************************
 	 handleKeyEvent
 	*******************************************************************************/
-	that.modifyTag_internal = function(ttag)
-	{
-		var psid = patientTableMirror.getCurrentUniquePSID();
-		if(!psid)
-			return false
+    that.modifyTag_internal = function (ttag) {
+        var psid = patientTableMirror.getCurrentUniquePSID();
+        if (!psid) return false;
 
-		var intent = currentrow_tags[ttag] == undefined ? "":"_del";
-		var tempObjectInfo_temp = undefined
-		if(state.viewer.selectionMode[1] == 's')
-		{
-			tempObjectInfo_temp = {type:"study",sid:psid.studies_id, piz:psid.patients_id }
-		}
-		else if(state.viewer.selectionMode[1] == 'p')
-		{
-			tempObjectInfo_temp = {type:"patient",piz:psid.patients_id }
-		}
-		if(tempObjectInfo_temp)
-		{
-			modifyTag(ttag,intent, undefined, [tempObjectInfo_temp])
-			renderTagList();
+        var intent = currentrow_tags[ttag] == undefined ? "" : "_del";
+        var tempObjectInfo_temp = undefined;
+        if (state.viewer.selectionMode[1] == "s") {
+            tempObjectInfo_temp = { type: "study", sid: psid.studies_id, piz: psid.patients_id };
+        } else if (state.viewer.selectionMode[1] == "p") {
+            tempObjectInfo_temp = { type: "patient", piz: psid.patients_id };
+        }
+        if (tempObjectInfo_temp) {
+            modifyTag(ttag, intent, undefined, [tempObjectInfo_temp]);
+            renderTagList();
 
-// 			var $blinker = $("<div class='KReading_ItemBlinker'></div>").appendTo(document.body);
-// 			var pp = tcols.stags.$tags.find("div[data-tag='"+ttag+"']").offset();
-// 			$blinker.offset( $blinker.css({'top': pp.top , 'left': pp.left }) )
-// 					.animate({width: 100, height: 100, opacity:0.2}, 500, function(){$blinker.remove()} )
+            // 			var $blinker = $("<div class='KReading_ItemBlinker'></div>").appendTo(document.body);
+            // 			var pp = tcols.stags.$tags.find("div[data-tag='"+ttag+"']").offset();
+            // 			$blinker.offset( $blinker.css({'top': pp.top , 'left': pp.left }) )
+            // 					.animate({width: 100, height: 100, opacity:0.2}, 500, function(){$blinker.remove()} )
 
-			return true
-		}
-		return false
+            return true;
+        }
+        return false;
+    };
 
-	}
-
-	/******************************************************************************
+    /******************************************************************************
 	 handleKeyEvent
 	*******************************************************************************/
-	that.handleKeyEvent = function(evt)
-	{
-		var thecode = evt.keyCode;
-		
-		if( (thecode >= 48 && thecode <= 57) || (thecode>=96 && thecode <= 96+9)  || thecode == 192 ) // any number
-		{
-			if(thecode<95)
-				var num = thecode - 48 ;
-			else
-				var num = thecode - 96 ;
+    that.handleKeyEvent = function (evt) {
+        var thecode = evt.keyCode;
 
-			if(thecode == 192)
-				num=0;
-			if(evt.shiftKey || evt.ctrlKey || evt.getModifierState('CapsLock'))
-				num+=10;
-			
+        if ((thecode >= 48 && thecode <= 57) || (thecode >= 96 && thecode <= 96 + 9) || thecode == 192) {
+            // any number
+            if (thecode < 95) var num = thecode - 48;
+            else var num = thecode - 96;
 
-			if(tagmap[num] != undefined)
-			{
-				 return that.modifyTag_internal(tagmap[num])
-			}
+            if (thecode == 192) num = 0;
+            if (evt.shiftKey || evt.ctrlKey || evt.getModifierState("CapsLock")) num += 10;
 
-		}
-		return false;
-	}
+            if (tagmap[num] != undefined) {
+                return that.modifyTag_internal(tagmap[num]);
+            }
+        }
+        return false;
+    };
 
-
-	/******************************************************************************
+    /******************************************************************************
 	 finalize
 	*******************************************************************************/
-	//renderTagList();
-	
-	return that;
-}	
+    //renderTagList();
 
-
-
-
-
+    return that;
+};
 
 // ======================================================================================
 // ======================================================================================
 // ============= TagPanel
 // ======================================================================================
 // ======================================================================================
-var ktextsearchpanel
+var ktextsearchpanel;
 
-KTXTSearchPanel = function()
-{
-	var that = new Object();
-	that.enabled = true;
+KTXTSearchPanel = function () {
+    var that = new Object();
+    that.enabled = true;
 
-	/******************************************************************
-	* build the tool
-	*******************************************************************/
-	if(1 && typeof(ktxtsearchpanel) != "undefined" && ktxtsearchpanel != undefined)
-	{
-		ktxtsearchpanel.show();
-		return;
-	}
-	ktxtsearchpanel = that;
-	var $container = $("<div id='KTextSearchPanel"+"' class='markerPanel movableWindows' style='width:auto; min-width:150px;'></div>").appendTo($(document.body));
+    /******************************************************************
+     * build the tool
+     *******************************************************************/
+    if (1 && typeof ktxtsearchpanel != "undefined" && ktxtsearchpanel != undefined) {
+        ktxtsearchpanel.show();
+        return;
+    }
+    ktxtsearchpanel = that;
+    var $container = $(
+        "<div id='KTextSearchPanel" + "' class='markerPanel movableWindows' style='width:auto; min-width:150px;'></div>"
+    ).appendTo($(document.body));
 
+    var pp = getPixelPosition($(document.body));
+    //$container.position({left:"10px", top:"450px"})
+    $container.css("left", "10px");
+    $container.css("top", "210px");
 
-	var pp = getPixelPosition($(document.body));
-	//$container.position({left:"10px", top:"450px"})
- 	$container.css("left", "10px")
- 	$container.css("top", "210px"  );
-
- 	$container.height("auto").width("240px");
+    $container.height("auto").width("240px");
 
     $container.show();
-	/******************************************************************************
+    /******************************************************************************
 	  tools
 	*******************************************************************************/
-	var $topRow  = that.$topRow = $("<div class='roiTool_panel_flex persistent' style='background: hsl(206, 64%, 37%); padding:2px;' ></div>").appendTo($container);
-	var $caption = $("<span> <b> Text Search </b></span>");
-	var $close = that.$close = $("<i class='KViewPort_tool fa fa-close'></i>").click( function(){that.close()} );
-	$topRow.append($caption).append($("<i class='flexspacer'></i>")).append($close);
-	$topRow.mousedown( function(ev) { movableWindowMousedownFn(ev, $container) } );
+    var $topRow = (that.$topRow = $(
+        "<div class='roiTool_panel_flex persistent' style='background: hsl(206, 64%, 37%); padding:2px;' ></div>"
+    ).appendTo($container));
+    var $caption = $("<span> <b> Text Search </b></span>");
+    var $close = (that.$close = $("<i class='KViewPort_tool fa fa-close'></i>").click(function () {
+        that.close();
+    }));
+    $topRow.append($caption).append($("<i class='flexspacer'></i>")).append($close);
+    $topRow.mousedown(function (ev) {
+        movableWindowMousedownFn(ev, $container);
+    });
 
-	that.close = function()
-	{
-		$container.remove();
-		that.enabled = false;
-	}
+    that.close = function () {
+        $container.remove();
+        that.enabled = false;
+    };
 
-	/************************************************
-	* search panel
-	************************************************/
-	var $tools = $("<div class='' style='display:flex;'></div>").appendTo($container)
-	var $inner = $("<div class='KListView' style='display:flex;background:hsl(0,0%,30%)'></div>").appendTo($container)
-	var $left  = $("<div style='flex-grow:1;display:flex;flex-direction:column' class=''></div>").appendTo($inner);
-	var $right = $("<div style='flex-grow:1;background:red'></div>").appendTo($inner);
+    /************************************************
+     * search panel
+     ************************************************/
+    var $tools = $("<div class='' style='display:flex;'></div>").appendTo($container);
+    var $inner = $("<div class='KListView' style='display:flex;background:hsl(0,0%,30%)'></div>").appendTo($container);
+    var $left = $("<div style='flex-grow:1;display:flex;flex-direction:column' class=''></div>").appendTo($inner);
+    var $right = $("<div style='flex-grow:1;background:red'></div>").appendTo($inner);
 
-	$right.hide();
-	$tools.hide();
+    $right.hide();
+    $tools.hide();
 
+    /************************************************
+     * load Fuse => fuse does not work, too fuzzy
+     ************************************************/
+    //     scriptLoader.loadScript("./fuse.min.js")
+    //         const options =
+    //         {
+    //             isCaseSensitive: false,
+    //             minMatchCharLength: -2,
+    //             includeScore: true,
+    //             includeMatches: true,
+    //             findAllMatches: true,
+    //             ignoreLocation: true,
+    //             threshold: 0,
+    //             location:0,
 
-	/************************************************
-	* load Fuse => fuse does not work, too fuzzy
-	************************************************/
-//     scriptLoader.loadScript("./fuse.min.js")
-//         const options = 
-//         {
-//             isCaseSensitive: false,
-//             minMatchCharLength: -2,
-//             includeScore: true,
-//             includeMatches: true,
-//             findAllMatches: true,
-//             ignoreLocation: true,
-//             threshold: 0,
-//             location:0,
+    //         }
 
-//         }
+    //         var list = [txt];
+    //         var list = ["Old eins zwei drei ", "The Lock Artist"]
+    //         const fuse = new Fuse(list, options)
 
-//         var list = [txt];
-//         var list = ["Old eins zwei drei ", "The Lock Artist"]
-//         const fuse = new Fuse(list, options)
+    //         const result = fuse.search('drei')
+    //         console.log(result[0]);
+    //var tt = result[0].matches[0].indices[4];
+    // console.log(txt.substr(tt[0], tt[1]-tt[0],))
 
-//         const result = fuse.search('drei')
-//         console.log(result[0]);
-//var tt = result[0].matches[0].indices[4];
-       // console.log(txt.substr(tt[0], tt[1]-tt[0],))
-
-
-
-	/******************************************************************
+    /******************************************************************
 	  state
 	*******************************************************************/
-	that.state = 
-	{
-		visible:true,
-		searchfor:""
-	}
-	
-	// save the taglist in state
-	if(state.txtsearchpanel != undefined)
-	{
-		that.state = state.txtsearchpanel;
-	}
-	else
-	{
-		state.txtsearchpanel = that.state;
-	}
+    that.state = {
+        visible: true,
+        searchfor: "",
+    };
 
+    // save the taglist in state
+    if (state.txtsearchpanel != undefined) {
+        that.state = state.txtsearchpanel;
+    } else {
+        state.txtsearchpanel = that.state;
+    }
 
     //var sobj =defaultsobj ;
-//     var jsoneditor = new KJSONEditor(sobj, "searchfor",  { parseonblur:true });
-//     $left.append(jsoneditor.$container);
+    //     var jsoneditor = new KJSONEditor(sobj, "searchfor",  { parseonblur:true });
+    //     $left.append(jsoneditor.$container);
 
-
-	var $textarea = $("<textarea autocorrect='off' autocapitalize='off' spellcheck='false' style='resize:none;flex-grow:1;resize: vertical;height:200px'>"+that.state.searchfor+"</textarea>").appendTo($container).appendTo($left)
-	   .on('change', function(){that.state.searchfor = $textarea.val();})
-	var $dummy = $("<textarea autocorrect='off' readonly=true spellcheck='false' style='resize:none;flex-grow:0;height:120px;background:hsl(0,0%,70%)'>Search is triggered on file reload/autoloader\nUse following Format:\n============\nkeyword1\nkeyword3|keyword4</textarea>").appendTo($container).appendTo($left);
+    var $textarea = $(
+        "<textarea autocorrect='off' autocapitalize='off' spellcheck='false' style='resize:none;flex-grow:1;resize: vertical;height:200px'>" +
+            that.state.searchfor +
+            "</textarea>"
+    )
+        .appendTo($container)
+        .appendTo($left)
+        .on("change", function () {
+            that.state.searchfor = $textarea.val();
+        });
+    var $dummy = $(
+        "<textarea autocorrect='off' readonly=true spellcheck='false' style='resize:none;flex-grow:0;height:120px;background:hsl(0,0%,70%)'>Search is triggered on file reload/autoloader\nUse following Format:\n============\nkeyword1\nkeyword3|keyword4</textarea>"
+    )
+        .appendTo($container)
+        .appendTo($left);
     //var $dummy = $("<div class='' style='_flex-grow:1;'>tumor<br></br>ACI|MCI</div>").appendTo($left)
 
-     var $sandbox= $("<div class='modernbutton small gray' style=''>sandbox</div>")
-         .click(function(){ $right.toggle() }).appendTo($tools);
+    var $sandbox = $("<div class='modernbutton small gray' style=''>sandbox</div>")
+        .click(function () {
+            $right.toggle();
+        })
+        .appendTo($tools);
 
-     var $preview= $("<div class='modernbutton small green' style=''>preview</div>")
-         .click(function(){ jsoneditor.JSONparse(); runSearch($right) }).appendTo($tools);
+    var $preview = $("<div class='modernbutton small green' style=''>preview</div>")
+        .click(function () {
+            jsoneditor.JSONparse();
+            runSearch($right);
+        })
+        .appendTo($tools);
 
-	
-	/******************************************************************
-	* close
-	*******************************************************************/
-	that.close = function()
-	{
-		$container.hide();
-		that.enabled = false;
-	}
+    /******************************************************************
+     * close
+     *******************************************************************/
+    that.close = function () {
+        $container.hide();
+        that.enabled = false;
+    };
 
-	
-	/******************************************************************
-	* close
-	*******************************************************************/
-	that.show = function()
-	{
-		$container.show();
-		that.enabled = true;
-	}
-
+    /******************************************************************
+     * close
+     *******************************************************************/
+    that.show = function () {
+        $container.show();
+        that.enabled = true;
+    };
 
     return that;
 
-// 	/******************************************************************************
-// 	  tools
-// 	*******************************************************************************/
-// 	var $topRow  = that.$topRow = $("<div class='roiTool_panel_flex persistent' style='background: hsl(206, 64%, 37%); padding:2px;' ></div>").appendTo($container);
-// 	var $caption = $("<span> <b> TagPanel </b></span>");
-// 	var $close = that.$close = $("<i class='KViewPort_tool fa fa-close'></i>").click( that.close );
-// 	$topRow.append($caption).append($("<i class='flexspacer'></i>")).append($close);
-// 	$topRow.mousedown( function(ev) { movableWindowMousedownFn(ev, $container) } );
+    // 	/******************************************************************************
+    // 	  tools
+    // 	*******************************************************************************/
+    // 	var $topRow  = that.$topRow = $("<div class='roiTool_panel_flex persistent' style='background: hsl(206, 64%, 37%); padding:2px;' ></div>").appendTo($container);
+    // 	var $caption = $("<span> <b> TagPanel </b></span>");
+    // 	var $close = that.$close = $("<i class='KViewPort_tool fa fa-close'></i>").click( that.close );
+    // 	$topRow.append($caption).append($("<i class='flexspacer'></i>")).append($close);
+    // 	$topRow.mousedown( function(ev) { movableWindowMousedownFn(ev, $container) } );
 
+    // 	/******************************************************************************
+    // 	  toggle a stat var
+    // 	*******************************************************************************/
+    // 	function switch_enabled(prop, force, invert)
+    // 	{
+    // 		that.state[prop] = typeof(force)!=="boolean"?(that.state[prop]?false:true):force;
+    // 		btns["$"+prop][that.state[prop]?"addClass":"removeClass"]('KViewPort_tool_enabled');
+    // 		return that.state[prop];
+    // 	}
 
-// 	/******************************************************************************
-// 	  toggle a stat var
-// 	*******************************************************************************/
-// 	function switch_enabled(prop, force, invert)
-// 	{
-// 		that.state[prop] = typeof(force)!=="boolean"?(that.state[prop]?false:true):force;
-// 		btns["$"+prop][that.state[prop]?"addClass":"removeClass"]('KViewPort_tool_enabled');
-// 		return that.state[prop];
-// 	}
-	
-// 	return that;
-}	
+    // 	return that;
+};
 /************************************************
-* run search
-************************************************/
-function KTXTSearchPanel_runSearch(txt, $div)
-{
+ * run search
+ ************************************************/
+function KTXTSearchPanel_runSearch(txt, $div) {
     /************************************************
-    * parse items in certain format
-    ************************************************/
-    function parseSearchItems()
-    {
+     * parse items in certain format
+     ************************************************/
+    function parseSearchItems() {
         var lines = state.txtsearchpanel.searchfor.split("\n");
-        var searchfor = []
-        for(var k=0; k<lines.length; k++)
-        {
-            if(lines[k].trim() != "")
-            {
+        var searchfor = [];
+        for (var k = 0; k < lines.length; k++) {
+            if (lines[k].trim() != "") {
                 var tkeyword = lines[k];
                 searchfor.push(tkeyword);
             }
@@ -10971,397 +9017,337 @@ function KTXTSearchPanel_runSearch(txt, $div)
     // walk over all searched items
     var tlist = [];
     var searchfor = parseSearchItems();
-    for(var k in searchfor)
-    {
-        if(typeof(searchfor[k]) == "string")
-            var kw = searchfor[k].replace(" ", '\\s');
-        else
-            var kw = searchfor[k].keywords.replace(" ", '\\s');
-
+    for (var k in searchfor) {
+        if (typeof searchfor[k] == "string") var kw = searchfor[k].replace(" ", "\\s");
+        else var kw = searchfor[k].keywords.replace(" ", "\\s");
 
         var rr = new RegExp(kw, "g");
         var matches = txt.matchAll(rr);
-        for (const tmatch of matches) 
-        {
+        for (const tmatch of matches) {
             //console.log(tmatch)
-            tlist.push({start:tmatch.index, length: tmatch[0].length, index:k, word:tmatch[0]});
+            tlist.push({ start: tmatch.index, length: tmatch[0].length, index: k, word: tmatch[0] });
         }
-
     }
     // sort match indexes
-    tlist = tlist.sort(function(a,b){return (a.start<b.start?-1:1) });
+    tlist = tlist.sort(function (a, b) {
+        return a.start < b.start ? -1 : 1;
+    });
     var htxt = "";
     var tind = 0;
     var bgopac = 1;
-    var colorlist = 
-    [
-        "255,100,255",
-        "100,255,255",
-        "55,255,55",
-        "255,0,0",
-        "195,195,255",
-        "100,100,255",
-    ]
+    var colorlist = ["255,100,255", "100,255,255", "55,255,55", "255,0,0", "195,195,255", "100,100,255"];
 
-    for(var k=0; k<tlist.length; k++)
-    {
+    for (var k = 0; k < tlist.length; k++) {
         var tt = tlist[k];
-        var tcolor =  tt.color;
-        var tcolor = colorlist[tt.index%(colorlist.length-1)];
+        var tcolor = tt.color;
+        var tcolor = colorlist[tt.index % (colorlist.length - 1)];
 
-        htxt += txt.substr(tind, tt.start-tind);
+        htxt += txt.substr(tind, tt.start - tind);
         //tstyle = "background:"+ tt.color +";";
         var tstyle = "";
         tstyle += "position:relative;";
-        tstyle += "font-weight:bold"
+        tstyle += "font-weight:bold";
 
-        tstyle += "scolor:" +  tcolor +";";
-        tstyle += "background-color:rgba("+tcolor+","+ bgopac +");";
+        tstyle += "scolor:" + tcolor + ";";
+        tstyle += "background-color:rgba(" + tcolor + "," + bgopac + ");";
 
-        htxt += "<span style='" + tstyle +"'>";
+        htxt += "<span style='" + tstyle + "'>";
         htxt += txt.substr(tt.start, tt.length);
         //htxt += "<div style='position:absolue; top:5px:background:"+tcolor+"'>";
         htxt += "</span>";
-        tind = tt.start+tt.length;
+        tind = tt.start + tt.length;
     }
-    htxt += txt.substr(tind, txt.length-tind);
+    htxt += txt.substr(tind, txt.length - tind);
     //console.log(txt);
     //console.log(htxt);
 
-   if($div != undefined)
-       $div.html(htxt);
-   return htxt
-
+    if ($div != undefined) $div.html(htxt);
+    return htxt;
 }
 
-
-
-
-
-
 /***************************************************************************************
-* compare and subtract two different lists
-****************************************************************************************/
-function KExcelFunctions()
-{
-	var that = new Object();
+ * compare and subtract two different lists
+ ****************************************************************************************/
+function KExcelFunctions() {
+    var that = new Object();
 
-	function TList()
-	{
-		var tt = {};
-		tt.doublettes = undefined;
-		tt.obj = {};
-		return tt; 
-	}
+    function TList() {
+        var tt = {};
+        tt.doublettes = undefined;
+        tt.obj = {};
+        return tt;
+    }
 
-	var listA = new TList();
-	var listB = new TList();
-	var listBoth = new TList();
-	var listAnotB = new TList();
-	var listBnotA = new TList();
-	
-	var d;
+    var listA = new TList();
+    var listB = new TList();
+    var listBoth = new TList();
+    var listAnotB = new TList();
+    var listBnotA = new TList();
 
-	/*******************************************************************
-	* main layout
-	********************************************************************/
-	if($('#KExcelFunctionsDialog').length == 0)
-	{
-		d = new dialog_generic();
-		d.deleteonclose = false;
-		d.$frame.attr('id', 'KExcelFunctionsDialog').show()
-		d.$frame.width($(document.body).width()*.7);
+    var d;
 
-	}
-	else
-	{
-		$('#KExcelFunctionsDialog').show();
-		return;
-	}
-
+    /*******************************************************************
+     * main layout
+     ********************************************************************/
+    if ($("#KExcelFunctionsDialog").length == 0) {
+        d = new dialog_generic();
+        d.deleteonclose = false;
+        d.$frame.attr("id", "KExcelFunctionsDialog").show();
+        d.$frame.width($(document.body).width() * 0.7);
+    } else {
+        $("#KExcelFunctionsDialog").show();
+        return;
+    }
 
     var $tablecontainer = $("<div class='KExcelList_tcontainer'></div>").appendTo(d.$container);
 
-	create_table(listA, 'List A');
-	create_table(listB, 'List B');
-	//setcontent(listA, "1234 20120101\n1235 20120505");
-	//setcontent( listB, "1234 20120101\n1232 20120505\n1232 20120508");
+    create_table(listA, "List A");
+    create_table(listB, "List B");
+    //setcontent(listA, "1234 20120101\n1235 20120505");
+    //setcontent( listB, "1234 20120101\n1232 20120505\n1232 20120508");
 
-	create_table(listBoth,  'in Both',    1);
-	create_table(listAnotB, 'A not in B', 1);
-	create_table(listBnotA, 'B NOT in A', 1);
+    create_table(listBoth, "in Both", 1);
+    create_table(listAnotB, "A not in B", 1);
+    create_table(listBnotA, "B NOT in A", 1);
 
-	compare_tables();
+    compare_tables();
 
-	/*******************************************************************
-	* prepare table
-	********************************************************************/
-	function create_table(whichtable, title, type)
-	{
-		var $icontainer   = $("<div class='KExcelList_icontainer'></div>").appendTo($tablecontainer);
-		var $title        = $("<div class='KExcelList_ititle'>"+title +"</div>").appendTo($icontainer);
-		var $toolbar      = $("<div class='KExcelList_icontainer_toolbar' ></div>").appendTo($icontainer);
-		
-// 		if(type != undefined)
-// 			$textarea.css('visibility', 'hidden')
+    /*******************************************************************
+     * prepare table
+     ********************************************************************/
+    function create_table(whichtable, title, type) {
+        var $icontainer = $("<div class='KExcelList_icontainer'></div>").appendTo($tablecontainer);
+        var $title = $("<div class='KExcelList_ititle'>" + title + "</div>").appendTo($icontainer);
+        var $toolbar = $("<div class='KExcelList_icontainer_toolbar' ></div>").appendTo($icontainer);
 
-		if(type == undefined)
-		{
-			var $textarea  = $("<textarea onclick='this.focus();this.select()'>paste content here</textarea>").appendTo($toolbar);
-				$textarea.get(0).onpaste = function(ev){pastecontent(ev, whichtable)}
-			whichtable.$textarea = $textarea;
+        // 		if(type != undefined)
+        // 			$textarea.css('visibility', 'hidden')
 
-			var $copybutton2  = $("<div class='modernbutton orange small' _style='height:15px;' >from patienttable</div>").appendTo($toolbar)
-				.click(function(){paste_from_ptable(whichtable)});
-			var $copybutton2  = $("<div class='modernbutton blue small' _style='height:15px;' >copy as psids</div>").appendTo($toolbar)
-				.click(function(){copy_to_clipboard(whichtable, 'psid')});
+        if (type == undefined) {
+            var $textarea = $("<textarea onclick='this.focus();this.select()'>paste content here</textarea>").appendTo(
+                $toolbar
+            );
+            $textarea.get(0).onpaste = function (ev) {
+                pastecontent(ev, whichtable);
+            };
+            whichtable.$textarea = $textarea;
 
-		}
-		else
-		{
-			var $copybutton2  = $("<div class='modernbutton red small' _style='height:15px;' >to patienttable</div>").appendTo($toolbar)
-				.click(function(){copy_to_clipboard(whichtable, 'psid', 1)});
-			var $copybutton2  = $("<div class='modernbutton yellow small' _style='height:15px;' >copy as excel</div>").appendTo($toolbar)
-				.click(function(){copy_to_clipboard(whichtable, 'table')});
-			var $copybutton2  = $("<div class='modernbutton blue small' _style='height:15px;' >copy as psids</div>").appendTo($toolbar)
-				.click(function(){copy_to_clipboard(whichtable, 'psid')});
-		}
+            var $copybutton2 = $(
+                "<div class='modernbutton orange small' _style='height:15px;' >from patienttable</div>"
+            )
+                .appendTo($toolbar)
+                .click(function () {
+                    paste_from_ptable(whichtable);
+                });
+            var $copybutton2 = $("<div class='modernbutton blue small' _style='height:15px;' >copy as psids</div>")
+                .appendTo($toolbar)
+                .click(function () {
+                    copy_to_clipboard(whichtable, "psid");
+                });
+        } else {
+            var $copybutton2 = $("<div class='modernbutton red small' _style='height:15px;' >to patienttable</div>")
+                .appendTo($toolbar)
+                .click(function () {
+                    copy_to_clipboard(whichtable, "psid", 1);
+                });
+            var $copybutton2 = $("<div class='modernbutton yellow small' _style='height:15px;' >copy as excel</div>")
+                .appendTo($toolbar)
+                .click(function () {
+                    copy_to_clipboard(whichtable, "table");
+                });
+            var $copybutton2 = $("<div class='modernbutton blue small' _style='height:15px;' >copy as psids</div>")
+                .appendTo($toolbar)
+                .click(function () {
+                    copy_to_clipboard(whichtable, "psid");
+                });
+        }
 
-		
-	
-		var $summary = $("<div class='KExcelList_summary'></div>").appendTo($icontainer);
-		var $table = $("<table cellspacing=0  '></table>").appendTo($icontainer);
+        var $summary = $("<div class='KExcelList_summary'></div>").appendTo($icontainer);
+        var $table = $("<table cellspacing=0  '></table>").appendTo($icontainer);
 
-		whichtable.$container = $icontainer;
-		whichtable.$summary = $summary;
-		whichtable.$table = $table;
-		return $icontainer;
-	}
+        whichtable.$container = $icontainer;
+        whichtable.$summary = $summary;
+        whichtable.$table = $table;
+        return $icontainer;
+    }
 
-	/*******************************************************************
-	* paste content /  convert a csv / string to table object
-	********************************************************************/
-	function paste_from_ptable(targettable)
-	{
-		var str = "";
-		var selectedItems = patientTableMirror.selectedItems;
-		for(var k=0; k<selectedItems.length; k++)
-		{
-			if(k>0)
-				str += "\n";
+    /*******************************************************************
+     * paste content /  convert a csv / string to table object
+     ********************************************************************/
+    function paste_from_ptable(targettable) {
+        var str = "";
+        var selectedItems = patientTableMirror.selectedItems;
+        for (var k = 0; k < selectedItems.length; k++) {
+            if (k > 0) str += "\n";
 
-			if(state.viewer.selectionMode[1]=='p')
-			{
-				str += selectedItems[k];
-			}
-			if(state.viewer.selectionMode[1]=='s')
-			{
-				var spl = selectedItems[k].split(riddelim);
-				str += spl[0] + "\t" + spl[1].substring(1,9);
-			}
-		}
-		setcontent(targettable, str);
-		compare_tables();	
-	}
+            if (state.viewer.selectionMode[1] == "p") {
+                str += selectedItems[k];
+            }
+            if (state.viewer.selectionMode[1] == "s") {
+                var spl = selectedItems[k].split(riddelim);
+                str += spl[0] + "\t" + spl[1].substring(1, 9);
+            }
+        }
+        setcontent(targettable, str);
+        compare_tables();
+    }
 
-	/*******************************************************************
-	* paste from clipboard
-	********************************************************************/
-	function pastecontent(ev, whichtable)
-	{
-		setcontent(whichtable, (ev?ev.clipboardData.getData("Text"):"") || "" );
-		compare_tables();
-	}
+    /*******************************************************************
+     * paste from clipboard
+     ********************************************************************/
+    function pastecontent(ev, whichtable) {
+        setcontent(whichtable, (ev ? ev.clipboardData.getData("Text") : "") || "");
+        compare_tables();
+    }
 
-	/*******************************************************************
-	* paste content /  convert a csv / string to table object
-	********************************************************************/
-	function setcontent(whichtable, txt)
-	{
+    /*******************************************************************
+     * paste content /  convert a csv / string to table object
+     ********************************************************************/
+    function setcontent(whichtable, txt) {
+        whichtable.obj = {};
 
-		whichtable.obj = {};
+        var rows = txt.split(/[\n\ ]/g);
+        var trow, cells, uid, val, xx;
+        var obj = {};
+        whichtable.doublettes = 0;
+        for (var k = 0; k < rows.length; k++) {
+            trow = rows[k];
+            if (trow.trim() == "") continue;
 
-		var rows = txt.split(/[\n\ ]/g);
-		var trow, cells, uid, val, xx
-		var obj = {};
-		whichtable.doublettes = 0;
-		for(var k=0; k<rows.length; k++)
-		{
-			trow = rows[k];
-			if(trow.trim()=="")
-				continue
+            cells = trow.split(/[\t\s]+/);
+            for (var c = 0; c < cells.length; c++) {
+                // convert dates?
+                xx = cells[c].trim();
+                if (xx.search(/\//) != -1) {
+                    // USA date
+                    xx = xx.split("/");
+                    if (xx.length == 3) val = zeroPad(xx[2], 2) + zeroPad(xx[0], 2) + zeroPad(xx[1], 2);
+                } else if (xx.search(/\./) != -1) {
+                    // german date
+                    xx = xx.split(".");
+                    if (xx.length == 3) val = zeroPad(xx[2], 2) + zeroPad(xx[1], 2) + zeroPad(xx[0], 2);
+                } else {
+                    val = xx;
+                }
+                cells[c] = val;
+            }
+            uid = cells.join("");
 
-			cells = trow.split(/[\t\s]+/);
-			for(var c=0; c<cells.length; c++)
-			{
-				// convert dates?
-				xx = cells[c].trim();
-				if(xx.search(/\//) != -1 ) // USA date
-				{
-					xx = xx.split('/');
-					if(xx.length==3)
-						val = zeroPad(xx[2],2) + zeroPad(xx[0],2) + zeroPad(xx[1],2);
-				}
-				else if(xx.search(/\./) != -1 ) // german date
-				{
-					xx = xx.split('.');
-					if(xx.length==3)
-						val = zeroPad(xx[2],2) + zeroPad(xx[1],2) + zeroPad(xx[0],2);
-				}
-				else
-				{
-				  	val = xx;
-				}
-				cells[c] = val;
-			}
-			uid=cells.join('');	
+            if (obj[uid] == undefined) obj[uid] = cells;
+            else whichtable.doublettes++;
+        }
 
-			if(obj[uid] == undefined)
-				obj[uid] = cells;
-			else
-				whichtable.doublettes++;
-		}	
-		
-		whichtable.obj = obj;
-		whichtable.$textarea.val("paste excel cells here");
-		render_table_content(whichtable);
-	}
+        whichtable.obj = obj;
+        whichtable.$textarea.val("paste excel cells here");
+        render_table_content(whichtable);
+    }
 
+    /*******************************************************************
+     * render table
+     ********************************************************************/
+    function render_table_content(whichtable) {
+        var html = "";
+        var count = 0;
+        for (var k in whichtable.obj) {
+            var trow = whichtable.obj[k];
+            html += "<tr>";
+            for (var c = 0; c < trow.length; c++) {
+                html += "<td>" + trow[c] + "</td>";
+            }
+            html += "</tr>";
+            count++;
+        }
+        //html = "<div style='user-select:text;-webkit-user-select:all;'>" + html + "</div>"
+        //whichtable.$table.append($(html));
 
-	/*******************************************************************
-	* render table
-	********************************************************************/
-	function render_table_content(whichtable)
-	{
-			var html ="";
-			var count = 0;
-			for(var k in whichtable.obj)
-			{
-				var trow = whichtable.obj[k];
-				html += "<tr>";
-				for(var c=0; c<trow.length; c++)
-				{
-					html += "<td>" + trow[c] + "</td>";
-				}
-				html += "</tr>";
-				count++;
-			}
-			//html = "<div style='user-select:text;-webkit-user-select:all;'>" + html + "</div>" 
-			//whichtable.$table.append($(html));
-		
-			whichtable.$table.empty().append($(html));
-			
-			var summary = "<b>" + count + "</b> unique rows";
-			if (whichtable.doublettes != undefined)
-				summary += ( "<br/><b>" + whichtable.doublettes + "</b> doublettes");
-			whichtable.$summary.html(summary)
-		
-	}
+        whichtable.$table.empty().append($(html));
 
+        var summary = "<b>" + count + "</b> unique rows";
+        if (whichtable.doublettes != undefined) summary += "<br/><b>" + whichtable.doublettes + "</b> doublettes";
+        whichtable.$summary.html(summary);
+    }
 
-	/*******************************************************************
-	* compare 2 tables
-	********************************************************************/
-	function compare_tables()
-	{
-		var a = listA.obj;
-		var b = listB.obj;
-		listBoth.obj = {};
-		listAnotB.obj = {};
-		listBnotA.obj = {};
-		for(var k in a)
-		{
-			if(b[k] != undefined)
-				listBoth.obj[k] = a[k];
-			else
-				listAnotB.obj[k] = a[k];
-			//a[k].found = 
-		}
-		for(var k in b)
-		{
-			if(a[k] == undefined)
-				listBnotA.obj[k] = b[k];
-			//b[k].found = (a[k] != undefined)
-		}
-		render_table_content(listBoth)
-		render_table_content(listAnotB)
-		render_table_content(listBnotA)
-	}
+    /*******************************************************************
+     * compare 2 tables
+     ********************************************************************/
+    function compare_tables() {
+        var a = listA.obj;
+        var b = listB.obj;
+        listBoth.obj = {};
+        listAnotB.obj = {};
+        listBnotA.obj = {};
+        for (var k in a) {
+            if (b[k] != undefined) listBoth.obj[k] = a[k];
+            else listAnotB.obj[k] = a[k];
+            //a[k].found =
+        }
+        for (var k in b) {
+            if (a[k] == undefined) listBnotA.obj[k] = b[k];
+            //b[k].found = (a[k] != undefined)
+        }
+        render_table_content(listBoth);
+        render_table_content(listAnotB);
+        render_table_content(listBnotA);
+    }
 
+    /*******************************************************************
+     * copy to clipboard
+     ********************************************************************/
+    function copy_to_clipboard(ttable, mode, maptoptable) {
+        var str = "";
+        for (var k in ttable.obj) {
+            var trow = ttable.obj[k];
+            if (mode == "psid") {
+                str += trow[0] + "#" + trow[1];
+            } else {
+                for (var c = 0; c < trow.length; c++) {
+                    str += (c > 0 ? "\t" : "") + trow[c];
+                }
+            }
 
-	/*******************************************************************
-	* copy to clipboard
-	********************************************************************/
-	function copy_to_clipboard(ttable, mode, maptoptable)
-	{
-		var str = "";
-		for(var k in ttable.obj)
-		{
-			var trow = ttable.obj[k];
-			if(mode == 'psid')
-			{
-					str += trow[0] + "#" + trow[1]; ; 
-			}
-			else
-			{
-				for(var c=0; c<trow.length; c++)
-				{
-					str += (c>0?"\t":"") + trow[c]; 
-				}
-			}
+            str += maptoptable ? " " : "\n";
+        }
 
-			str += maptoptable?" ":"\n";
-		}
+        if (maptoptable) {
+            $(".KSearchFields[name='PIZ']").val(str);
+            if (state.viewer.levelMode) patientTableMirror.levelMode_backToAll();
+            patientSearch({ keyCode: 13 }, function () {});
+        } else {
+            var $temp = $(
+                "<textarea style='position:absolute; display:block;z-index:99999;top:0px'>" + str + "</textarea>"
+            )
+                .appendTo($body)
+                .select();
+            var successful = document.execCommand("Copy");
+            $.notify(" Copied to clipboard", "success");
+            $temp.remove();
+        }
+    }
 
-		if(maptoptable)
-		{
-			$(".KSearchFields[name='PIZ']").val(str);
-			if (state.viewer.levelMode)
-				patientTableMirror.levelMode_backToAll();
-			patientSearch({keyCode:13},function() { });
-
-		}
-		else
-		{
-			var $temp = $("<textarea style='position:absolute; display:block;z-index:99999;top:0px'>"+str+"</textarea>").appendTo($body).select();
-			var successful = document.execCommand('Copy');
-			$.notify(" Copied to clipboard","success");
-			$temp.remove();
-		}
-		
-	}
-
-
-
-
-
-	return that;
+    return that;
 }
 
-
 function getCurrentAnalysisFolders() {
-    if (getCurrentAnalysisFolders.analysisfolders == undefined)
-        getCurrentAnalysisFolders.analysisfolders = {}
-    for (var k = 0; k < all_analysis.length; k++)
-        getCurrentAnalysisFolders.analysisfolders[all_analysis[k]] = true;
+    if (getCurrentAnalysisFolders.analysisfolders == undefined) getCurrentAnalysisFolders.analysisfolders = {};
+    for (var k = 0; k < all_analysis.length; k++) getCurrentAnalysisFolders.analysisfolders[all_analysis[k]] = true;
 
     return Object.keys(getCurrentAnalysisFolders.analysisfolders);
 }
 
-
-function setNORAenv(toadd)
-{
-    var p = {}
-    p.application = "webview"
+function setNORAenv(toadd) {
+    var p = {};
+    p.application = "webview";
     p.electron = false;
     p.debug = false;
 
-    p.url_pref = ""
+    p.url_pref = "";
 
-    p.setPatientTableWidth = function() {}
-    p.setPatientTableLayout = function() {}
-    p.jsonTable_loadFormattedList = function() {}
-    p.unsavedChanges = function() {return false; }
+    p.setPatientTableWidth = function () {};
+    p.setPatientTableLayout = function () {};
+    p.jsonTable_loadFormattedList = function () {};
+    p.unsavedChanges = function () {
+        return false;
+    };
 
     p.KViewer = undefined;
     p.commandDialog = undefined;
@@ -11369,13 +9355,13 @@ function setNORAenv(toadd)
     p.hasProxy = false;
     p.static_info = {};
     p.standardToolsize = 300;
-    p.userinfo = {username:""};
-    p.guestuser="";
+    p.userinfo = { username: "" };
+    p.guestuser = "";
     p.storage = undefined;
     p.ViewerSettings = undefined;
     p.TableHidden = true;
     p.markerProxy = undefined;
-    p.defaultOpenPath ;
+    p.defaultOpenPath;
     p.markerProxy = undefined;
     p.pakoWorker = true;
 
@@ -11383,178 +9369,130 @@ function setNORAenv(toadd)
 
     p.signalhandler = new SignalHandler();
     p.colormap = new KColormap();
-    p.presetManager	   	 = new PresetManager();
-    p.stateManager	   = new StateManager();
+    p.presetManager = new PresetManager();
+    p.stateManager = new StateManager();
     p.logProcess = console.log;
 
-
-    for (var k in p)
-    {
-        if (window[k] == undefined)
-            window[k] = p[k];
+    for (var k in p) {
+        if (window[k] == undefined) window[k] = p[k];
     }
-    for (var k in toadd)
-    {
-         window[k] = toadd[k]
+    for (var k in toadd) {
+        window[k] = toadd[k];
     }
-
 }
 
-function generateRandomString(N)
-{
-
+function generateRandomString(N) {
     var s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    return Array(N).join().split(',').map(function() { return s.charAt(Math.floor(Math.random() * s.length)); }).join('');
+    return Array(N)
+        .join()
+        .split(",")
+        .map(function () {
+            return s.charAt(Math.floor(Math.random() * s.length));
+        })
+        .join("");
 }
 
-
-function moveObjKey(a,b,obj)
-{
-    var tmp = {}
+function moveObjKey(a, b, obj) {
+    var tmp = {};
     var tomove;
-    for (var k in obj)
-        {
-            if (k==a)
-                tomove = obj[k];
-            else
-                tmp[k] = obj[k];
-            delete obj[k]
-        }
-    for (var k in tmp)
-        {
-            obj[k] = tmp[k]            
-            if (k==b)
-                obj[a] = tomove;
-        }
-    
+    for (var k in obj) {
+        if (k == a) tomove = obj[k];
+        else tmp[k] = obj[k];
+        delete obj[k];
+    }
+    for (var k in tmp) {
+        obj[k] = tmp[k];
+        if (k == b) obj[a] = tomove;
+    }
 }
 
-
-
-function draghint(element,text)
-{
+function draghint(element, text) {
     var $div;
-    element.addEventListener("dragover",function(event) {
+    element.addEventListener("dragover", function (event) {
         event.preventDefault();
         event.stopPropagation();
-        if ($div != undefined)
-            return;
+        if ($div != undefined) return;
         $div = $("<div id='standardTooltip'> " + text + " </div>");
         $div.css("top", event.clientY);
         $div.appendTo($(document.body));
-        $div.css("left", event.clientX -$div.width()-20);
-        if ($div.position().left + $div.width() > $(document.body).width())
-        {
-            $div.css('left', $(document.body).width() - $div.width() - 10);
-            $div.css('top', $div.position().top + 15);
+        $div.css("left", event.clientX - $div.width() - 20);
+        if ($div.position().left + $div.width() > $(document.body).width()) {
+            $div.css("left", $(document.body).width() - $div.width() - 10);
+            $div.css("top", $div.position().top + 15);
         }
         if ($div.position().top + $div.height() > $(document.body).height())
-            $div.css('top', $(document.body).height() - $div.height() - 10);
-        
+            $div.css("top", $(document.body).height() - $div.height() - 10);
 
-        $(event.target).parent().find("input,textarea").addClass("KCmdToDrop")
-
+        $(event.target).parent().find("input,textarea").addClass("KCmdToDrop");
     });
-    element.addEventListener("drop",function(event) {  
-            $(event.target).parent().find("input,textarea").removeClass("KCmdToDrop")
-            if ($div != undefined)
-                $div.remove()
-            $("#standardTooltip").remove()
-            $div = undefined 
-    })
+    element.addEventListener("drop", function (event) {
+        $(event.target).parent().find("input,textarea").removeClass("KCmdToDrop");
+        if ($div != undefined) $div.remove();
+        $("#standardTooltip").remove();
+        $div = undefined;
+    });
 
-    element.addEventListener("dragleave",function(event) {
-        $(event.target).parent().find("input,textarea").removeClass("KCmdToDrop")
+    element.addEventListener("dragleave", function (event) {
+        $(event.target).parent().find("input,textarea").removeClass("KCmdToDrop");
 
-        if ($div != undefined)
-        {
+        if ($div != undefined) {
             $div.remove();
-            $("#standardTooltip").remove()
+            $("#standardTooltip").remove();
             $div = undefined;
         }
-    })
-
+    });
 }
 
-
-function sertry(...args)
-{
-    for (var k = 0; k < args.length;k++)
-    {
+function sertry(...args) {
+    for (var k = 0; k < args.length; k++) {
         try {
             var res = args[k]();
             return res;
-        }
-        catch(err)
-        {
-            if (k==args.length-1)
-                throw err; 
+        } catch (err) {
+            if (k == args.length - 1) throw err;
         }
     }
 }
-function tryit(f)
-{
+function tryit(f) {
     try {
-       var ret = f();
-       return ret; 
-    }
-    catch(err)
-    {
-        
-    }
+        var ret = f();
+        return ret;
+    } catch (err) {}
 }
 
-
-
-function waitFor(condition,interval,fun)
-{
-    var cid = setInterval(function()
-                          {
-                              if (condition())
-                              {
-                                  fun()
-                                  clearInterval(cid)
-                                  return;
-                              }
-                          },interval)
-    
+function waitFor(condition, interval, fun) {
+    var cid = setInterval(function () {
+        if (condition()) {
+            fun();
+            clearInterval(cid);
+            return;
+        }
+    }, interval);
 }
 
-
-
-function addWorkstatePostCode()
-{
-
-        popupView({fileID:"WorkstatePostCode",
-                   filename:"WorkstatePostCode",
-                   contentType:"txt"}
-                  ,{intent:{singleview:true}})
-  
-    
+function addWorkstatePostCode() {
+    popupView(
+        { fileID: "WorkstatePostCode", filename: "WorkstatePostCode", contentType: "txt" },
+        { intent: { singleview: true } }
+    );
 }
 
-function appendSVGtoViewport(name,vp,callback)
-{
-    var jv = KViewer.viewports[vp].getCurrentViewer().$container
+function appendSVGtoViewport(name, vp, callback) {
+    var jv = KViewer.viewports[vp].getCurrentViewer().$container;
 
-    $.get(name,function(e) { 
-        var svg=e;
+    $.get(name, function (e) {
+        var svg = e;
         var svg0;
         KViewer.viewports[vp].getCurrentViewer().$container.find("svg").remove();
-        if (typeof svg == "string")
-        {
-            var tmp = $("<div>" + svg + "</div>").find("svg")
+        if (typeof svg == "string") {
+            var tmp = $("<div>" + svg + "</div>").find("svg");
             svg0 = tmp[0];
-            jv.append(tmp)
-        }
-        else
-        {
+            jv.append(tmp);
+        } else {
             svg0 = svg.documentElement;
-            jv.append(svg0)
+            jv.append(svg0);
         }
 
-        if (callback)
-            callback(svg0);
-         })
-
+        if (callback) callback(svg0);
+    });
 }

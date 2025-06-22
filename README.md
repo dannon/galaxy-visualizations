@@ -8,12 +8,13 @@ Galaxy provides an interactive visualization system to help users explore, inter
 
 The **Galaxy Charts** framework and its **script-entrypoint** defines the standardized approach for visualization development in Galaxy, documented at [charts.galaxyproject.org](https://charts.galaxyproject.org).
 
-Think of **Galaxy Charts** as the *"how-to-build"* guide and **galaxy-visualizations** as the *"actual built examples"*.
+Think of **Galaxy Charts** as the _"how-to-build"_ guide and **galaxy-visualizations** as the _"actual built examples"_.
 
 This repository houses **concrete visualization implementations** that:
-- Follow the guidelines and structure defined by **Galaxy Charts**.
-- Integrate seamlessly into Galaxy's interface.
-- Support a variety of data types and analysis workflows.
+
+-   Follow the guidelines and structure defined by **Galaxy Charts**.
+-   Integrate seamlessly into Galaxy's interface.
+-   Support a variety of data types and analysis workflows.
 
 Each visualization here is a self-contained module following Galaxy's visualization plugin system.
 
@@ -57,12 +58,12 @@ pnpm test
 
 ### Common Development Commands
 
-- **Install all dependencies**: `pnpm install`
-- **Build all packages**: `pnpm build:all`
-- **Test all packages**: `pnpm test:all`
-- **Format all packages**: `pnpm lint:all`
-- **Clean all builds**: `pnpm clean`
-- **Work with specific package**: `pnpm --filter @galaxyproject/[name] [command]`
+-   **Install all dependencies**: `pnpm install`
+-   **Build all packages**: `pnpm build:all`
+-   **Test all packages**: `pnpm test:all`
+-   **Format all packages**: `pnpm lint:all`
+-   **Clean all builds**: `pnpm clean`
+-   **Work with specific package**: `pnpm --filter @galaxyproject/[name] [command]`
 
 ## Available Packages
 
@@ -79,17 +80,18 @@ For a complete list of available packages, see the [packages directory](./packag
 
 ## Publishing & Distribution
 
-- **Automatic Publishing**: When package versions are updated and merged to `main`, GitHub workflows automatically publish to npm
-- **Manual Publishing**: Maintainers can use the "Manual Package Publish" workflow for specific packages
-- **Testing**: All pull requests automatically run tests, builds, and formatting checks
-- **Package Scope**: All packages are published under the `@galaxyproject` npm organization
+-   **Automatic Publishing**: When package versions are updated and merged to `main`, GitHub workflows automatically publish to npm
+-   **Manual Publishing**: Maintainers can use the "Manual Package Publish" workflow for specific packages
+-   **Testing**: All pull requests automatically run tests, builds, and formatting checks
+-   **Package Scope**: All packages are published under the `@galaxyproject` npm organization
 
 ## Developing and Adding Visualizations
 
 If you want to add a third-party visualization or build your own:
-- Start by reading the [Galaxy Charts Documentation](https://charts.galaxyproject.org) to understand the framework and development process.
-- Use the [galaxy-charts-starter](https://github.com/guerler/galaxy-charts-starter) template to quickly scaffold a new project. It provides a Vue environment, utilities to simplify common tasks, and an automatically generated input form by parsing your Galaxy visualization XML configuration.
-- Alternatively, you can follow the [Vite-only project](https://charts.galaxyproject.org/galaxy-charts/content/xml-framework.html#building-a-vite-plugin-vanilla-vue-react-and-more) guide to create a standalone plugin without using the Galaxy Charts Vue package (supports Vanilla, Vue, React, and more).
+
+-   Start by reading the [Galaxy Charts Documentation](https://charts.galaxyproject.org) to understand the framework and development process.
+-   Use the [galaxy-charts-starter](https://github.com/guerler/galaxy-charts-starter) template to quickly scaffold a new project. It provides a Vue environment, utilities to simplify common tasks, and an automatically generated input form by parsing your Galaxy visualization XML configuration.
+-   Alternatively, you can follow the [Vite-only project](https://charts.galaxyproject.org/galaxy-charts/content/xml-framework.html#building-a-vite-plugin-vanilla-vue-react-and-more) guide to create a standalone plugin without using the Galaxy Charts Vue package (supports Vanilla, Vue, React, and more).
 
 ## Contributing
 
@@ -104,7 +106,7 @@ To contribute a new visualization or improve an existing one:
 
 ### Pull Request Guidelines
 
-- Ensure all tests pass and code is properly formatted
-- Include updates to documentation if needed
-- For new packages, follow the established directory structure
-- For version changes, the automated publishing workflow will handle npm publication
+-   Ensure all tests pass and code is properly formatted
+-   Include updates to documentation if needed
+-   For new packages, follow the established directory structure
+-   For version changes, the automated publishing workflow will handle npm publication

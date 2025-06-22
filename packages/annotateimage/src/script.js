@@ -461,7 +461,7 @@ function render(downloadUrl) {
         .catch((error) => {
             console.error(error.message);
         });
-};
+}
 
 const { root, visualization_config } = JSON.parse(document.getElementById("app").dataset.incoming);
 

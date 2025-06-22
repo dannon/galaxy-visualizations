@@ -65,7 +65,7 @@ onMounted(() => {
 watch(
     () => props,
     () => debouncedRender(),
-    { deep: true },
+    { deep: true }
 );
 </script>
 

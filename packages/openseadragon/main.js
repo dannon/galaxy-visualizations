@@ -79,7 +79,7 @@ async function create() {
             hideMessage();
         } else {
             showMessage(
-                `Unsupported image format: ${dataset.extension}. Supported formats: ${supportedFormats.join(", ")}`,
+                `Unsupported image format: ${dataset.extension}. Supported formats: ${supportedFormats.join(", ")}`
             );
         }
     } catch (error) {

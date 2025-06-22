@@ -53,7 +53,7 @@ async function create() {
             hideMessage();
         } else {
             showMessage(
-                `Unsupported dataset format: ${dataset.extension}. Supported formats: ${supportedFormats.join(", ")}`,
+                `Unsupported dataset format: ${dataset.extension}. Supported formats: ${supportedFormats.join(", ")}`
             );
         }
     } catch (error) {

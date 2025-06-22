@@ -7,16 +7,16 @@ const appElement = document.querySelector(appElementId);
 
 // Attach mock data for development
 if (import.meta.env.DEV) {
-  // Build the incoming data object
-  const dataIncoming = {
-    visualization_config: {
-      dataset_id: "09f1e31b9542a75b",
-    },
-    root: "/",
-  };
+    // Build the incoming data object
+    const dataIncoming = {
+        visualization_config: {
+            dataset_id: "09f1e31b9542a75b",
+        },
+        root: "/",
+    };
 
-  // Attach config to the data-incoming attribute
-  appElement?.setAttribute("data-incoming", JSON.stringify(dataIncoming));
+    // Attach config to the data-incoming attribute
+    appElement?.setAttribute("data-incoming", JSON.stringify(dataIncoming));
 }
 
 // Access attached data
@@ -30,52 +30,45 @@ const datasetId = incoming.visualization_config.dataset_id;
 const root = incoming.root;
 
 async function render() {
-  const dataset = await getDataset();
-  if (!dataset) {
-    console.error(`Dataset ${datasetId} not found or failed to load`);
-    return;
-  }
+    const dataset = await getDataset();
+    if (!dataset) {
+        console.error(`Dataset ${datasetId} not found or failed to load`);
+        return;
+    }
 
-  const url = getSourceUrl(dataset);
-  if (!url) {
-    console.error(`Cannot find source URL for dataset ${datasetId}`);
-    return;
-  }
+    const url = getSourceUrl(dataset);
+    if (!url) {
+        console.error(`Cannot find source URL for dataset ${datasetId}`);
+        return;
+    }
 
-  const viewer = await createViewer(appElement);
-  const config = {
-    source: url,
-    name: dataset.name,
-  };
-  viewer.addImage(config);
+    const viewer = await createViewer(appElement);
+    const config = {
+        source: url,
+        name: dataset.name,
+    };
+    viewer.addImage(config);
 }
 
 async function getDataset() {
-  try {
-    const { data: dataset } = await axios.get(
-      `${root}api/datasets/${datasetId}`
-    );
-    return dataset;
-  } catch (error) {
-    console.error(`Failed to load dataset: ${error.message}`);
-  }
+    try {
+        const { data: dataset } = await axios.get(`${root}api/datasets/${datasetId}`);
+        return dataset;
+    } catch (error) {
+        console.error(`Failed to load dataset: ${error.message}`);
+    }
 }
 
 function getSourceUrl(dataset) {
-  if (dataset.state === "deferred") {
-    return dataset.sources[0].source_uri;
-  }
-  return (
-    prefixedDownloadUrl(
-      root,
-      `datasets/${dataset.id}/display/${dataset.metadata_store_root}`
-    )
-  );
+    if (dataset.state === "deferred") {
+        return dataset.sources[0].source_uri;
+    }
+    return prefixedDownloadUrl(root, `datasets/${dataset.id}/display/${dataset.metadata_store_root}`);
 }
 
 const slashCleanup = /(\/)+/g;
 function prefixedDownloadUrl(root, path) {
-  return `${root}/${path}`.replace(slashCleanup, "/");
+    return `${root}/${path}`.replace(slashCleanup, "/");
 }
 
 render();

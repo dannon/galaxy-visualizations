@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 // add dataset id for testing
-let GALAXY_DATASET_ID = ""
+let GALAXY_DATASET_ID = "";
 if (process.env.GALAXY_DATASET_ID) {
     GALAXY_DATASET_ID = process.env.GALAXY_DATASET_ID;
 } else {

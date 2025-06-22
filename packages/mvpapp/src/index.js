@@ -1,25 +1,25 @@
-import axios from "axios"
-import "./index.css"
-import "./mvpapp.js"
+import axios from "axios";
+import "./index.css";
+import "./mvpapp.js";
 
-const appElement = document.querySelector("#app")
-const incoming = JSON.parse(appElement.dataset.incoming || "{}")
-const datasetId = incoming.visualization_config.dataset_id
-const root = incoming.root
-const metaUrl = `${root}api/datasets/${datasetId}`
+const appElement = document.querySelector("#app");
+const incoming = JSON.parse(appElement.dataset.incoming || "{}");
+const datasetId = incoming.visualization_config.dataset_id;
+const root = incoming.root;
+const metaUrl = `${root}api/datasets/${datasetId}`;
 
-const messageElement = document.createElement("div")
-messageElement.id = "message"
-messageElement.style.display = "none"
-appElement.appendChild(messageElement)
+const messageElement = document.createElement("div");
+messageElement.id = "message";
+messageElement.style.display = "none";
+appElement.appendChild(messageElement);
 
 function buildInterface() {
-    const modal = document.createElement("div")
-    modal.id = "master_modal"
-    appElement.appendChild(modal)
+    const modal = document.createElement("div");
+    modal.id = "master_modal";
+    appElement.appendChild(modal);
 
-    const nav = document.createElement("nav")
-    nav.className = "navbar navbar-fixed-top"
+    const nav = document.createElement("nav");
+    nav.className = "navbar navbar-fixed-top";
     nav.innerHTML = `
         <div class="container">
             <div class="navbar-header">
@@ -39,11 +39,11 @@ function buildInterface() {
                 </div>
             </div>
         </div>
-    `
-    appElement.appendChild(nav)
+    `;
+    appElement.appendChild(nav);
 
-    const container = document.createElement("div")
-    container.className = "container"
+    const container = document.createElement("div");
+    container.className = "container";
     container.innerHTML = `
         <div id="igvDiv"></div>
         <div id="protein_viewer"></div>
@@ -57,33 +57,33 @@ function buildInterface() {
         <div class="row"><div id="detail_div" class="col-md-12"></div></div>
         <div class="row"><div id="lorikeet_zone" class="col-md-12"></div></div>
         <div id="fdr_div"></div>
-    `
-    appElement.appendChild(container)
+    `;
+    appElement.appendChild(container);
 }
 
 function showMessage(title, details = null) {
-    messageElement.innerHTML = `${title}${details ? `: ${details}` : ""}`
-    messageElement.style.display = "inline"
-    console.debug(messageElement.innerHTML)
+    messageElement.innerHTML = `${title}${details ? `: ${details}` : ""}`;
+    messageElement.style.display = "inline";
+    console.debug(messageElement.innerHTML);
 }
 
 function hideMessage() {
-    messageElement.style.display = "none"
+    messageElement.style.display = "none";
 }
 
 async function getData(url) {
     try {
-        const { data } = await axios.get(url)
-        return data
+        const { data } = await axios.get(url);
+        return data;
     } catch (e) {
-        showMessage("Failed to retrieve data", e)
+        showMessage("Failed to retrieve data", e);
     }
 }
 
 async function create() {
-    showMessage("Loading...")
-    buildInterface()
-    const dataset = await getData(metaUrl)
+    showMessage("Loading...");
+    buildInterface();
+    const dataset = await getData(metaUrl);
     if (dataset.metadata_table_row_count) {
         const config = {
             datasetID: datasetId,
@@ -92,12 +92,12 @@ async function create() {
             href: root,
             historyID: dataset.history_id,
             tableRowCount: { ...dataset.metadata_table_row_count },
-        }
-        MVPApplication.run(config)
-        hideMessage()
+        };
+        MVPApplication.run(config);
+        hideMessage();
     } else {
-        showMessage("No columns found in dataset")
+        showMessage("No columns found in dataset");
     }
 }
 
-create()
+create();

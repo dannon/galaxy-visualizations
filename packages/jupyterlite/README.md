@@ -6,9 +6,9 @@ The `jl-galaxy` extension enables Jupyter users to interact seamlessly with thei
 
 ## ⚙️ Requirements
 
-- Python **3.10.17+**
-- Node.js **20.19.1+**
-- npm **10.8.2+**
+-   Python **3.10.17+**
+-   Node.js **20.19.1+**
+-   npm **10.8.2+**
 
 ---
 
@@ -48,10 +48,11 @@ npm run build
 ```
 
 This will:
-- Run `jupyter lite build`
-- Include the Pyodide kernel
-- Bundle federated extensions like `jl-galaxy`
-- Output the final static site to: `./static/dist/_output`
+
+-   Run `jupyter lite build`
+-   Include the Pyodide kernel
+-   Bundle federated extensions like `jl-galaxy`
+-   Output the final static site to: `./static/dist/_output`
 
 ---
 
@@ -72,6 +73,7 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 The `gxy` module provides Python functions to interact with the Galaxy API directly from JupyterLite.
 
 ### ✅ `api(endpoint, method="GET", data=None)`
+
 Makes an HTTP request to a Galaxy API endpoint and returns the parsed JSON response.
 
 ```python
@@ -82,6 +84,7 @@ await api("/api/histories", method="POST", data={"name": "New History"})
 ---
 
 ### ✅ `get(datasets_identifiers, identifier_type="hid", retrieve_datatype=False)`
+
 Downloads dataset(s) by HID, ID, or regex pattern. Saves them to Pyodide's virtual filesystem.
 
 ```python
@@ -93,6 +96,7 @@ await get("myfile.*", identifier_type="regex")
 ---
 
 ### ✅ `put(name, output=None, ext="auto", dbkey="?", history_id=None)`
+
 Uploads a file from the virtual filesystem to the current Galaxy history.
 
 ```python
@@ -102,6 +106,7 @@ await put("mydata.txt", "newname.txt", ext="txt")
 ---
 
 ### ✅ `get_history(history_id=None)`
+
 Returns metadata for all visible datasets in the current history.
 
 ```python
@@ -111,6 +116,7 @@ await get_history()
 ---
 
 ### ✅ `get_history_id()`
+
 Returns the current history ID based on the dataset context.
 
 ```python
@@ -120,6 +126,7 @@ await get_history_id()
 ---
 
 ### ✅ `get_environment()`
+
 Returns the Galaxy environment injected into the session via `__gxy__`.
 
 ```python
@@ -129,13 +136,13 @@ get_environment()
 ---
 
 ### ✅ `_find_matching_ids(history_datasets, list_of_regex_patterns, identifier_type='hid')`
+
 Used internally to resolve regex patterns to dataset identifiers.
 
 ---
 
 ## 📎 Notes
 
-- The `jl-galaxy` extension allows users to browse and manage Galaxy histories directly from the Jupyter UI.
-- All files must be placed within `static/dist/_output`; writing outside this directory breaks the build.
-- The upload helper uses `XMLHttpRequest` to work around Pyodide's limitations with `fetch`.
-
+-   The `jl-galaxy` extension allows users to browse and manage Galaxy histories directly from the Jupyter UI.
+-   All files must be placed within `static/dist/_output`; writing outside this directory breaks the build.
+-   The upload helper uses `XMLHttpRequest` to work around Pyodide's limitations with `fetch`.

@@ -25,15 +25,15 @@ Use this repo as a starting point for your own Galaxy visualization plugins.
 
 ## 📦 What's Included
 
-- ⚡ Vite for fast dev server and hot module replacement
-- 🧩 Galaxy Charts plugin system
-- 🎨 Vue 3 setup with scoped components
-- 🧪 Example plugin for reference
-- 🛠️ Pre-configured for connecting to Galaxy datasets
+-   ⚡ Vite for fast dev server and hot module replacement
+-   🧩 Galaxy Charts plugin system
+-   🎨 Vue 3 setup with scoped components
+-   🧪 Example plugin for reference
+-   🛠️ Pre-configured for connecting to Galaxy datasets
 
 ---
 
 ## 📘 Learn More
 
-- [Galaxy Charts Documentation](https://galaxyproject.github.io/galaxy-charts/)
-- [Galaxy Charts Repository](https://github.com/galaxyproject/galaxy-charts)
+-   [Galaxy Charts Documentation](https://galaxyproject.github.io/galaxy-charts/)
+-   [Galaxy Charts Repository](https://github.com/galaxyproject/galaxy-charts)

@@ -19,7 +19,8 @@ defineProps<{
                 :specs="specs"
                 :tracks="tracks"
                 @save="save"
-                @update="update" />
+                @update="update"
+            />
         </template>
     </GalaxyCharts>
 </template>

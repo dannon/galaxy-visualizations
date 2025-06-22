@@ -15,7 +15,7 @@ export default defineConfig({
                 return {
                     code: code.replace(
                         `return fetch(new URL("./re_viewer_bg.wasm", import.meta.url));`,
-                        `const wasmPath = "./re_viewer_bg.wasm"; return fetch(new URL(wasmPath, import.meta.url));`,
+                        `const wasmPath = "./re_viewer_bg.wasm"; return fetch(new URL(wasmPath, import.meta.url));`
                     ),
                     map: null,
                 };
